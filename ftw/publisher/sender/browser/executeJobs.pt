@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/prefs_main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<div metal:fill-slot="prefs_configlet_content">
+    <div class="documentContent" id="content">
+
+        <h1 class="documentFirstHeading">Execute Jobs</h1>
+
+        <a href=""
+           class="link-parent"
+           tal:attributes="href string:$portal_url/@@publisher-config">
+            Up to Publisher Control Panel
+        </a>
+
+        <br />
+
+        <b>Log Output:</b>
+        <pre tal:content="structure view/output"></pre>
+
+    </div>
+</div>
+
+</body>
+</html>

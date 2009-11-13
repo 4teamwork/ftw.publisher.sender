@@ -1,0 +1,22 @@
+<configure
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:five="http://namespaces.zope.org/five"
+        i18n_domain="ftw.publisher.sender">
+
+    <include package=".browser" />
+    <include file="profiles.zcml" />
+    <include file="dependencies.zcml" />
+
+    <adapter
+            provides=".interfaces.IConfig"
+            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            factory=".persistence.Config"
+            />
+
+    <adapter
+            provides=".interfaces.IQueue"
+            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+            factory=".persistence.Queue"
+            />
+
+</configure>

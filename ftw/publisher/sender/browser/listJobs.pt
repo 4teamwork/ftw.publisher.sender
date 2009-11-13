@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/prefs_main_template/macros/master"
+      i18n:domain="plone">
+
+<body>
+
+<div metal:fill-slot="prefs_configlet_content">
+    <div class="documentContent" id="content">
+        <div metal:use-macro="here/global_statusmessage/macros/portal_message">
+          Portal status message
+        </div>
+
+        <h1 class="documentFirstHeading">Queue</h1>
+
+        <a href=""
+           class="link-parent"
+           tal:attributes="href string:$portal_url/@@publisher-config">
+            Up to Publisher Control Panel
+        </a>
+
+        <br />
+
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th>Object</th>
+                    <th>Action</th>
+                    <th>Username</th>
+                    <th>Data Length</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tal:repeat repeat="job view/getJobs">
+                    <tr tal:define="odd repeat/job/odd"
+                            tal:attributes="class python:odd and 'odd' or 'even'">
+                        <td>
+                            <a href=""
+                                    tal:attributes="href string:${job/objectPath}/view"
+                                    tal:content="job/objectTitle"></a>
+                        </td>
+                        <td tal:content="job/action" />
+                        <td tal:content="job/username" />
+                        <td tal:define="length python:len(job.getData())"
+                                tal:content="string:${length} Bytes"/>
+                    </tr>
+                </tal:repeat>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+</body>
+</html>
