@@ -42,6 +42,8 @@ from ftw.publisher.sender import extractor
 from ftw.publisher.sender import getLogger
 from ftw.publisher.core import states
 
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile 
+
 """
 @var BATCH_SIZE:        Maximum amount of Jobs to be performed at one ExecuteQueue call
 """
@@ -51,8 +53,7 @@ class PublishObject(BrowserView):
     """
     This BrowserView adds the current object (self.context) to the publishing queue.
     """
-
-    def __call__(self, *args, **kwargs):
+    def __call__(self, no_response=False, *args, **kwargs):
         """
         The __call__ method is used to execute the BrowserView. It creates and
         adds a "PUSH"-Job on the current context to the queue.
@@ -82,7 +83,8 @@ class PublishObject(BrowserView):
                 'This object has been added to the queue.',
                 type='info'
         )
-        return self.request.RESPONSE.redirect('./view')
+        if not no_response:
+            return self.request.RESPONSE.redirect('./view')
 
 
 class DeleteObject(BrowserView):
@@ -90,7 +92,7 @@ class DeleteObject(BrowserView):
     Add a object to the queue with the action "delete".
     """
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, no_response=False, *args, **kwargs):
         """
         Add the current context as delete-job to the queue, creates a status
         message to inform the user and returns to the default view.
@@ -120,7 +122,8 @@ class DeleteObject(BrowserView):
                 'This object will be deleted at the remote sites.',
                 type='info'
         )
-        return self.request.RESPONSE.redirect('./view')
+        if not no_response:
+            return self.request.RESPONSE.redirect('./view')
 
 
 
@@ -160,6 +163,7 @@ class ExecuteQueue(BrowserView):
         log = logStream.read()
         del logStream
         del logHandler
+        
         return log
 
     def getActiveRealms(self):
