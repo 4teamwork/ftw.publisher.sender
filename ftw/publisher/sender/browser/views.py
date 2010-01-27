@@ -44,6 +44,10 @@ from ftw.publisher.core import states
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile 
 
+# event
+from ftw.publisher.sender.events import AfterPushEvent
+from zope import event
+
 """
 @var BATCH_SIZE:        Maximum amount of Jobs to be performed at one ExecuteQueue call
 """
@@ -225,4 +229,7 @@ class ExecuteQueue(BrowserView):
             else:
                 self.logger.info('... got result: %s' % state.toString())
 
+        # fire AfterPushEvent
+        obj = self.context.archetype_tool.getObject(job.objectUID)
+        event.notify(AfterPushEvent(obj, state, job))
 

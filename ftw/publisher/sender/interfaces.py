@@ -25,6 +25,7 @@
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 from zope import interface
+from zope.component.interfaces import IObjectEvent
 
 class IConfig(interface.Interface):
     """
@@ -38,3 +39,7 @@ class IQueue(interface.Interface):
     See persistence.py
     """
 
+class IAfterPushEvent(IObjectEvent):
+    """
+    Event gets fired, after object is pushed to the realm
+    """
