@@ -25,6 +25,7 @@ setup(name='ftw.publisher.sender',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
+          'collective.testcaselayer',
           'z3c.form',
           'plone.z3cform',
           'simplejson',
