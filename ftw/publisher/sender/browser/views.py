@@ -98,7 +98,7 @@ class DeleteObject(BrowserView):
     Add a object to the queue with the action "delete".
     """
 
-    def __call__(self, no_response=False, *args, **kwargs):
+    def __call__(self, no_response=False, msg=None, *args, **kwargs):
         """
         Add the current context as delete-job to the queue, creates a status
         message to inform the user and returns to the default view.
@@ -124,8 +124,10 @@ class DeleteObject(BrowserView):
                 '/'.join(self.context.getPhysicalPath()),
         ))
         # status message
+        if msg is None:
+            msg = 'This object will be deleted at the remote sites.'
         IStatusMessage(self.request).addStatusMessage(
-                'This object will be deleted at the remote sites.',
+                msg,
                 type='info'
         )
         if not no_response:
