@@ -57,7 +57,7 @@ class PublishObject(BrowserView):
     """
     This BrowserView adds the current object (self.context) to the publishing queue.
     """
-    def __call__(self, no_response=False, *args, **kwargs):
+    def __call__(self, no_response=False, msg=None, *args, **kwargs):
         """
         The __call__ method is used to execute the BrowserView. It creates and
         adds a "PUSH"-Job on the current context to the queue.
@@ -83,8 +83,10 @@ class PublishObject(BrowserView):
                 '/'.join(self.context.getPhysicalPath()),
         ))
         # status message
+        if msg is None:
+            msg = 'This object has been added to the queue.'
         IStatusMessage(self.request).addStatusMessage(
-                'This object has been added to the queue.',
+                msg,
                 type='info'
         )
         if not no_response:
