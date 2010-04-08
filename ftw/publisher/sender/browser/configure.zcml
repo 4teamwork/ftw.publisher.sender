@@ -13,6 +13,13 @@
             />
 
     <browser:page
+            name="publisher.move"
+            for="*"
+            class=".views.MoveObject"
+            permission="cmf.ReviewPortalContent"
+            />
+
+    <browser:page
             name="publisher.delete"
             for="*"
             class=".views.DeleteObject"

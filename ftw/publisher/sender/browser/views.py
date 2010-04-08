@@ -93,6 +93,46 @@ class PublishObject(BrowserView):
             return self.request.RESPONSE.redirect('./view')
 
 
+class MoveObject(BrowserView):
+    """
+    This BrowserView adds the current object (self.context) to the publishing queue for renaming.
+    """
+    def __call__(self, no_response=False, msg=None, *args, **kwargs):
+        """
+        Creates a "rename" job for the current item(s)
+        @param args:    list of unnamed arguments
+        @type args:     list
+        @param kwargs:  dict of named keyword-arguments
+        @type kwargs:   dict
+        @return:        Redirect to object`s default view
+        """
+        self.logger = getLogger()
+        # This View should not be executed at the PloneSiteRoot
+        if IPloneSiteRoot.providedBy(self.context):
+            raise Exception('Not allowed on PloneSiteRoot')
+        # get username
+        user = self.context.portal_membership.getAuthenticatedMember()
+        username = user.getUserName()
+        # create Job
+        queue = Queue(self.context)
+        queue.createJob('move', self.context, username, )
+        self.logger.info('Created "%s" Job for "%s" at %s' % (
+                'move',
+                self.context.Title(),
+                '/'.join(self.context.getPhysicalPath()),
+        ))
+        # status message
+        if msg is None:
+            msg = 'Object move/rename action has been added to the queue.'
+        IStatusMessage(self.request).addStatusMessage(
+                msg,
+                type='info'
+        )
+        if not no_response:
+            return self.request.RESPONSE.redirect('./view')
+
+
+
 class DeleteObject(BrowserView):
     """
     Add a object to the queue with the action "delete".

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.0b
+----
+* [08.04.2010, mle] implement rename action
+
+
 1.0 - Unreleased
 ----------------
 

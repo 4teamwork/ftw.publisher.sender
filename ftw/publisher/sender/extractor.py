@@ -52,13 +52,26 @@ class Extractor(object):
         """
         self.object = object
         data = {}
-        if action!='delete':
+        if action not in ['delete', 'move']:
             adapters = getAdapters((self.object,),IDataCollector)
             for name,adapter in adapters:
                 data[name] = adapter.getData()
         # gets the metadata, we dont use an adapter in this case, 
         # cause metdata is the most important data-set we need 
         data['metadata'] = self.getMetadata(action)
+            
+        if action == 'move':
+            #read out data from event_information attr
+            move_data = getattr(self.object,'event_information', None)
+            #make data convertable and shrink amount of data (replace objects by path)
+            del move_data['object']
+            move_data['newParent'] = '/'.join(move_data['newParent'].getPhysicalPath())
+            move_data['oldParent'] = '/'.join(move_data['oldParent'].getPhysicalPath())
+            move_data['newTitle'] = self.object.Title()
+            data['move'] = move_data
+            # finally remove event_information from object
+            delattr(self.object, 'event_information')
+        
         # convert to json
         jsondata = self.convertToJson(data)
         return jsondata
