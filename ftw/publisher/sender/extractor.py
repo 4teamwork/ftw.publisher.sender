@@ -67,7 +67,7 @@ class Extractor(object):
             del move_data['object']
             move_data['newParent'] = '/'.join(move_data['newParent'].getPhysicalPath())
             move_data['oldParent'] = '/'.join(move_data['oldParent'].getPhysicalPath())
-            move_data['newTitle'] = self.object.Title()
+            move_data['newTitle'] = self.object.Title().decode('utf-8')
             data['move'] = move_data
             # finally remove event_information from object
             delattr(self.object, 'event_information')
