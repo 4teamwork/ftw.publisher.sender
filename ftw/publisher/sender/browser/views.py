@@ -253,6 +253,7 @@ class ExecuteQueue(BrowserView):
         @type job:      Job
         """
         # get data from chache file
+        state = None
         json = job.getData()
         self.logger.info('-' * 100)
         self.logger.info('executing "%s" on "%s" (at %s | UID %s)' % (
@@ -275,5 +276,6 @@ class ExecuteQueue(BrowserView):
 
         # fire AfterPushEvent
         obj = self.context.archetype_tool.getObject(job.objectUID)
-        event.notify(AfterPushEvent(obj, state, job))
+        if state is not None:
+            event.notify(AfterPushEvent(obj, state, job))
 
