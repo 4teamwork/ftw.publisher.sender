@@ -7,8 +7,12 @@ def add_move_job(obj, event):
     """
     if obj == event.object:
         # do nohting, if we are in portal_factory or the item is just created
-        if not data['oldParent'] or not getattr(event.object, '_at_creation_flag', False):
-            return        
+        if not data['oldName']:
+            return
+        url_endswith = event.object.REQUEST.get('ACTUAL_URL').split('/')[-1:][0]
+        # also include manage_pasteObjects for ZMI support
+        if url_endswith not in ['folder_rename_form', 'folder_paste', 'manage_pasteObjects']:
+            return
         #set event info on on obj
         data = event.__dict__.copy()
         setattr(obj, 'event_information', data)
