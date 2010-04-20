@@ -38,11 +38,8 @@ from Products.statusmessages.interfaces import IStatusMessage
 # publisher imports
 from ftw.publisher.sender.persistence import Queue, Config
 from ftw.publisher.sender.utils import sendJsonToRealm
-from ftw.publisher.sender import extractor
 from ftw.publisher.sender import getLogger
 from ftw.publisher.core import states
-
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile 
 
 # event
 from ftw.publisher.sender.events import AfterPushEvent
@@ -68,9 +65,10 @@ class PublishObject(BrowserView):
         @return:        Redirect to object`s default view
         """
         self.logger = getLogger()
+        # mle: now its possible to execite this view on plonesiteroot
         # This View should not be executed at the PloneSiteRoot
-        if IPloneSiteRoot.providedBy(self.context):
-            raise Exception('Not allowed on PloneSiteRoot')
+        #if IPloneSiteRoot.providedBy(self.context):
+        #    raise Exception('Not allowed on PloneSiteRoot')
         # get username
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()

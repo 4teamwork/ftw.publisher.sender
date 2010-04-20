@@ -245,10 +245,12 @@ class Job(Persistent):
         @type username:     string
         """
         super(Persistent, self).__init__()
+        self.is_root = IPloneSiteRoot.providedBy(object)
         self.action = action
         self.username = username
-        self.objectUID = object.UID()
         self.objectPath = '/'.join(object.getPhysicalPath())
+        # store the path as uid if we are on a plone root
+        self.objectUID = self.is_root and self.objectPath or object.UID()
         self.objectTitle = object.Title()
         self._extractData(object)
 
@@ -265,7 +267,7 @@ class Job(Persistent):
         file = None
         while not file:
             filename = '%s.%s.%s.json' % (
-                object.UID(),
+                self.objectUID.replace('/','_'), # on plone root we have we use the path as uid, now we habe to replace the '/' by '_' to provide a good name
                 time.strftime('%Y%m%d-%H%M%S'),
                 str(i).rjust(3, '0')
             )
@@ -308,7 +310,7 @@ class Job(Persistent):
         @rtype:             Plone object
         """
         reference_tool = getToolByName(context, 'reference_catalog')
-        return reference_tool.lookupObject(self.objectUID)
+        return self.is_root and context.portal_url.getPortalObject() or reference_tool.lookupObject(self.objectUID)
 
 
 class Realm(Persistent):

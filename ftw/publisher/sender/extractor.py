@@ -26,13 +26,14 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 # global imports
 import simplejson
-import base64
 
 # zope imports
 from zope.component import getAdapters
 
 #ftw.publisher.core imports
 from ftw.publisher.core.interfaces import IDataCollector
+
+from Products.CMFPlone.interfaces import IPloneSiteRoot
 
 class Extractor(object):
     """
@@ -51,6 +52,7 @@ class Extractor(object):
         @rtype:             string
         """
         self.object = object
+        self.is_root = IPloneSiteRoot.providedBy(self.object)
         data = {}
         if action not in ['delete', 'move']:
             adapters = getAdapters((self.object,),IDataCollector)
@@ -85,20 +87,24 @@ class Extractor(object):
         @return:        metadata dictionary
         @rtype:         dict
         """
-        parent = self.object.aq_inner.aq_parent
         # get object positions
         positions = {}
-        for obj_id in parent.objectIds():
-            positions[obj_id] = parent.getObjectPosition(obj_id)
+
+        if not self.is_root:
+            parent = self.object.aq_inner.aq_parent
+            for obj_id in parent.objectIds():
+                positions[obj_id] = parent.getObjectPosition(obj_id)
         # create metadata dict
+        uid = self.is_root and self.getRelativePath() or self.object.UID()
+        wf_info = self.is_root and 'not state' or self.object.portal_workflow.getInfoFor(self.object, 'review_state')
         data = {
-            'UID' : self.object.UID(),
+            'UID' : uid,
             'id'  : self.object.id,
             'portal_type' : self.object.portal_type,
             'action' : action,
             'physicalPath' : self.getRelativePath(),
             'sibling_positions' : positions,
-            'review_state' : self.object.portal_workflow.getInfoFor(self.object, 'review_state')
+            'review_state' : wf_info
             
         }
         return data
@@ -115,7 +121,10 @@ class Extractor(object):
         portalPath = '/'.join(self.object.portal_url.getPortalObject().getPhysicalPath())
         if not path.startswith(portalPath):
             raise TypeError('Expected object to be in a portal object -.-')
-        return path[len(portalPath):]
+        relative_path = path[len(portalPath):]
+        if relative_path == '':
+            return '/'
+        return relative_path
 
     def convertToJson(self, data):
         """
