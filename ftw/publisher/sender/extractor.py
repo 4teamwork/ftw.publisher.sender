@@ -96,7 +96,10 @@ class Extractor(object):
                 positions[obj_id] = parent.getObjectPosition(obj_id)
         # create metadata dict
         uid = self.is_root and self.getRelativePath() or self.object.UID()
-        wf_info = self.is_root and 'not state' or self.object.portal_workflow.getInfoFor(self.object, 'review_state')
+        try:
+            wf_info = self.object.portal_workflow.getInfoFor(self.object, 'review_state')
+        except Exception:
+            wf_info = ''
         data = {
             'UID' : uid,
             'id'  : self.object.id,

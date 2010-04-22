@@ -22,7 +22,7 @@ class TestPublishObject(PloneTestCase):
         self.assertEquals(queue.getJobs()[0].action,'push')
         
     def test_publish_plonesiteroot(self):
-        self.assertRaises(Exception, PublishObject(self.portal,self.portal.REQUEST))
+        self.assertEquals(isinstance(PublishObject(self.portal,self.portal.REQUEST), PublishObject), True)
 
 
 class TestDeleteObject(PloneTestCase):
@@ -42,6 +42,29 @@ class TestDeleteObject(PloneTestCase):
 
     def test_delete_plonesiteroot(self):
         self.assertRaises(Exception, DeleteObject(self.portal,self.portal.REQUEST))
+
+
+
+# XXX: FAILED to implement suitable PloneFormGen tests
+# Unauthorized...
+# 
+# class TestFormGenIntegration(PloneTestCase):
+#     layer = Layer
+# 
+#     def afterSetUp(self):
+#         # install PloneFormGen
+#         self.loginAsPortalOwner()
+#         
+#         self.portal.invokeFactory('FormFolder', 'ff1')
+#         self.ff1 = getattr(self.folder, 'ff1')
+# 
+# 
+# 
+#     def test_publish_form(self):
+# 
+#         self.assertEquals(1, 0)
+
+
 
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)
