@@ -1,13 +1,14 @@
 Changelog
 =========
 
-1.0b
-----
-* [08.04.2010, mle] implement rename action
 
+1.0b1
+-----
 
-1.0 - Unreleased
-----------------
+* Using z3c.autoinclude for including zcml-dependencies
+  [07.05.2010, jbaumann]
 
-* Initial release
+* implement rename action
+  [08.04.2010, mle]
 
+* Initial Release

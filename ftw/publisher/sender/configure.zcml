@@ -1,41 +1,44 @@
 <configure
-        xmlns="http://namespaces.zope.org/zope"
-        xmlns:five="http://namespaces.zope.org/five"
-		xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-        i18n_domain="ftw.publisher.sender">
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="ftw.publisher.sender">
 
-    <include package=".browser" />
-    <include file="profiles.zcml" />
-    <include file="dependencies.zcml" />
+  <!-- Include configuration for dependencies listed in setup.py -->
+  <include package="z3c.autoinclude" file="meta.zcml" />
+  <includeDependencies package="." />
 
-    <adapter
-            provides=".interfaces.IConfig"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            factory=".persistence.Config"
-            />
+  <include package=".browser" />
+  <include file="profiles.zcml" />
 
-    <adapter
-            provides=".interfaces.IQueue"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            factory=".persistence.Queue"
-            />
+  <adapter
+      provides=".interfaces.IConfig"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      factory=".persistence.Config"
+      />
+
+  <adapter
+      provides=".interfaces.IQueue"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      factory=".persistence.Queue"
+      />
 
 
-	<!-- Upgrade step for the migration -->
-    <genericsetup:upgradeStep
-        sortkey="1"
-        source="publisher"
-        destination="ftw.publisher"
-        title="upgrade from publisher to ftw.publisher"
-        description="Fixes the front page title"
-        profile="ftw.publisher.sender:default"
-        handler=".upgrades.RemoveAnnotations"
-        />
+  <!-- Upgrade step for the migration -->
+  <genericsetup:upgradeStep
+      sortkey="1"
+      source="publisher"
+      destination="ftw.publisher"
+      title="upgrade from publisher to ftw.publisher"
+      description="Fixes the front page title"
+      profile="ftw.publisher.sender:default"
+      handler=".upgrades.RemoveAnnotations"
+      />
 
-    <subscriber
-         for="Products.Archetypes.interfaces.IBaseContent
-              zope.app.container.interfaces.IObjectMovedEvent" 
-         handler=".eventhandlers.add_move_job"
-         />
+  <subscriber
+      for="Products.Archetypes.interfaces.IBaseContent
+           zope.app.container.interfaces.IObjectMovedEvent"
+      handler=".eventhandlers.add_move_job"
+      />
 
 </configure>
