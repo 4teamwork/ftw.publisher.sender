@@ -5,7 +5,10 @@ def add_move_job(obj, event):
     """
     This event handles move and rename jobs
     """
+
     if obj == event.object:
+
+        data = event.__dict__.copy()
         # do nohting, if we are in portal_factory or the item is just created
         if not data['oldName']:
             return
@@ -14,7 +17,6 @@ def add_move_job(obj, event):
         if url_endswith not in ['folder_rename_form', 'folder_paste', 'manage_pasteObjects']:
             return
         #set event info on on obj
-        data = event.__dict__.copy()
         setattr(obj, 'event_information', data)
         move_view = queryMultiAdapter((obj, obj.REQUEST), name="publisher.move")
         move_view(no_response=True)
