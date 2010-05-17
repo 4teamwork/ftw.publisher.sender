@@ -5,6 +5,9 @@ Changelog
 1.0b1
 -----
 
+* Client-Objects are now `IAttributeAnnotable`
+  [17.05.2010, jbaumann]
+
 * Using z3c.autoinclude for including zcml-dependencies
   [07.05.2010, jbaumann]
 

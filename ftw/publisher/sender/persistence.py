@@ -34,6 +34,7 @@ from persistent import Persistent
 from persistent.list import PersistentList
 from zope import interface, component
 from zope.annotation.interfaces import IAnnotations
+from zope.app.annotation.interfaces import IAttributeAnnotatable
 
 # Plone imports
 from Products.CMFCore.utils import getToolByName
@@ -320,6 +321,7 @@ class Realm(Persistent):
     It stores and provides information such as URL or credentials.
     URL+username should be unique!
     """
+    interface.implements(IAttributeAnnotatable)
 
     active = 0
     url = ''
