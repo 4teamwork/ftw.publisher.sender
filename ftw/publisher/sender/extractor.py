@@ -58,10 +58,10 @@ class Extractor(object):
             adapters = getAdapters((self.object,),IDataCollector)
             for name,adapter in adapters:
                 data[name] = adapter.getData()
-        # gets the metadata, we dont use an adapter in this case, 
-        # cause metdata is the most important data-set we need 
+        # gets the metadata, we dont use an adapter in this case,
+        # cause metdata is the most important data-set we need
         data['metadata'] = self.getMetadata(action)
-            
+
         if action == 'move':
             #read out data from event_information attr
             move_data = getattr(self.object,'event_information', None)
@@ -73,7 +73,7 @@ class Extractor(object):
             data['move'] = move_data
             # finally remove event_information from object
             delattr(self.object, 'event_information')
-        
+
         # convert to json
         jsondata = self.convertToJson(data)
         return jsondata
@@ -100,6 +100,13 @@ class Extractor(object):
             wf_info = self.object.portal_workflow.getInfoFor(self.object, 'review_state')
         except Exception:
             wf_info = ''
+        # get schema path
+        if self.is_root:
+            schema_path = None
+        else:
+            schema_path = '.'.join((self.object.__module__,
+                                    self.object.__class__.__name__,
+                                    'schema'))
         data = {
             'UID' : uid,
             'id'  : self.object.id,
@@ -107,9 +114,9 @@ class Extractor(object):
             'action' : action,
             'physicalPath' : self.getRelativePath(),
             'sibling_positions' : positions,
-            'review_state' : wf_info
-            
-        }
+            'review_state' : wf_info,
+            'schema_path': schema_path,
+            }
         return data
 
 
