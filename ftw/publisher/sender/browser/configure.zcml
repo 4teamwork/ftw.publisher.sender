@@ -10,21 +10,21 @@
             name="publisher.publish"
             for="*"
             class=".views.PublishObject"
-            permission="cmf.ReviewPortalContent"
+            permission="zope2.View"
             />
 
     <browser:page
             name="publisher.move"
             for="*"
             class=".views.MoveObject"
-            permission="cmf.ReviewPortalContent"
+            permission="zope2.View"
             />
 
     <browser:page
             name="publisher.delete"
             for="*"
             class=".views.DeleteObject"
-            permission="cmf.ReviewPortalContent"
+            permission="zope2.View"
             />
 
     <browser:page
