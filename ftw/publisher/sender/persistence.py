@@ -119,7 +119,8 @@ class Config(object):
         """
         path = self.annotations.get('publisher-dataFolder', None)
         if not path:
-            path = os.path.join(os.environ['INSTANCE_HOME'], 'var', 'publisher')
+            path = os.path.join(os.environ['CLIENT_HOME'], '..',
+                                'var','publisher')
             self.setDataFolder(path)
         # create if not existing
         if not os.path.exists(path):
