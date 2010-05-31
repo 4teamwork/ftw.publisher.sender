@@ -1,12 +1,15 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="ftw.publisher.sender">
 
   <!-- Include configuration for dependencies listed in setup.py -->
   <include package="z3c.autoinclude" file="meta.zcml" />
   <includeDependencies package="." />
+
+  <i18n:registerTranslations directory="locales" />
 
   <include package=".browser" />
   <include file="profiles.zcml" />
