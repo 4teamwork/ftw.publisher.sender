@@ -73,7 +73,7 @@ class PublishObject(BrowserView):
         
         # status message
         if msg is None:
-            msg = 'This object has been added to the queue.'
+            msg = _(u'This object has been added to the queue.')
         IStatusMessage(self.request).addStatusMessage(
                 msg,
                 type='info'

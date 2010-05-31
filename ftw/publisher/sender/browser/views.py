@@ -39,6 +39,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.sender.persistence import Queue, Config
 from ftw.publisher.sender.utils import sendJsonToRealm
 from ftw.publisher.sender import getLogger
+from ftw.publisher.sender import message_factory as _
 from ftw.publisher.core import states
 
 # event
@@ -82,7 +83,7 @@ class PublishObject(BrowserView):
         ))
         # status message
         if msg is None:
-            msg = 'This object has been added to the queue.'
+            msg = _(u'This object has been added to the queue.')
         IStatusMessage(self.request).addStatusMessage(
                 msg,
                 type='info'
@@ -121,7 +122,7 @@ class MoveObject(BrowserView):
         ))
         # status message
         if msg is None:
-            msg = 'Object move/rename action has been added to the queue.'
+            msg = _(u'Object move/rename action has been added to the queue.')
         IStatusMessage(self.request).addStatusMessage(
                 msg,
                 type='info'
@@ -163,7 +164,7 @@ class DeleteObject(BrowserView):
         ))
         # status message
         if msg is None:
-            msg = 'This object will be deleted at the remote sites.'
+            msg = _(u'This object will be deleted at the remote sites.')
         IStatusMessage(self.request).addStatusMessage(
                 msg,
                 type='info'

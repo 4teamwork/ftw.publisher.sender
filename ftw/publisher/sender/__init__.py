@@ -25,6 +25,9 @@
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 from ftw.publisher.core.utils import getPublisherLogger
+from zope.i18nmessageid import MessageFactory
+
+message_factory = MessageFactory('ftw.publisher.sender')
 
 def getLogger():
     """
