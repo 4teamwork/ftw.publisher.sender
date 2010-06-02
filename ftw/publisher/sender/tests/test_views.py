@@ -45,24 +45,20 @@ class TestDeleteObject(PloneTestCase):
 
 
 
-# XXX: FAILED to implement suitable PloneFormGen tests
-# Unauthorized...
-# 
-# class TestFormGenIntegration(PloneTestCase):
-#     layer = Layer
-# 
-#     def afterSetUp(self):
-#         # install PloneFormGen
-#         self.loginAsPortalOwner()
-#         
-#         self.portal.invokeFactory('FormFolder', 'ff1')
-#         self.ff1 = getattr(self.folder, 'ff1')
-# 
-# 
-# 
-#     def test_publish_form(self):
-# 
-#         self.assertEquals(1, 0)
+class TestFormGenIntegration(PloneTestCase):
+    layer = Layer
+
+    def afterSetUp(self):
+        #self.loginAsPortalOwner()
+        #import pdb; pdb.set_trace( )
+        self.folder.invokeFactory('FormFolder', 'ff1')
+        self.ff1 = getattr(self.folder, 'ff1')
+
+
+
+    def test_publish_form(self):
+
+        self.assertEquals(1, 0)
 
 
 

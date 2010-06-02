@@ -32,8 +32,8 @@ from zope.component import getAdapters
 
 #ftw.publisher.core imports
 from ftw.publisher.core.interfaces import IDataCollector
-
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from zExceptions import NotFound
 
 class Extractor(object):
     """
@@ -89,11 +89,16 @@ class Extractor(object):
         """
         # get object positions
         positions = {}
-
         if not self.is_root:
             parent = self.object.aq_inner.aq_parent
             for obj_id in parent.objectIds():
-                positions[obj_id] = parent.getObjectPosition(obj_id)
+                try:
+                    positions[obj_id] = parent.getObjectPosition(obj_id)
+                except NotFound:
+                    # catch notfound, some zope objects (ex. syndication_information of a topic)
+                    # has no getObjectPosition
+                    pass
+                    
         # create metadata dict
         uid = self.is_root and self.getRelativePath() or self.object.UID()
         try:
