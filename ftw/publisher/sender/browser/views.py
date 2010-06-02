@@ -27,9 +27,12 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 # python imports
 from StringIO import StringIO
 import logging
+import traceback
+import sys
 
 # zope imports
 from Products.Five import BrowserView
+import transaction
 
 # plone imports
 from Products.CMFPlone.interfaces import IPloneSiteRoot
@@ -38,7 +41,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 # publisher imports
 from ftw.publisher.sender.persistence import Queue, Config
 from ftw.publisher.sender.utils import sendJsonToRealm
-from ftw.publisher.sender import getLogger
+from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
 from ftw.publisher.core import states
 
@@ -80,14 +83,14 @@ class PublishObject(BrowserView):
                 'push',
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
-        ))
+                ))
         # status message
         if msg is None:
             msg = _(u'This object has been added to the queue.')
         IStatusMessage(self.request).addStatusMessage(
-                msg,
-                type='info'
-        )
+            msg,
+            type='info'
+            )
         if not no_response:
             return self.request.RESPONSE.redirect('./view')
 
@@ -119,14 +122,14 @@ class MoveObject(BrowserView):
                 'move',
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
-        ))
+                ))
         # status message
         if msg is None:
             msg = _(u'Object move/rename action has been added to the queue.')
         IStatusMessage(self.request).addStatusMessage(
-                msg,
-                type='info'
-        )
+            msg,
+            type='info'
+            )
         if not no_response:
             return self.request.RESPONSE.redirect('./view')
 
@@ -161,14 +164,14 @@ class DeleteObject(BrowserView):
                 'delete',
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
-        ))
+                ))
         # status message
         if msg is None:
             msg = _(u'This object will be deleted at the remote sites.')
         IStatusMessage(self.request).addStatusMessage(
-                msg,
-                type='info'
-        )
+            msg,
+            type='info'
+            )
         if not no_response:
             return self.request.RESPONSE.redirect('./view')
 
@@ -189,6 +192,7 @@ class ExecuteQueue(BrowserView):
         @return:        Redirect to object`s default view
         """
         self.logger = getLogger()
+        self.error_logger = getErrorLogger()
         # register our own logging handler for returning logs afterwards
         logStream = StringIO()
         logHandler = logging.StreamHandler(logStream)
@@ -210,7 +214,7 @@ class ExecuteQueue(BrowserView):
         log = logStream.read()
         del logStream
         del logHandler
-        
+
         return log
 
     def getActiveRealms(self):
@@ -235,16 +239,23 @@ class ExecuteQueue(BrowserView):
                 jobs>BATCH_SIZE and BATCH_SIZE or jobs,
                 self.queue.countJobs(),
                 len(self.getActiveRealms()),
-        ))
+                ))
         while self.queue.countJobs()>0 and (BATCH_SIZE<1 or jobCounter<BATCH_SIZE):
             # get job from queue
             job = self.queue.popJob()
-            # execute job
-            self.executeJob(job)
-            # remove cache file from file system / delete job
-            job.removeJob()
-            jobCounter += 1
-            
+            try:
+                # execute job
+                self.executeJob(job)
+            except:
+                # print the exception to the publisher error log
+                exc = ''.join(traceback.format_exception(*sys.exc_info()))
+                self.error_logger.error(exc)
+            else:
+                # remove cache file from file system / delete job
+                job.removeJob()
+                jobCounter += 1
+                transaction.commit(1)
+
     def executeJob(self, job):
         """
         Executes a Job: sends the job to all available realms.
@@ -260,16 +271,24 @@ class ExecuteQueue(BrowserView):
                 job.objectTitle,
                 job.objectPath,
                 job.objectUID,
-        ))
+                ))
         self.logger.info('... request data length: %i' % len(json))
         for realm in self.getActiveRealms():
             self.logger.info('... to realm %s' % (
                     realm.url,
-            ))
+                    ))
             # send data to each realm
             state = sendJsonToRealm(json, realm, 'publisher.receive')
             if isinstance(state, states.ErrorState):
                 self.logger.error('... got result: %s' % state.toString())
+                self.error_logger.error('executing "%s" on "%s" (at %s | UID %s)' % (
+                        job.action,
+                        job.objectTitle,
+                        job.objectPath,
+                        job.objectUID,
+                        ))
+                self.error_logger.error('... got result: %s' % state.toString())
+                self.queue.appendJob(job)
             else:
                 self.logger.info('... got result: %s' % state.toString())
 

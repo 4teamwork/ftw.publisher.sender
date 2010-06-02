@@ -24,7 +24,7 @@
 #
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
-from ftw.publisher.core.utils import getPublisherLogger
+from ftw.publisher.core.utils import getPublisherLogger, getPublisherErrorLogger
 from zope.i18nmessageid import MessageFactory
 
 message_factory = MessageFactory('ftw.publisher.sender')
@@ -35,3 +35,8 @@ def getLogger():
     @return: Logging instance
     """
     return getPublisherLogger('ftw.publisher.sender')
+
+def getErrorLogger():
+    """ Returns a error log instance, which loggs into the error log
+    """
+    return getPublisherErrorLogger('ftw.publisher.sender')
