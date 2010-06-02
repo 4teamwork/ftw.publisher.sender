@@ -44,7 +44,7 @@
                         </td>
                         <td tal:content="job/action" />
                         <td tal:content="job/username" />
-                        <td tal:define="length python:len(job.getData())"
+                        <td tal:define="length job/getSize"
                                 tal:content="string:${length} Bytes"/>
                     </tr>
                 </tal:repeat>

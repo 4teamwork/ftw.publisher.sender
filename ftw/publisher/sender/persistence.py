@@ -285,6 +285,12 @@ class Job(Persistent):
         f.close()
         self.dataFile = file
 
+    def getSize(self):
+        try:
+            return len(self.getData())
+        except IOError:
+            return -1
+
     def getData(self):
         """
         Loads the JSON-data from the cache file and returns
