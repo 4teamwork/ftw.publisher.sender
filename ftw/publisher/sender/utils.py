@@ -26,11 +26,14 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 # global imports
 import os.path
-import urllib, urllib2, base64
+import urllib
+import urllib2
+import base64
 
 # publisher imports
 from ftw.publisher.sender.persistence import Realm
 from ftw.publisher.core import communication
+
 
 def sendJsonToRealm(json, realm, serverAction):
     """
@@ -51,6 +54,7 @@ def sendJsonToRealm(json, realm, serverAction):
     html = sendRequestToRealm(data, realm, serverAction)
     return communication.parseResponse(html)
 
+
 def sendRequestToRealm(data, realm, serverAction):
     """
     Makes a HTTP-Request to a realm and sends the given data on
@@ -70,11 +74,58 @@ def sendRequestToRealm(data, realm, serverAction):
     credentials = ':'.join([realm.username.encode('hex'), realm.password.encode('hex')])
     credentials = str(base64.encodestring(credentials)).strip()
     headers = {
-            'User-Agent'            : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
-            'Content-Type'          : 'application/x-www-form-urlencoded',
-            'Cookie'                : '__ac=' + credentials,
-    }
+        'User-Agent'            : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
+        'Content-Type'          : 'application/x-www-form-urlencoded',
+        'Cookie'                : '__ac=' + credentials,
+        }
     request = urllib2.Request(url, urllib.urlencode(data), headers)
     response = urllib2.urlopen(request)
     return response.read()
 
+
+def aggressive_decode(value, encoding='utf-8'):
+    if isinstance(value, unicode):
+        return value
+    other_encodings = filter(lambda e:e is not encoding, [
+            'utf8',
+            'iso-8859-1',
+            'latin1',
+            ])
+    encodings = [encoding] + other_encodings
+    if not isinstance(value, str):
+        value = str(value)
+    for enc in encodings:
+        try:
+            return value.decode(enc)
+        except UnicodeDecodeError:
+            pass
+    raise
+
+
+def recursive_aggressive_decode(value):
+    # str types
+    if isinstance(value, str) or isinstance(value, unicode):
+        return aggressive_decode(value)
+
+    # lists tuples sets
+    if type(value) in (list, tuple, set):
+        nval = []
+        for sval in value:
+            nval.append(recursive_aggressive_decode(sval))
+        if isinstance(value, tuple):
+            return tuple(nval)
+        elif isinstance(value, set):
+            return set(nval)
+        return nval
+
+    # dicts
+    if isinstance(value, dict):
+        nval = {}
+        for key, sval in value.items():
+            key = recursive_aggressive_decode(key)
+            sval = recursive_aggressive_decode(sval)
+            nval[key] = sval
+        return nval
+
+    # others
+    return value

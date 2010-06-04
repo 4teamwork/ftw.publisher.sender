@@ -149,5 +149,8 @@ class Extractor(object):
         @return:        JSON
         @rtype:         string
         """
+        # circular import aware
+        from ftw.publisher.sender.utils import recursive_aggressive_decode
+        data = recursive_aggressive_decode(data)
         return simplejson.dumps(data, sort_keys=True)
 
