@@ -5,6 +5,9 @@ Changelog
 1.0b1
 -----
 
+* Added modification date to medata: it will be set by the receiver
+  [09.06.2010, jbaumann]
+
 * Fixed encoding problem: the dumped data should always contain unicode strings
   [04.06.2010, jbaumann]
 

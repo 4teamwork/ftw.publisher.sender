@@ -112,6 +112,10 @@ class Extractor(object):
             schema_path = '.'.join((self.object.__module__,
                                     self.object.__class__.__name__,
                                     'schema'))
+        try:
+            modifiedDate = str(self.object.modified())
+        except AttributeError:
+            modifiedDate = None
         data = {
             'UID' : uid,
             'id'  : self.object.id,
@@ -121,6 +125,7 @@ class Extractor(object):
             'sibling_positions' : positions,
             'review_state' : wf_info,
             'schema_path': schema_path,
+            'modified': modifiedDate,
             }
         return data
 
