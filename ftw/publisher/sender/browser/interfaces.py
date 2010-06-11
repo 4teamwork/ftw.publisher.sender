@@ -29,25 +29,25 @@ from zope.interface import Interface
 
 class IRealmSchema(Interface):
     active = schema.Bool(
-            title = u'Active',
-    )
+        title = u'Active',
+        )
     url = schema.URI(
-            title = u'URL to the Plone-Site',
-    )
+        title = u'URL to the Plone-Site',
+        )
     username = schema.TextLine(
-            title = u'Username',
-    )
+        title = u'Username',
+        )
     password = schema.Password(
-            title = u'Password',
-    )
+        title = u'Password',
+        )
 
 class IEditRealmSchema(IRealmSchema):
 
     id = schema.TextLine(
-            title = u'id',
-    )
+        title = u'id',
+        )
     password = schema.Password(
-            title = u'Password',
-            required = False,
-    )
+        title = u'Password',
+        required = False,
+        )
 
