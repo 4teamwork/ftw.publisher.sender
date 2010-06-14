@@ -26,6 +26,11 @@
       factory=".persistence.Queue"
       />
 
+  <adapter
+      provides=".interfaces.IPathBlacklist"
+      for="*"
+      factory=".adapters.PathBlacklist"
+      />
 
   <!-- Upgrade step for the migration -->
   <genericsetup:upgradeStep

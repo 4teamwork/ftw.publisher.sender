@@ -1,107 +1,116 @@
 <configure
-        xmlns="http://namespaces.zope.org/zope"
-        xmlns:browser="http://namespaces.zope.org/browser"
-        xmlns:five="http://namespaces.zope.org/five"
-        xmlns:zcml="http://namespaces.zope.org/zcml"
-        i18n_domain="ftw.publisher.sender">
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="ftw.publisher.sender">
 
 
-    <browser:page
-            name="publisher.publish"
-            for="*"
-            class=".views.PublishObject"
-            permission="zope2.View"
-            />
+  <browser:page
+      name="publisher.publish"
+      for="*"
+      class=".views.PublishObject"
+      permission="zope2.View"
+      />
 
-    <browser:page
-            name="publisher.move"
-            for="*"
-            class=".views.MoveObject"
-            permission="zope2.View"
-            />
+  <browser:page
+      name="publisher.move"
+      for="*"
+      class=".views.MoveObject"
+      permission="zope2.View"
+      />
 
-    <browser:page
-            name="publisher.delete"
-            for="*"
-            class=".views.DeleteObject"
-            permission="zope2.View"
-            />
+  <browser:page
+      name="publisher.delete"
+      for="*"
+      class=".views.DeleteObject"
+      permission="zope2.View"
+      />
 
-    <browser:page
-            name="publisher.executeQueue"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".views.ExecuteQueue"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher.executeQueue"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".views.ExecuteQueue"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.ConfigView"
-            template="publisherConfig.pt"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.ConfigView"
+      template="publisherConfig.pt"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-listJobs"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.ListJobs"
-            template="listJobs.pt"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-listJobs"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.ListJobs"
+      template="listJobs.pt"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-cleanJobs"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.CleanJobs"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-cleanJobs"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.CleanJobs"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-executeJobs"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.ExecuteJobs"
-            template="executeJobs.pt"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-executeJobs"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.ExecuteJobs"
+      template="executeJobs.pt"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-addRealm"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.AddRealm"
-            template="addRealm.pt"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-addRealm"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.AddRealm"
+      template="addRealm.pt"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-editRealm"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.EditRealm"
-            template="editRealm.pt"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-editRealm"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.EditRealm"
+      template="editRealm.pt"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-deleteRealm"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.DeleteRealm"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-deleteRealm"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.DeleteRealm"
+      permission="cmf.ManagePortal"
+      />
 
-    <browser:page
-            name="publisher-config-testRealm"
-            for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-            class=".configlet.TestRealm"
-            permission="cmf.ManagePortal"
-            />
+  <browser:page
+      name="publisher-config-testRealm"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.TestRealm"
+      permission="cmf.ManagePortal"
+      />
 
-    <!-- special publisher view for PloneFormGen -->
-    <browser:page
-            zcml:condition="installed Products.PloneFormGen"
-            name="publisher.publish"
-            for="Products.PloneFormGen.interfaces.IPloneFormGenForm"
-            class=".publishformgen.PublishObject"
-            permission="cmf.ReviewPortalContent"
-            />
+  <!-- special publisher view for PloneFormGen -->
+  <browser:page
+      zcml:condition="installed Products.PloneFormGen"
+      name="publisher.publish"
+      for="Products.PloneFormGen.interfaces.IPloneFormGenForm"
+      class=".publishformgen.PublishObject"
+      permission="cmf.ReviewPortalContent"
+      />
+
+  <!-- path blacklist -->
+  <browser:page
+      name="publisher-config-blacklist"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".blacklist.PathBlacklistView"
+      template="blacklist_listing.pt"
+      permission="cmf.ManagePortal"
+      />
 
 </configure>

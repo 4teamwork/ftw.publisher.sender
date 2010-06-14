@@ -44,6 +44,11 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from interfaces import IConfig, IQueue
 from ftw.publisher.sender import extractor
 
+_marker = object()
+
+ANNOTATIONS_PATH_BLACKLIST_KEY = 'publisher-path-blacklist'
+
+
 class Config(object):
     """
     The Config object is registered via zcml as adapter. It stores the
@@ -120,8 +125,7 @@ class Config(object):
         path = self.annotations.get('publisher-dataFolder', None)
         if not path:
             path = os.path.join('/'.join(
-                    os.environ['CLIENT_HOME'].split('/')[:-2] + \
-                        ['var', 'publisher']))
+                    os.environ['CLIENT_HOME'].split('/')[:-2] + ['var', 'publisher']))
             self.setDataFolder(path)
         # create if not existing
         if not os.path.exists(path):
@@ -136,6 +140,53 @@ class Config(object):
         @return:        None
         """
         self.annotations['publisher-dataFolder'] = path
+
+    def getPathBlacklist(self):
+        """
+        Returns a list of paths which are blacklistet and are not
+        touched by the publisher.
+        """
+        blacklist = self.annotations.get(ANNOTATIONS_PATH_BLACKLIST_KEY, _marker)
+        if blacklist is _marker:
+            blacklist = PersistentList()
+            self.setPathBlacklist(blacklist)
+        return blacklist
+
+    def setPathBlacklist(self, blacklist):
+        """
+        Sets the path blacklist
+        """
+        if not isinstance(blacklist, PersistentList):
+            raise ValueError('Expected PersistentList, got %s' % `blacklist`)
+        self.annotations[ANNOTATIONS_PATH_BLACKLIST_KEY] = blacklist
+
+    def appendPathToBlacklist(self, path):
+        """
+        Appends a path to the blacklist, if it isnt already blacklisted...
+        """
+        if type(path) not in (str, unicode):
+            raise ValueError('Expected string, got %s' % `path`)
+        path = path.strip()
+        blacklist = self.getPathBlacklist()
+        if path not in blacklist:
+            blacklist.append(path)
+            self.setPathBlacklist(blacklist)
+
+    def removePathFromBlacklist(self, path):
+        """
+        Removes a path from the path blacklist
+        """
+        if type(path) not in (str, unicode):
+            raise ValueError('Expected string, got %s' % `path`)
+        path = path.strip()
+        blacklist = self.getPathBlacklist()
+        if path in blacklist:
+            blacklist.remove(path)
+            return True
+        else:
+            return False
+
+
 
 class Queue(object):
     """
@@ -273,7 +324,7 @@ class Job(Persistent):
                 self.objectUID.replace('/','_'), # on plone root we have we use the path as uid, now we habe to replace the '/' by '_' to provide a good name
                 time.strftime('%Y%m%d-%H%M%S'),
                 str(i).rjust(3, '0')
-            )
+                )
             file = os.path.join(dir, filename)
             if os.path.exists(file):
                 file = None

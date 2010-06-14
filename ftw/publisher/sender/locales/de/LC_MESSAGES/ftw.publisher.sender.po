@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-05-31 12:25+0000\n"
+"POT-Creation-Date: 2010-06-14 12:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,17 +12,67 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:125
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:149
 msgid "Object move/rename action has been added to the queue."
 msgstr "Verschiebung/Umbenennung des Objekts wurde zur Warteschlange hinzugefügt."
 
 #: ftw.publisher.sender/ftw/publisher/sender/browser/publishformgen.py:76
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:86
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:100
 msgid "This object has been added to the queue."
 msgstr "Das Objekt wurde zur Warteschlange hinzugefügt."
 
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:167
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:201
 msgid "This object will be deleted at the remote sites."
 msgstr "Das Objekt wird auf den entfernten Seiten gelöscht."
+
+#. Default: "Add path"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:18
+msgid "button_add_path"
+msgstr "Hinzufügen"
+
+#. Default: "Add path"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:15
+msgid "form_label_add_path"
+msgstr "Pfad hinzufügen"
+
+#. Default: "Path Blacklist"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:17
+msgid "heading_path_blacklist"
+msgstr "Pfad Blacklist"
+
+#. Default: "Add a exact or a wildcard path. Valid pfaths are: \"/platform/foo\", \"/platform/foo/*\" or \"/platform/foo*\" invalid are paths like \"/platform/foo*bar\" or \"foo/bar\"."
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:30
+msgid "help_add_path"
+msgstr "Pfade können genau sein oder mit einem *-Zeichen enden (wildcard). Gültige Pfad: \"/platform/foo\", \"/platform/foo/*\" oder \"/platform/foo*\". Ungültige Pfade: \"/platform/foo*bar\", \"foo/bar\"."
+
+#. Default: "Path added"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:29
+msgid "info_path_added"
+msgstr "Pfad hinzugefügt"
+
+#. Default: "Removed path ${path} from blacklist"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:47
+msgid "info_path_removed"
+msgstr "Pfad ${path} von Blacklist gelöscht"
+
+#. Default: "Path"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:61
+msgid "label_path"
+msgstr "Pfad"
+
+#. Default: "Blacklisted paths"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:41
+msgid "legend_blacklisted_paths"
+msgstr "Ignorierte Pfade"
+
+#. Default: "Add path to blacklist"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:29
+msgid "legend_blacklst_add_path"
+msgstr "Pfad zu Blacklist hinzufügen"
+
+#. Default: "Path Blacklist"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:40
+msgid "link_path_blacklist"
+msgstr "Blacklist"
 
 

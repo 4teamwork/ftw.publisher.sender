@@ -36,7 +36,10 @@
                 <dd>
                     <a href="@@publisher-config-listJobs" class="standalone">List jobs</a><br />
                     <a href="@@publisher-config-cleanJobs" class="standalone" onclick="return confirm('Are you sure to delete all jobs in the queue?')">Clean queue</a><br />
-                    <a href="@@publisher-config-executeJobs" class="standalone">Execute Jobs</a>
+                    <a href="@@publisher-config-executeJobs" class="standalone">Execute Jobs</a><br />
+                    <a href="@@publisher-config-blacklist" class="standalone"
+                       i18n:translate="link_path_blacklist"
+                       i18n:domain="ftw.publisher.sender">Path Blacklist</a><br />
                 </dd>
             <dl>
         </fieldset>

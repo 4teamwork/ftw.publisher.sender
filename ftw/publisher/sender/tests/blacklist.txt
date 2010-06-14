@@ -1,0 +1,68 @@
+
+>>> from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig
+>>> from persistent.list import PersistentList
+
+
+>>> portal = self.folder.portal_url.getPortalObject()
+>>> config = IConfig(portal)
+>>> config
+<ftw.publisher.sender.persistence.Config object at ...>
+>>> blacklist = IPathBlacklist(portal)
+>>> blacklist
+<ftw.publisher.sender.adapters.PathBlacklist object at ...>
+
+
+>>> config.setPathBlacklist(PersistentList())
+>>> len(config.getPathBlacklist())
+0
+>>> config.appendPathToBlacklist('hans')
+>>> 'hans' in config.getPathBlacklist()
+True
+>>> len(config.getPathBlacklist())
+1
+
+>>> config.setPathBlacklist(PersistentList())
+>>> config.appendPathToBlacklist('/foo/bar/one/two/three')
+>>> blacklist.is_blacklisted('/foo/bar')
+False
+>>> blacklist.is_blacklisted('/foo/bar/one/two')
+False
+>>> blacklist.is_blacklisted('/foo/bar/one/two/three')
+True
+
+
+>>> config.setPathBlacklist(PersistentList())
+>>> config.appendPathToBlacklist('/foo/bar/one/*')
+>>> blacklist.is_blacklisted('/foo/bar')
+False
+>>> blacklist.is_blacklisted('/foo/bar/one/two')
+True
+>>> blacklist.is_blacklisted('/foo/bar/oneXXXXX')
+False
+>>> blacklist.is_blacklisted(path='/foo/bar/one/two/three')
+True
+
+>>> config.setPathBlacklist(PersistentList())
+>>> config.appendPathToBlacklist('/foo/bar/one*')
+>>> blacklist.is_blacklisted('/foo/bar')
+False
+>>> blacklist.is_blacklisted('/foo/bar/one')
+True
+>>> blacklist.is_blacklisted('/foo/bar/one/two')
+False
+>>> blacklist.is_blacklisted('/foo/bar/oneXXXX')
+True
+
+>>> blacklist.is_blacklisted(portal)
+False
+>>> config.appendPathToBlacklist('/'.join(portal.getPhysicalPath()))
+>>> blacklist.is_blacklisted(portal)
+True
+
+>>> config.appendPathToBlacklist('/demo/one*two')
+>>> blacklist.is_blacklisted('/demo/one')
+False
+>>> blacklist.is_blacklisted('/demo/oneXtwo')
+False
+>>> blacklist.is_blacklisted('/demo/one/two')
+False

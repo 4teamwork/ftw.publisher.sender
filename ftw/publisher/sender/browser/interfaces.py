@@ -24,8 +24,10 @@
 #
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
+from ftw.publisher.sender import message_factory as _
 from zope import schema
 from zope.interface import Interface
+
 
 class IRealmSchema(Interface):
     active = schema.Bool(
@@ -41,6 +43,7 @@ class IRealmSchema(Interface):
         title = u'Password',
         )
 
+
 class IEditRealmSchema(IRealmSchema):
 
     id = schema.TextLine(
@@ -51,3 +54,11 @@ class IEditRealmSchema(IRealmSchema):
         required = False,
         )
 
+
+class IBlacklistPathSchema(Interface):
+
+    path = schema.TextLine(
+        title = _(u'label_path',
+                  default=u'Path'),
+        required=True
+        )

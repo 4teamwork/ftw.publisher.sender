@@ -5,6 +5,9 @@ Changelog
 1.0b1
 -----
 
+* Implemented blacklist support
+  [14.06.2010, jbaumann]
+
 * Added modification date to medata: it will be set by the receiver
   [09.06.2010, jbaumann]
 

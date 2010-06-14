@@ -35,6 +35,7 @@ setup(name='ftw.publisher.sender',
         'simplejson',
         'z3c.autoinclude',
         'z3c.form',
+        'ftw.table',
         ],
       extras_require={
         'tests_require': tests_require,

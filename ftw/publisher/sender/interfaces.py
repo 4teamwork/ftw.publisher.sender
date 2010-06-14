@@ -43,3 +43,13 @@ class IAfterPushEvent(IObjectEvent):
     """
     Event gets fired, after object is pushed to the realm
     """
+
+class IPathBlacklist(interface.Interface):
+    """ Adapter interface for the PathBlacklist adapter which
+    knows if the object is blacklisted.
+    """
+
+    def is_blacklisted(self, context=None, path=None):
+        """ Checks if the adapter the context, the given
+        `context` or the given `path` is blacklisted.
+        """

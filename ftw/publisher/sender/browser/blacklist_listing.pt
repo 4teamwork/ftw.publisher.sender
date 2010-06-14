@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/prefs_main_template/macros/master"
+      i18n:domain="ftw.publisher.sender">
+  <body>
+
+    <div metal:fill-slot="prefs_configlet_content">
+      <div class="documentContent" id="content">
+
+        <div metal:use-macro="here/global_statusmessage/macros/portal_message">
+          Portal status message
+        </div>
+
+        <h1 class="documentFirstHeading"
+            i18n:translate="heading_path_blacklist">Path Blacklist</h1>
+
+        <a href=""
+           class="link-parent"
+           tal:attributes="href string:$portal_url/@@publisher-config">
+          Up to Publisher Control Panel
+        </a>
+
+        <br />
+
+        <fieldset>
+          <legend i18n:translate="legend_blacklst_add_path">Add path to blacklist</legend>
+          <p class="descreet" i18n:translate="help_add_path">
+            Add a exact or a wildcard path. Valid pfaths are: "/platform/foo",
+            "/platform/foo/*" or "/platform/foo*" invalid are paths like
+            "/platform/foo*bar" or "foo/bar".
+          </p>
+          <tal:FORM tal:replace="structure view/render_add_form" />
+        </fieldset>
+
+        <br />
+
+        <fieldset>
+          <legend i18n:translate="legend_blacklisted_paths">Blacklisted paths</legend>
+          <tal:TABLE tal:replace="structure view/render_table" />
+        </fieldset>
+
+      </div>
+    </div>
+
+  </body>
+</html>
