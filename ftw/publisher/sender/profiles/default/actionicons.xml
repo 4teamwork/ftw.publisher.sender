@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<action-icons>
+
+  <action-icon category="controlpanel"
+               action_id="publisher-config"
+               title="Publisher Control Panel"
+               priority="0"
+               icon_expr="++resource++ftw.publisher.sender/publisher.gif" />
+
+</action-icons>

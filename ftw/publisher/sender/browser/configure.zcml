@@ -5,6 +5,10 @@
     xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="ftw.publisher.sender">
 
+  <browser:resourceDirectory
+      name="ftw.publisher.sender"
+      directory="resources"
+      />
 
   <browser:page
       name="publisher.publish"
