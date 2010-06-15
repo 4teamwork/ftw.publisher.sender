@@ -27,20 +27,24 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 # python imports
 import md5
 from persistent.list import PersistentList
+import datetime
 
 # Zope imports
 from Products.Five import BrowserView
 from z3c.form import form, field, button
 from z3c.form import interfaces
+from zope.component import getUtility
 
 # plone imports
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.z3cform import z2
+from ftw.table.interfaces import ITableGenerator
 
 # publisher imports
 from ftw.publisher.sender.persistence import Queue, Config, Realm
 from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
 from ftw.publisher.sender.utils import sendRequestToRealm
+from ftw.publisher.core import states
 
 # -- Forms
 
@@ -48,7 +52,7 @@ class CreateRealmForm(form.Form):
     """
     The CreateRealmForm is a z3c-form used for adding a new Realm
     instance to the publisher configuration.
-    
+
     @cvar fields:           fields from the schema IRealmSchema
     @cvar ignoreContext:    do not use context (z3c-form setting)
     @cvar label:            label of the form
@@ -72,16 +76,16 @@ class CreateRealmForm(form.Form):
             for realm in config.getRealms():
                 if realm.url==data['url'] and realm.username==data['username']:
                     self.statusMessage(
-                            'This URL / Username combination already exists!',
-                            'error'
-                    )
+                        'This URL / Username combination already exists!',
+                        'error'
+                        )
                     return
             kwargs = {
                 'active' : data['active'] and 1 or 0,
                 'url' : data['url'],
                 'username' : data['username'],
                 'password' : data['password'],
-            }
+                }
             realm = Realm(**kwargs)
             config.appendRealm(realm)
             self.statusMessage('Added realm successfully')
@@ -97,9 +101,9 @@ class CreateRealmForm(form.Form):
         @return:                None
         """
         IStatusMessage(self.request).addStatusMessage(
-                message,
-                type=type
-        )
+            message,
+            type=type
+            )
 
 
 class EditRealmForm(form.EditForm):
@@ -138,8 +142,8 @@ class EditRealmForm(form.EditForm):
                 if realm!=currentRealm:
                     if realm.username==data['username'] and realm.url==data['url']:
                         self.statusMessage(
-                                'This URL / Username combination already exists!',
-                        )
+                            'This URL / Username combination already exists!',
+                            )
                         return
             # update realm
             currentRealm.active = data['active'] and 1 or 0
@@ -152,9 +156,9 @@ class EditRealmForm(form.EditForm):
 
     def statusMessage(self, message, type='info'):
         IStatusMessage(self.request).addStatusMessage(
-                message,
-                type=type
-        )
+            message,
+            type=type
+            )
 
     def makeRealmId(self, realm):
         return md5.md5('%s-%s' % (realm.url, realm.username)).hexdigest()
@@ -186,12 +190,25 @@ class PublisherConfigletView(BrowserView):
 
     def statusMessage(self, message, type='info'):
         IStatusMessage(self.request).addStatusMessage(
-                message,
-                type=type
-        )
-    
+            message,
+            type=type
+            )
+
 
 class ConfigView(PublisherConfigletView):
+
+    def __call__(self, *args, **kwargs):
+        redirect = False
+        if self.request.get('enable-publishing'):
+            self.config.set_publishing_enabled(True)
+            redirect = True
+        elif self.request.get('disable-publishing'):
+            self.config.set_publishing_enabled(False)
+            redirect = True
+
+        if redirect:
+            return self.request.RESPONSE.redirect('./@@publisher-config')
+        return super(ConfigView, self).__call__(*args, **kwargs)
 
     def getQueueSize(self):
         return Queue(self.context).countJobs()
@@ -200,32 +217,32 @@ class ConfigView(PublisherConfigletView):
         """
         Returns a list of realms prepared for the template
         Example: [
-            {
-                'id' : '7815696ecbf1c96e6894b779456d330e',
-                'active' : True,
-                'url' : 'http://localhost:8080/targetSite/',
-                'username' : 'blubb',
-                'odd' : True,
-            },
-            {
-                'id' : 'a67995ad3ec084cb38d32725fd73d9a3',
-                'active' : False,
-                'url' : 'http://localhost:8080/targetSite/',
-                'username' : 'bla',
-                'odd' : False,
-            }
+        {
+        'id' : '7815696ecbf1c96e6894b779456d330e',
+        'active' : True,
+        'url' : 'http://localhost:8080/targetSite/',
+        'username' : 'blubb',
+        'odd' : True,
+        },
+        {
+        'id' : 'a67995ad3ec084cb38d32725fd73d9a3',
+        'active' : False,
+        'url' : 'http://localhost:8080/targetSite/',
+        'username' : 'bla',
+        'odd' : False,
+        }
         ]
         """
         realmlist = []
         for i, realm in enumerate(self.config.getRealms()):
             id = self.makeRealmId(realm)
             realmlist.append({
-                'id' : id,
-                'active' : realm.active,
-                'url' : realm.url,
-                'username' : realm.username,
-                'odd' : not ((i/2)*2==i),
-            })
+                    'id' : id,
+                    'active' : realm.active,
+                    'url' : realm.url,
+                    'username' : realm.username,
+                    'odd' : not ((i/2)*2==i),
+                    })
         return realmlist
 
 
@@ -238,6 +255,137 @@ class ListJobs(PublisherConfigletView):
         return self.queue.getJobs()
 
 
+class ListExecutedJobs(PublisherConfigletView):
+
+    def __call__(self, *args, **kwargs):
+        redirect = False
+        if self.request.get('button.cleanup'):
+            for job in self.queue.get_executed_jobs()[:]:
+                self.queue.remove_executed_job(job)
+                job.removeJob()
+            redirect = True
+
+        if self.request.get('button.delete.successfuls'):
+            for job in self.queue.get_executed_jobs():
+                state = job.get_latest_executed_entry()
+                if isinstance(state, states.SuccessState):
+                    self.queue.remove_executed_job(job)
+                    job.removeJob()
+                redirect = True
+
+        if self.request.get('button.delete.olderthan'):
+            days = int(self.request.get('days'))
+            delta = datetime.timedelta(days)
+            now = datetime.datetime.now()
+            for job in self.queue.get_executed_jobs():
+                xdate = job.executed_list[-1]['date']
+                if xdate + delta < now:
+                    self.queue.remove_executed_job(job)
+                    job.removeJob()
+            redirect = True
+
+        deleteJob = self.request.get('delete.job')
+        if deleteJob:
+            for job in self.queue.get_executed_jobs():
+                if job.get_filename() == deleteJob:
+                    self.queue.remove_executed_job(job)
+                    job.removeJob()
+                    redirect = True
+                    break
+
+        requeueJob = self.request.get('requeue.job')
+        if requeueJob:
+            for job in self.queue.get_executed_jobs():
+                if job.get_filename() == requeueJob:
+                    self.queue.remove_executed_job(job)
+                    job.move_jsonfile_to(self.config.getDataFolder())
+                    self.queue.appendJob(job)
+                    redirect = True
+                    break
+
+        if redirect:
+            url = './@@publisher-config-listExecutedJobs'
+            return self.request.RESPONSE.redirect(url)
+
+        return super(ListExecutedJobs, self).__call__(*args, **kwargs)
+
+    def render_table(self):
+        generator = getUtility(ITableGenerator, 'ftw.tablegenerator')
+        columns = ('Date', 'Title', 'Action', 'State', 'Username', '')
+        return generator.generate(self._get_data(), columns)
+
+    def _get_data(self):
+        for job in self.queue.get_executed_jobs():
+            state = job.get_latest_executed_entry()
+            if isinstance(state, states.ErrorState):
+                colored_state = '<span class="error" style="color:red;">' +\
+                    '%s</span>' % state.__class__.__name__
+            else:
+                colored_state = '<span class="success">%s</span>' % state.__class__.__name__
+            date = 'unknown'
+            try:
+                date = job.executed_list[-1]['date'].strftime('%d.%m.%Y %H:%M')
+            except:
+                pass
+            ctrl = ' '.join((
+                    '<a href="./@@publisher-config-executed-job-details' +\
+                        '?job=%s">Details</a>' % job.get_filename(),
+                    '<a href="./@@publisher-config-listExecutedJobs' +\
+                        '?requeue.job=%s">Queue</a>' % job.get_filename(),
+                    '<a href="./@@publisher-config-listExecutedJobs' +\
+                        '?delete.job=%s">Delete</a>' % job.get_filename(),
+                    ))
+            yield {
+                'Date': date,
+                'Title': '<a href="%s">%s</a>' % (job.objectPath + '/view',
+                                                  job.objectTitle),
+                'Action': job.action,
+                'State': colored_state,
+                'Username': job.username,
+                '': ctrl,
+                }
+
+
+class ExecutedJobDetails(PublisherConfigletView):
+
+    def __call__(self, *args, **kwargs):
+        redirect_to = None
+
+        if self.request.get('button.requeue'):
+            job = self.get_job()
+            self.queue.remove_executed_job(job)
+            job.move_jsonfile_to(self.config.getDataFolder())
+            self.queue.appendJob(job)
+            redirect_to = './@@publisher-config'
+
+        if self.request.get('button.delete'):
+            job = self.get_job()
+            self.queue.remove_executed_job(job)
+            if job.json_file_exists():
+                job.removeJob()
+            redirect_to = './@@publisher-config-listExecutedJobs'
+
+        if self.request.get('button.execute'):
+            job = self.get_job()
+            if job.json_file_exists():
+                portal = self.context.portal_url.getPortalObject()
+                execview = portal.restrictedTraverse('@@publisher.executeQueue')
+                execview.execute_single_job(job)
+            redirect_to = './@@publisher-config-executed-job-details?job=' + \
+                job.get_filename()
+
+        if redirect_to:
+            return self.request.RESPONSE.redirect(redirect_to)
+
+        return super(ExecutedJobDetails, self).__call__(*args, **kwargs)
+
+    def get_job(self):
+        job_filename = self.request.get('job')
+        for job in self.queue.get_executed_jobs():
+            if job.get_filename() == job_filename:
+                return job
+
+
 class CleanJobs(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
@@ -246,11 +394,49 @@ class CleanJobs(PublisherConfigletView):
         return self.request.RESPONSE.redirect('./@@publisher-config')
 
 class ExecuteJobs(PublisherConfigletView):
-    
+
     def __call__(self, *args, **kwargs):
         self.output = self.context.restrictedTraverse('publisher.executeQueue')()
         self.output = self.output.replace('\n','<br/>')
         return super(ExecuteJobs, self).__call__(self, *args, **kwargs)
+
+
+class ExecuteJob(PublisherConfigletView):
+
+    def __call__(self, *args, **kwargs):
+        job = self.get_job()
+        if not job:
+            raise Exception('No job found')
+        portal = self.context.portal_url.getPortalObject()
+        execview = portal.restrictedTraverse('@@publisher.executeQueue')
+        execview.execute_single_job(job)
+        redirect_to = './@@publisher-config-executed-job-details?job=' + \
+            job.get_filename()
+        return self.request.RESPONSE.redirect(redirect_to)
+
+    def get_job(self):
+        job_filename = self.request.get('job')
+        for job in self.queue.getJobs():
+            if job.get_filename() == job_filename:
+                return job
+
+
+class RemoveJob(PublisherConfigletView):
+
+    def __call__(self, *args, **kwargs):
+        job = self.get_job()
+        if not job:
+            raise Exception('No job found')
+        self.queue.removeJob(job)
+        job.removeJob()
+        redirect_to = './@@publisher-config-listJobs'
+        return self.request.RESPONSE.redirect(redirect_to)
+
+    def get_job(self):
+        job_filename = self.request.get('job')
+        for job in self.queue.getJobs():
+            if job.get_filename() == job_filename:
+                return job
 
 
 class AddRealm(PublisherConfigletView):
@@ -317,8 +503,8 @@ class TestRealm(PublisherConfigletView):
                 self.statusMessage('Connection okay')
             else:
                 self.statusMessage(
-                        'Connection failed: %s' % responseText,
-                        'error'
-                )
+                    'Connection failed: %s' % responseText,
+                    'error'
+                    )
         return self.request.RESPONSE.redirect('./@@publisher-config')
 

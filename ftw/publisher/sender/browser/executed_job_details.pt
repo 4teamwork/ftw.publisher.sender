@@ -1,0 +1,93 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="here/prefs_main_template/macros/master"
+      i18n:domain="plone">
+
+  <body>
+
+    <div metal:fill-slot="prefs_configlet_content">
+      <div class="documentContent" id="content">
+        <div metal:use-macro="here/global_statusmessage/macros/portal_message">
+          Portal status message
+        </div>
+
+        <h1 class="documentFirstHeading">Queue</h1>
+
+        <a href=""
+           class="link-parent"
+           tal:attributes="href string:$portal_url/@@publisher-config-listExecutedJobs">
+          Up to executed jobs
+        </a>
+
+        <tal:job tal:define="job view/get_job">
+
+          <form action="./@@publisher-config-executed-job-details" method="POST">
+            <input type="hidden" name="job" tal:attributes="value job/get_filename" />
+            <input type="submit" name="button.requeue" value="Re-Queue" />
+            <input type="submit" name="button.execute" value="Execute" />
+            <input type="submit" name="button.delete" value="Delete" />
+          </form>
+
+          <fieldset>
+            <legend>Infos</legend>
+            <table>
+              <tr>
+                <th>Title</th>
+                <td><a href="" tal:content="job/objectTitle"
+                       tal:attributes="href job/objectPath"></a></td>
+              </tr>
+              <tr>
+                <th>Path</th>
+                <td tal:content="job/objectPath" />
+              </tr>
+              <tr>
+                <th>Action</th>
+                <td tal:content="job/action" />
+              </tr>
+              <tr>
+                <th>Username</th>
+                <td tal:content="job/username" />
+              </tr>
+              <tr>
+                <th>Data length</th>
+                <td><span tal:replace="job/getSize" /> bytes</td>
+              </tr>
+            </table>
+          </fieldset>
+
+          <fieldset tal:condition="job/executed_exception|nothing">
+            <legend>Exceptions when trying to execute</legend>
+            <pre class="exception" tal:content="job/executed_exception" />
+          </fieldset>
+
+          <fieldset tal:condition="job/executed_list|nothing">
+            <legend>Runs</legend>
+
+            <tal:RUN tal:repeat="run job/executed_list">
+              <div class="run">
+                <b tal:content="run/date" /><br />
+                <tal:REALM tal:repeat="entry run/items">
+                  <tal:not_date tal:condition="python:entry[0] != 'date'">
+                    <i>Realm: <span tal:replace="python:entry[0].username" /> @
+                      <span tal:replace="python:entry[0].url" />
+                    </i><br/>
+
+                    <pre class="state" tal:content="python:entry[1].toString()" />
+                  </tal:not_date>
+                </tal:REALM>
+                <hr />
+              </div>
+            </tal:RUN>
+
+          </fieldset>
+
+        </tal:job>
+
+      </div>
+    </div>
+
+  </body>
+</html>

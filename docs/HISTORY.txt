@@ -4,6 +4,19 @@ Changelog
 
 1.0b1
 -----
+
+* Locking while executing queue
+  [15.06.2010, jbaumann]
+
+* Added possiblity to disable automatic publishing in control panel
+  [15.06.2010, jbaumann]
+
+* Added possibility to execute / delete a single job in the queue
+  [15.06.2010, jbaumann]
+
+* Added executed jobs list
+  [15.06.2010, jbaumann]
+
 * Added publisher control panel icon
   [14.06.2010, jbaumann]
 

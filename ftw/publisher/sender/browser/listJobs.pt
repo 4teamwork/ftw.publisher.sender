@@ -31,6 +31,7 @@
                     <th>Action</th>
                     <th>Username</th>
                     <th>Data Length</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -46,6 +47,10 @@
                         <td tal:content="job/username" />
                         <td tal:define="length job/getSize"
                                 tal:content="string:${length} Bytes"/>
+                        <td>
+                          <a tal:attributes="href string:./@@publisher.execute.job?job=${job/get_filename}">Execute</a>
+                          <a tal:attributes="href string:./@@publisher.remove.job?job=${job/get_filename}">Delete</a>
+                        </td>
                     </tr>
                 </tal:repeat>
             </tbody>

@@ -39,6 +39,20 @@
       />
 
   <browser:page
+      name="publisher.execute.job"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.ExecuteJob"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="publisher.remove.job"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".configlet.RemoveJob"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
       name="publisher-config"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.ConfigView"
@@ -54,6 +68,22 @@
       permission="cmf.ManagePortal"
       />
 
+  <browser:page
+    name="publisher-config-listExecutedJobs"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".configlet.ListExecutedJobs"
+    template="list_executed_jobs.pt"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    name="publisher-config-executed-job-details"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".configlet.ExecutedJobDetails"
+    template="executed_job_details.pt"
+    permission="cmf.ManagePortal"
+    />
+  
   <browser:page
       name="publisher-config-cleanJobs"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"

@@ -6,10 +6,10 @@
       metal:use-macro="here/prefs_main_template/macros/master"
       i18n:domain="plone">
 
-<body>
+  <body>
 
-<div metal:fill-slot="prefs_configlet_content">
-    <div class="documentContent" id="content">
+    <div metal:fill-slot="prefs_configlet_content">
+      <div class="documentContent" id="content">
         <div metal:use-macro="here/global_statusmessage/macros/portal_message">
           Portal status message
         </div>
@@ -20,71 +20,87 @@
            class="link-parent"
            tal:attributes="href string:$portal_url/plone_control_panel"
            i18n:translate="label_up_to_plone_setup">
-            Up to Site Setup
+          Up to Site Setup
         </a>
 
         <br />
 
         <fieldset>
-            <legend>Queue</legend>
-            <dl>
-                <dt>Amount of jobs in the queue</dt>
-                <dd tal:content="view/getQueueSize">666666</dd>
-            </dl>
-            <dl>
-                <dt></dt>
-                <dd>
-                    <a href="@@publisher-config-listJobs" class="standalone">List jobs</a><br />
-                    <a href="@@publisher-config-cleanJobs" class="standalone" onclick="return confirm('Are you sure to delete all jobs in the queue?')">Clean queue</a><br />
-                    <a href="@@publisher-config-executeJobs" class="standalone">Execute Jobs</a><br />
-                    <a href="@@publisher-config-blacklist" class="standalone"
-                       i18n:translate="link_path_blacklist"
-                       i18n:domain="ftw.publisher.sender">Path Blacklist</a><br />
-                </dd>
+          <legend>Queue</legend>
+          <dl>
+            <dt>Amount of jobs in the queue</dt>
+            <dd tal:content="view/getQueueSize">666666</dd>
+          </dl>
+          <dl>
+            <dt></dt>
+            <dd>
+              <a href="@@publisher-config-listJobs" class="standalone">List jobs</a><br />
+              <a href="@@publisher-config-listExecutedJobs" class="standalone">List Executed jobs</a><br />
+              <a href="@@publisher-config-cleanJobs" class="standalone" onclick="return confirm('Are you sure to delete all jobs in the queue?')">Clean queue</a><br />
+              <a href="@@publisher-config-executeJobs" class="standalone">Execute Jobs</a><br />
+              <a href="@@publisher-config-blacklist" class="standalone"
+                 i18n:translate="link_path_blacklist"
+                 i18n:domain="ftw.publisher.sender">Path Blacklist</a><br />
+            </dd>
             <dl>
         </fieldset>
 
         <fieldset>
-            <legend>Realms</legend>
-            <a href="@@publisher-config-addRealm" class="standalone">New Realm</a>
-            <table class="listing">
-                <thead>
-                    <tr>
-                        <th>Active</th>
-                        <th>URL</th>
-                        <th>Username</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tal:repeat repeat="realm view/getRealms">
-                        <tr tal:attributes="class python:realm['odd'] and 'odd' or 'even'">
-                            <td tal:content="python:realm['active'] and 'X' or ''" />
-                            <td tal:content="realm/url" />
-                            <td tal:content="realm/username" />
-                            <td>
-                                <a href="@@publisher-config-editRealm?id=X"
-                                        tal:attributes="href string:@@publisher-config-editRealm?form.widgets.id=${realm/id}"
-                                        class="context"
-                                        >Edit</a>
-                                <a href="@@publisher-config-deleteRealm?id=X"
-                                        tal:attributes="href string:@@publisher-config-deleteRealm?id=${realm/id}"
-                                        onclick="return confirm('Are you sure to delete this realm?')"
-                                        class="context"
-                                        >Delete</a>
-                                <a href="@@publisher-config-testRealm?id=X"
-                                        tal:attributes="href string:@@publisher-config-testRealm?id=${realm/id}"
-                                        class="context"
-                                        >Test</a>
-                            </td>
-                        </tr>
-                    </tal:repeat>
-                </tbody>
-            </table>
+          <legend>Realms</legend>
+          <a href="@@publisher-config-addRealm" class="standalone">New Realm</a>
+          <table class="listing">
+            <thead>
+              <tr>
+                <th>Active</th>
+                <th>URL</th>
+                <th>Username</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tal:repeat repeat="realm view/getRealms">
+                <tr tal:attributes="class python:realm['odd'] and 'odd' or 'even'">
+                  <td tal:content="python:realm['active'] and 'X' or ''" />
+                  <td tal:content="realm/url" />
+                  <td tal:content="realm/username" />
+                  <td>
+                    <a href="@@publisher-config-editRealm?id=X"
+                       tal:attributes="href string:@@publisher-config-editRealm?form.widgets.id=${realm/id}"
+                       class="context"
+                       >Edit</a>
+                    <a href="@@publisher-config-deleteRealm?id=X"
+                       tal:attributes="href string:@@publisher-config-deleteRealm?id=${realm/id}"
+                       onclick="return confirm('Are you sure to delete this realm?')"
+                       class="context"
+                       >Delete</a>
+                    <a href="@@publisher-config-testRealm?id=X"
+                       tal:attributes="href string:@@publisher-config-testRealm?id=${realm/id}"
+                       class="context"
+                       >Test</a>
+                  </td>
+                </tr>
+              </tal:repeat>
+            </tbody>
+          </table>
         </fieldset>
 
-    </div>
-</div>
+        <fieldset>
+          <legend>Disable publishing</legend>
+          <p>
+            Publishing is currently
+            <tal:ENABLED tal:condition="view/config/publishing_enabled">
+              <b>Enabled</b>
+              &raquo; <a href="./@@publisher-config?disable-publishing=1">Disable</a>
+            </tal:ENABLED>
+            <tal:DISABLED tal:condition="not:view/config/publishing_enabled">
+              <b style="color:red;">Disabled</b>
+              &raquo; <a href="./@@publisher-config?enable-publishing=1">Enable</a>
+            </tal:DISABLED>
+          </p>
+        </fieldset>
 
-</body>
+      </div>
+    </div>
+
+  </body>
 </html>

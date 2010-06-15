@@ -25,26 +25,26 @@
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 # python imports
+from datetime import datetime
 from StringIO import StringIO
+from threading import RLock
 import logging
 import traceback
 import sys
 
 # zope imports
 from Products.Five import BrowserView
-import transaction
 
 # plone imports
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.statusmessages.interfaces import IStatusMessage
 
 # publisher imports
-from ftw.publisher.sender.persistence import Queue, Config
 from ftw.publisher.sender.utils import sendJsonToRealm
 from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
 from ftw.publisher.core import states
-from ftw.publisher.sender.interfaces import IPathBlacklist
+from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 
 # event
 from ftw.publisher.sender.events import AfterPushEvent
@@ -88,7 +88,8 @@ class PublishObject(BrowserView):
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
         # create Job
-        queue = Queue(self.context)
+        portal = self.context.portal_url.getPortalObject()
+        queue = IQueue(portal)
         queue.createJob('push', self.context, username)
         self.logger.info('Created "%s" Job for "%s" at %s' % (
                 'push',
@@ -137,7 +138,8 @@ class MoveObject(BrowserView):
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
         # create Job
-        queue = Queue(self.context)
+        portal = self.context.portal_url.getPortalObject()
+        queue = IQueue(portal)
         queue.createJob('move', self.context, username, )
         self.logger.info('Created "%s" Job for "%s" at %s' % (
                 'move',
@@ -189,7 +191,8 @@ class DeleteObject(BrowserView):
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
         # create Job
-        queue = Queue(self.context)
+        portal = self.context.portal_url.getPortalObject()
+        queue = IQueue(portal)
         queue.createJob('delete', self.context, username)
         self.logger.info('Created "%s" Job for "%s" at %s' % (
                 'delete',
@@ -213,6 +216,26 @@ class ExecuteQueue(BrowserView):
     Executes the Queue and sends BATCH_SIZE amount of Jobs to the target realms.
     """
 
+    def execute_single_job(self, job):
+        """ Executes a single job without calling the view
+        """
+        self.logger = getLogger()
+        self.error_logger = getErrorLogger()
+        portal = self.context.portal_url.getPortalObject()
+        self.config = IConfig(portal)
+        self.queue = IQueue(portal)
+        # remove job from queue
+        if job in self.queue.getJobs():
+            self.queue.removeJob(job)
+        elif job in self.queue.get_executed_jobs():
+            self.queue.remove_executed_job(job)
+        # execute it
+        self.executeJob(job)
+        # move json file
+        job.move_jsonfile_to(self.config.get_executed_folder())
+        # add to executed list
+        self.queue.append_executed_job(job)
+
     def __call__(self, *args, **kwargs):
         """
         Handles logging purposes and calls execute() method.
@@ -222,17 +245,29 @@ class ExecuteQueue(BrowserView):
         @type kwargs:   dict
         @return:        Redirect to object`s default view
         """
+        # get config and queue
+        self.config = IConfig(self.context)
+        portal = self.context.portal_url.getPortalObject()
+        self.queue = IQueue(portal)
+        # prepare logger
         self.logger = getLogger()
         self.error_logger = getErrorLogger()
+        # is it allowed to publish?
+        if not self.config.publishing_enabled():
+            self.logger.warning('PUBLISHING IS DISABLED')
+            return 'PUBLISHING IS DISABLED'
+
+        # lock
+        if not self.get_lock_object().acquire(0):
+            self.logger.info('Already publishing')
+            return 'Already publishing'
+
         # register our own logging handler for returning logs afterwards
         logStream = StringIO()
         logHandler = logging.StreamHandler(logStream)
         self.logger.addHandler(logHandler)
         # be sure to remove the handler!
         try:
-            # get config and queue
-            self.config = Config(self.context)
-            self.queue = Queue(self.context)
             # execute queue
             self.execute()
         except:
@@ -246,7 +281,15 @@ class ExecuteQueue(BrowserView):
         del logStream
         del logHandler
 
+        # unlock
+        self.get_lock_object().release()
+
         return log
+
+    def get_lock_object(self):
+        if getattr(self.__class__, '_lock', None) == None:
+            self.__class__._lock = RLock()
+        return self.__class__._lock
 
     def getActiveRealms(self):
         """
@@ -272,8 +315,11 @@ class ExecuteQueue(BrowserView):
                 len(self.getActiveRealms()),
                 ))
         while self.queue.countJobs()>0 and (BATCH_SIZE<1 or jobCounter<BATCH_SIZE):
+            jobCounter += 1
             # get job from queue
             job = self.queue.popJob()
+            if not job.json_file_exists():
+                continue
             try:
                 # execute job
                 self.executeJob(job)
@@ -281,11 +327,9 @@ class ExecuteQueue(BrowserView):
                 # print the exception to the publisher error log
                 exc = ''.join(traceback.format_exception(*sys.exc_info()))
                 self.error_logger.error(exc)
-            else:
-                # remove cache file from file system / delete job
-                job.removeJob()
-                jobCounter += 1
-                transaction.commit(1)
+                job.executed_exception = exc
+            job.move_jsonfile_to(self.config.get_executed_folder())
+            self.queue.append_executed_job(job)
 
     def executeJob(self, job):
         """
@@ -320,6 +364,7 @@ class ExecuteQueue(BrowserView):
                 job.objectUID,
                 ))
         self.logger.info('... request data length: %i' % len(json))
+        state_entries = {'date': datetime.now()}
         for realm in self.getActiveRealms():
             self.logger.info('... to realm %s' % (
                     realm.url,
@@ -335,9 +380,10 @@ class ExecuteQueue(BrowserView):
                         job.objectUID,
                         ))
                 self.error_logger.error('... got result: %s' % state.toString())
-                self.queue.appendJob(job)
             else:
                 self.logger.info('... got result: %s' % state.toString())
+            state_entries[realm] = state
+        job.executed_with_states(state_entries)
 
         # fire AfterPushEvent
         obj = self.context.archetype_tool.getObject(job.objectUID)

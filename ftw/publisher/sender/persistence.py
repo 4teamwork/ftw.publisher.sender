@@ -43,6 +43,7 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 # publisher imports
 from interfaces import IConfig, IQueue
 from ftw.publisher.sender import extractor
+from ftw.publisher.core import states
 
 _marker = object()
 
@@ -141,6 +142,12 @@ class Config(object):
         """
         self.annotations['publisher-dataFolder'] = path
 
+    def get_executed_folder(self):
+        executed_folder = os.path.join(self.getDataFolder(), 'executed')
+        if not os.path.exists(executed_folder):
+            os.makedirs(executed_folder)
+        return executed_folder
+
     def getPathBlacklist(self):
         """
         Returns a list of paths which are blacklistet and are not
@@ -185,6 +192,15 @@ class Config(object):
             return True
         else:
             return False
+
+    def publishing_enabled(self):
+        """ Returns True if the publishing is enable at the moment
+        """
+        return self.annotations.get('publisher-publishing-enabled', True)
+
+    def set_publishing_enabled(self, enabled):
+        enabled = enabled and True or False
+        self.annotations['publisher-publishing-enabled'] = enabled
 
 
 
@@ -281,6 +297,29 @@ class Queue(object):
         """
         return self.getJobs().pop(0)
 
+    def get_executed_jobs(self):
+        return self.annotations.get('publisher-executed', PersistentList())
+
+    def _set_executed_jobs(self, list_):
+        if not isinstance(list_, PersistentList):
+            raise ValueError('Expected PersistentList')
+        self.annotations['publisher-executed'] = list_
+
+    def append_executed_job(self, job):
+        if not isinstance(job, Job):
+            raise ValueError('Expected Job object')
+        list_ = self.get_executed_jobs()
+        list_.append(job)
+        self._set_executed_jobs(list_)
+
+    def remove_executed_job(self, job):
+        if not isinstance(job, Job):
+            raise ValueError('Expected Job object')
+        list_ = self.get_executed_jobs()
+        list_.remove(job)
+        self._set_executed_jobs(list_)
+
+
 
 class Job(Persistent):
     """
@@ -358,7 +397,29 @@ class Job(Persistent):
         """
         Removes the cache file for this job from the file system
         """
-        os.remove(self.dataFile)
+        if os.path.exists(self.dataFile):
+            os.remove(self.dataFile)
+
+    def json_file_exists(self):
+        return os.path.exists(self.dataFile)
+
+    def move_jsonfile_to(self, dir):
+        oridir, oname = os.path.split(self.dataFile)
+        obase = '.'.join(oname.split('.')[:-1])
+        oext = oname.split('.')[-1]
+        i = 1
+        path = os.path.join(dir, oname)
+        # find new unused name
+        while os.path.exists(path):
+            i += 1
+            path = os.path.join(dir, '%s.%i.%s' % (
+                    obase,
+                    i,
+                    oext))
+        # move it
+        os.rename(self.dataFile, path)
+        self.dataFile = path
+
 
     def getObject(self, context):
         """
@@ -371,6 +432,29 @@ class Job(Persistent):
         """
         reference_tool = getToolByName(context, 'reference_catalog')
         return self.is_root and context.portal_url.getPortalObject() or reference_tool.lookupObject(self.objectUID)
+
+    def executed_with_states(self, entries):
+        """ entries: {'date': <datetime ...>, <Realm1 ..>: <State1 ..>,
+        <Realm2 ..>: <State2 ..>}
+        """
+        if not getattr(self, 'executed_list', None):
+            self.executed_list = PersistentList()
+        self.executed_list.append(entries)
+
+    def get_latest_executed_entry(self):
+        entries_list = getattr(self, 'executed_list', ())
+        # get the last entries
+        if len(entries_list) == 0:
+            return None
+        last_entries = entries_list[-1]
+        # then return the first "bad" entry or the last
+        for state in last_entries.values():
+            if isinstance(state, states.ErrorState):
+                return state
+        return state
+
+    def get_filename(self):
+        return os.path.split(self.dataFile)[1]
 
 
 class Realm(Persistent):
