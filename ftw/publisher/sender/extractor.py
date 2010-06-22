@@ -67,8 +67,13 @@ class Extractor(object):
             move_data = getattr(self.object,'event_information', None)
             #make data convertable and shrink amount of data (replace objects by path)
             del move_data['object']
-            move_data['newParent'] = '/'.join(move_data['newParent'].getPhysicalPath())
-            move_data['oldParent'] = '/'.join(move_data['oldParent'].getPhysicalPath())
+            portal_path = '/'.join(self.object.portal_url.getPortalObject().getPhysicalPath())
+            new_parent_path = '/'.join(move_data['newParent'].getPhysicalPath())
+            new_parent_rpath = new_parent_path[len(portal_path):]
+            move_data['newParent'] = new_parent_rpath
+            old_parent_path = '/'.join(move_data['oldParent'].getPhysicalPath())
+            old_parent_rpath = old_parent_path[len(portal_path):]
+            move_data['oldParent'] = old_parent_rpath
             move_data['newTitle'] = self.object.Title().decode('utf-8')
             data['move'] = move_data
             # finally remove event_information from object

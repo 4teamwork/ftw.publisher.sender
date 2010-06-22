@@ -5,7 +5,6 @@ def add_move_job(obj, event):
     """
     This event handles move and rename jobs
     """
-
     if obj == event.object:
 
         data = event.__dict__.copy()
@@ -14,7 +13,8 @@ def add_move_job(obj, event):
             return
         url_endswith = event.object.REQUEST.get('ACTUAL_URL').split('/')[-1:][0]
         # also include manage_pasteObjects for ZMI support
-        if url_endswith not in ['folder_rename_form', 'folder_paste', 'manage_pasteObjects']:
+        if url_endswith not in ['folder_rename_form', 'folder_paste', 'manage_pasteObjects',
+                                'object_paste']:
             return
         #set event info on on obj
         setattr(obj, 'event_information', data)
