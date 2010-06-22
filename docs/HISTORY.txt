@@ -5,6 +5,9 @@ Changelog
 1.0c2
 -----
 
+* Fixed fixed namespace_packages in setup.py
+  [22.06.2010, jbaumann]
+
 
 1.0c1
 -----
