@@ -1,5 +1,5 @@
 recursive-include ftw *
 recursive-include docs *
-include setup.py
-include README.txt
-global-exclude *pyc
+include *.txt
+global-exclude *.pyc
+global-exclude *.mo
