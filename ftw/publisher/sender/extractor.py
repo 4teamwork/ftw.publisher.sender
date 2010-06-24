@@ -32,6 +32,7 @@ from zope.component import getAdapters
 
 #ftw.publisher.core imports
 from ftw.publisher.core.interfaces import IDataCollector
+from ftw.publisher.core.utils import decode_for_json
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from zExceptions import NotFound
 
@@ -159,8 +160,6 @@ class Extractor(object):
         @return:        JSON
         @rtype:         string
         """
-        # circular import aware
-        from ftw.publisher.sender.utils import recursive_aggressive_decode
-        data = recursive_aggressive_decode(data)
+        data = decode_for_json(data)
         return simplejson.dumps(data, sort_keys=True)
 

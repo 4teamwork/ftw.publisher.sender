@@ -5,6 +5,9 @@ Changelog
 1.0c3
 -----
 
+* Added string encoding / decoding methods which work with json
+  [24.06.2010, jbaumann]
+
 
 1.0c2
 -----
