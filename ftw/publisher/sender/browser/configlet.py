@@ -41,7 +41,8 @@ from plone.z3cform import z2
 from ftw.table.interfaces import ITableGenerator
 
 # publisher imports
-from ftw.publisher.sender.persistence import Queue, Config, Realm
+from ftw.publisher.sender.persistence import Realm
+from ftw.publisher.sender.interfaces import IQueue, IConfig
 from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
 from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.publisher.core import states
@@ -70,7 +71,7 @@ class CreateRealmForm(form.Form):
         @return:            None (form is shown) or Response-redirect
         """
         data, errors = self.extractData()
-        config = Config(self.context)
+        config = IConfig(self.context)
         if len(errors)==0:
             # url + username has to be unique
             for realm in config.getRealms():
@@ -131,7 +132,7 @@ class EditRealmForm(form.EditForm):
         """
         """
         data, errors = self.extractData()
-        config = Config(self.context)
+        config = IConfig(self.context)
         if len(errors)==0:
             # get realm
             currentRealm = self.getRealmById(data['id'])
@@ -164,7 +165,7 @@ class EditRealmForm(form.EditForm):
         return md5.md5('%s-%s' % (realm.url, realm.username)).hexdigest()
 
     def getRealmById(self, id):
-        for realm in Config(self.context).getRealms():
+        for realm in IConfig(self.context).getRealms():
             if self.makeRealmId(realm)==id:
                 return realm
         return None
@@ -176,8 +177,8 @@ class PublisherConfigletView(BrowserView):
 
     def __init__(self, *args, **kwargs):
         super(PublisherConfigletView, self).__init__(*args, **kwargs)
-        self.config = Config(self.context)
-        self.queue = Queue(self.context)
+        self.config = IConfig(self.context)
+        self.queue = IQueue(self.context)
 
     def makeRealmId(self, realm):
         return md5.md5('%s-%s' % (realm.url, realm.username)).hexdigest()
@@ -211,7 +212,7 @@ class ConfigView(PublisherConfigletView):
         return super(ConfigView, self).__call__(*args, **kwargs)
 
     def getQueueSize(self):
-        return Queue(self.context).countJobs()
+        return IQueue(self.context).countJobs()
 
     def getRealms(self):
         """
