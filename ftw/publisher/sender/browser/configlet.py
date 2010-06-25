@@ -279,6 +279,8 @@ class ListExecutedJobs(PublisherConfigletView):
             delta = datetime.timedelta(days)
             now = datetime.datetime.now()
             for job in self.queue.get_executed_jobs():
+                if getattr(job, 'executed_list', None) == None:
+                    continue
                 xdate = job.executed_list[-1]['date']
                 if xdate + delta < now:
                     self.queue.remove_executed_job(job)
@@ -316,7 +318,9 @@ class ListExecutedJobs(PublisherConfigletView):
         return generator.generate(self._get_data(), columns)
 
     def _get_data(self):
-        for job in self.queue.get_executed_jobs():
+        jobs = list(self.queue.get_executed_jobs())
+        jobs.reverse()
+        for job in jobs:
             state = job.get_latest_executed_entry()
             if isinstance(state, states.ErrorState):
                 colored_state = '<span class="error" style="color:red;">' +\
@@ -336,10 +340,21 @@ class ListExecutedJobs(PublisherConfigletView):
                     '<a href="./@@publisher-config-listExecutedJobs' +\
                         '?delete.job=%s">Delete</a>' % job.get_filename(),
                     ))
+            shortened_title = job.objectTitle
+            maximum_length = 35
+            if len(shortened_title) > maximum_length:
+                try:
+                   shortened_title = shortened_title.decode('utf8')
+                   shortened_title = shortened_title[:maximum_length] + u' ...'
+                   shortened_title = shortened_title.encode('utf8')
+                except:
+                    pass
             yield {
                 'Date': date,
-                'Title': '<a href="%s">%s</a>' % (job.objectPath + '/view',
-                                                  job.objectTitle),
+                'Title': '<a href="%s" title="%s">%s</a>' % (
+                    job.objectPath + '/view',
+                    job.objectTitle,
+                    shortened_title),
                 'Action': job.action,
                 'State': colored_state,
                 'Username': job.username,

@@ -30,7 +30,7 @@
 
         <form action="./@@publisher-config-listExecutedJobs" method="POST">
           <input type="submit" name="button.cleanup" value="Cleanup list" />
-          <input type="submit" name="button.delete.successfuls" value="Delete successful jobs" />
+
           <br />
           Delete jobs older than <input type="text" name="days" value="10" /> days:
           <input type="submit" name="button.delete.olderthan" value="Delete" />
