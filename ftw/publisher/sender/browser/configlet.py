@@ -246,6 +246,9 @@ class ConfigView(PublisherConfigletView):
                     })
         return realmlist
 
+    def get_cache_folder_path(self):
+        return self.config.getDataFolder()
+
 
 class ListJobs(PublisherConfigletView):
 

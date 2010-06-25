@@ -5,6 +5,9 @@ Changelog
 1.0c5
 -----
 
+* Show json cache path in configuration
+  [25.06.2010, jbaumann]
+
 * Executed jobs list: made more robust ; reversed listing
   [25.06.2010, jbaumann]
 

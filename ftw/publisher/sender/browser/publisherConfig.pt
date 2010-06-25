@@ -99,6 +99,16 @@
           </p>
         </fieldset>
 
+        <fieldset>
+          <legend>Information</legend>
+          <table class="publisher_infos">
+            <tr>
+              <td>Job cache directory:</td>
+              <td tal:content="view/get_cache_folder_path" />
+            </tr>
+          </table>
+        </fieldset>
+
       </div>
     </div>
 
