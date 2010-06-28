@@ -39,6 +39,7 @@ from zope.app.annotation.interfaces import IAttributeAnnotatable
 # Plone imports
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from plone.memoize import instance
 
 # publisher imports
 from interfaces import IConfig, IQueue
@@ -116,6 +117,7 @@ class Config(object):
         list.remove(realm)
         self._setRealms(list)
 
+    @instance.memoize
     def getDataFolder(self):
         """
         Returns the path to the data folder. If it does not exist, it will
@@ -123,24 +125,12 @@ class Config(object):
         @return:        absolute file system path
         @rtype:         string
         """
-        path = self.annotations.get('publisher-dataFolder', None)
-        if not path:
-            path = os.path.join('/'.join(
-                    os.environ['CLIENT_HOME'].split('/')[:-2] + ['var', 'publisher']))
-            self.setDataFolder(path)
+        path = os.path.join('/'.join(
+                os.environ['CLIENT_HOME'].split('/')[:-2] + ['var', 'publisher']))
         # create if not existing
         if not os.path.exists(path):
             os.mkdir(path)
         return path
-
-    def setDataFolder(self, path):
-        """
-        Sets the data folder path
-        @param path:    absoliute path to the data folder
-        @type path:     string
-        @return:        None
-        """
-        self.annotations['publisher-dataFolder'] = path
 
     def get_executed_folder(self):
         executed_folder = os.path.join(self.getDataFolder(), 'executed')

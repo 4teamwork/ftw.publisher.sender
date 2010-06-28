@@ -5,6 +5,10 @@ Changelog
 1.0c5
 -----
 
+* Issue #151 ftw.publisher: getDataFolder nicht persistent speichern
+  https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/151/
+  [28.06.2010, jbaumann]
+
 * Show json cache path in configuration
   [25.06.2010, jbaumann]
 
