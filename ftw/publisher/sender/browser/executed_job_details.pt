@@ -74,7 +74,7 @@
                     <i>Realm: <span tal:replace="python:entry[0].username" /> @
                       <span tal:replace="python:entry[0].url" />
                     </i><br/>
-
+                    <div tal:content="python:view.get_translated_state_name(entry[1])" />
                     <pre class="state" tal:content="python:entry[1].toString()" />
                   </tal:not_date>
                 </tal:REALM>

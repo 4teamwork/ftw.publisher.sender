@@ -325,11 +325,16 @@ class ListExecutedJobs(PublisherConfigletView):
         jobs.reverse()
         for job in jobs:
             state = job.get_latest_executed_entry()
+            state_name = getattr(state, 'localized_name', None)
+            if state_name:
+                state_name = self.context.translate(state_name)
+            else:
+                state_name = state.__class__.__name__
             if isinstance(state, states.ErrorState):
                 colored_state = '<span class="error" style="color:red;">' +\
-                    '%s</span>' % state.__class__.__name__
+                    '%s</span>' % self.context.translate(state_name)
             else:
-                colored_state = '<span class="success">%s</span>' % state.__class__.__name__
+                colored_state = '<span class="success">%s</span>' % state_name
             date = 'unknown'
             try:
                 date = job.executed_list[-1]['date'].strftime('%d.%m.%Y %H:%M')
@@ -403,6 +408,13 @@ class ExecutedJobDetails(PublisherConfigletView):
         for job in self.queue.get_executed_jobs():
             if job.get_filename() == job_filename:
                 return job
+
+    def get_translated_state_name(self, state):
+        name = getattr(state, 'localized_name', None)
+        if name:
+            return self.context.translate(name)
+        else:
+            return state.__class__.__name__
 
 
 class CleanJobs(PublisherConfigletView):

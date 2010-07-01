@@ -5,6 +5,9 @@ Changelog
 1.0c5
 -----
 
+* Use the translated communication state names
+  [01.07.2010, jbaumann]
+
 * Issue #151 ftw.publisher: getDataFolder nicht persistent speichern
   https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/151/
   [28.06.2010, jbaumann]
