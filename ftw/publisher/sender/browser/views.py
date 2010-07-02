@@ -27,10 +27,13 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 # python imports
 from datetime import datetime
 from StringIO import StringIO
+from urllib2 import URLError
 from threading import RLock
+from httplib import BadStatusLine
 import logging
 import traceback
 import sys
+import transaction
 
 # zope imports
 from Products.Five import BrowserView
@@ -272,6 +275,7 @@ class ExecuteQueue(BrowserView):
             self.execute()
         except:
             self.logger.removeHandler(logHandler)
+            self.get_lock_object().release()
             # re-raise exception
             raise
         # get logs
@@ -323,6 +327,8 @@ class ExecuteQueue(BrowserView):
             try:
                 # execute job
                 self.executeJob(job)
+            except (URLError, BadStatusLine):
+                raise
             except:
                 # print the exception to the publisher error log
                 exc = ''.join(traceback.format_exception(*sys.exc_info()))
@@ -330,6 +336,7 @@ class ExecuteQueue(BrowserView):
                 job.executed_exception = exc
             job.move_jsonfile_to(self.config.get_executed_folder())
             self.queue.append_executed_job(job)
+            transaction.commit()
 
     def executeJob(self, job):
         """
