@@ -260,8 +260,8 @@ class ExecuteQueue(BrowserView):
             self.logger.warning('PUBLISHING IS DISABLED')
             return 'PUBLISHING IS DISABLED'
 
-        # lock
-        if not self.get_lock_object().acquire(0):
+        # lock - check for locking flag
+        if self.config.locking_enabled and not self.get_lock_object().acquire(0):
             self.logger.info('Already publishing')
             return 'Already publishing'
 
@@ -275,7 +275,7 @@ class ExecuteQueue(BrowserView):
             self.execute()
         except:
             self.logger.removeHandler(logHandler)
-            self.get_lock_object().release()
+            if self.config.locking_enabled: self.get_lock_object().release()
             # re-raise exception
             raise
         # get logs
@@ -286,7 +286,7 @@ class ExecuteQueue(BrowserView):
         del logHandler
 
         # unlock
-        self.get_lock_object().release()
+        if self.config.locking_enabled: self.get_lock_object().release()
 
         return log
 

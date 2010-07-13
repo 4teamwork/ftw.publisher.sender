@@ -207,6 +207,12 @@ class ConfigView(PublisherConfigletView):
             self.config.set_publishing_enabled(False)
             redirect = True
 
+        #set locking flag
+        if self.request.has_key('enable-locking'):
+            self.config.set_locking_enabled(self.request.get('enable-locking'))
+            redirect = True
+            
+
         if redirect:
             return self.request.RESPONSE.redirect('./@@publisher-config')
         return super(ConfigView, self).__call__(*args, **kwargs)

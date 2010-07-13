@@ -4,6 +4,10 @@ Changelog
 
 1.0c5
 -----
+* lock-config-branch
+  Bei Direktem Publishing ohne Queu macht das Locking keinen Sinn. 
+  Daher kann man nun das Locking einschalten/ausschalten. 
+  [13.07.2010, mathias.leimgruber]
 
 * Issue #148 Robustes Error-Handling, falls auf dem Ziel-System der Publisher nicht erreichbar ist
   https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/148/

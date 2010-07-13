@@ -189,9 +189,15 @@ class Config(object):
         return self.annotations.get('publisher-publishing-enabled', True)
 
     def set_publishing_enabled(self, enabled):
-        enabled = enabled and True or False
-        self.annotations['publisher-publishing-enabled'] = enabled
+        self.annotations['publisher-publishing-enabled'] = bool(enabled)
 
+    def locking_enabled(self):
+        """ Returns True if locking is enabled, default is True
+        """
+        return self.annotations.get('publisher-locking-enabled', True)
+
+    def set_locking_enabled(self, enabled):
+        self.annotations['publisher-locking-enabled'] = bool(enabled)
 
 
 class Queue(object):
