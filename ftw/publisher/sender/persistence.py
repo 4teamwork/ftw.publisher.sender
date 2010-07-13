@@ -197,6 +197,8 @@ class Config(object):
         return self.annotations.get('publisher-locking-enabled', True)
 
     def set_locking_enabled(self, enabled):
+        if not isinstance(enabled, bool):
+            enabled = bool(enabled == '1')
         self.annotations['publisher-locking-enabled'] = bool(enabled)
 
 

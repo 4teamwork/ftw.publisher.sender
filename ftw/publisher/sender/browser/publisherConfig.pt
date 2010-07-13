@@ -102,7 +102,7 @@
         <fieldset>
           <legend>Disable locking</legend>
           <p>
-            Publishing is currently
+            Locking is currently
             <tal:ENABLED tal:condition="view/config/locking_enabled">
               <b>Enabled</b>
               &raquo; <a href="./@@publisher-config?enable-locking=0">Disable</a>
