@@ -30,6 +30,8 @@ setup(name='ftw.publisher.sender',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
+        'ftw.publisher.core',
+        'Products.PloneFormGen',
         'setuptools',
         # -*- Extra requirements: -*-
         'plone.z3cform',
