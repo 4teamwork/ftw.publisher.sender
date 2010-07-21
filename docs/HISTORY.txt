@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-1.0c5
------
+1.1
+---
 
 * Issue #148 Robustes Error-Handling, falls auf dem Ziel-System der Publisher nicht erreichbar ist
   https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/148/
