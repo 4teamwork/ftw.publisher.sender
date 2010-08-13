@@ -41,7 +41,7 @@ setup(name='ftw.publisher.sender',
         'ftw.table',
         ],
       extras_require={
-        'tests_require': tests_require,
+        'test': tests_require,
         },
       tests_require=tests_require,
       entry_points="""
