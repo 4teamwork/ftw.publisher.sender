@@ -24,29 +24,25 @@
 #
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
-# Python imports
-import os
-import time
 
-# Zope imports
 from Acquisition import aq_inner
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from ftw.publisher.core import states
+from ftw.publisher.sender import extractor
+from interfaces import IConfig, IQueue
 from persistent import Persistent
 from persistent.list import PersistentList
+from plone.memoize import instance
 from zope import interface, component
 from zope.annotation.interfaces import IAnnotations
 from zope.app.annotation.interfaces import IAttributeAnnotatable
+import os
+import time
 
-# Plone imports
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.interfaces import IPloneSiteRoot
-from plone.memoize import instance
-
-# publisher imports
-from interfaces import IConfig, IQueue
-from ftw.publisher.sender import extractor
-from ftw.publisher.core import states
 
 _marker = object()
+
 
 ANNOTATIONS_PATH_BLACKLIST_KEY = 'publisher-path-blacklist'
 
@@ -126,7 +122,8 @@ class Config(object):
         @rtype:         string
         """
         path = os.path.join('/'.join(
-                os.environ['CLIENT_HOME'].split('/')[:-2] + ['var', 'publisher']))
+                os.environ['CLIENT_HOME'].split('/')[:-2] + ['var',
+                                                             'publisher']))
         # create if not existing
         if not os.path.exists(path):
             os.mkdir(path)
@@ -143,7 +140,8 @@ class Config(object):
         Returns a list of paths which are blacklistet and are not
         touched by the publisher.
         """
-        blacklist = self.annotations.get(ANNOTATIONS_PATH_BLACKLIST_KEY, _marker)
+        blacklist = self.annotations.get(ANNOTATIONS_PATH_BLACKLIST_KEY,
+                                         _marker)
         if blacklist is _marker:
             blacklist = PersistentList()
             self.setPathBlacklist(blacklist)
@@ -154,7 +152,8 @@ class Config(object):
         Sets the path blacklist
         """
         if not isinstance(blacklist, PersistentList):
-            raise ValueError('Expected PersistentList, got %s' % `blacklist`)
+            raise ValueError('Expected PersistentList, got %s' %
+                             repr(blacklist))
         self.annotations[ANNOTATIONS_PATH_BLACKLIST_KEY] = blacklist
 
     def appendPathToBlacklist(self, path):
@@ -162,7 +161,7 @@ class Config(object):
         Appends a path to the blacklist, if it isnt already blacklisted...
         """
         if type(path) not in (str, unicode):
-            raise ValueError('Expected string, got %s' % `path`)
+            raise ValueError('Expected string, got %s' % repr(path))
         path = path.strip()
         blacklist = self.getPathBlacklist()
         if path not in blacklist:
@@ -174,7 +173,7 @@ class Config(object):
         Removes a path from the path blacklist
         """
         if type(path) not in (str, unicode):
-            raise ValueError('Expected string, got %s' % `path`)
+            raise ValueError('Expected string, got %s' % repr(path))
         path = path.strip()
         blacklist = self.getPathBlacklist()
         if path in blacklist:
@@ -191,7 +190,6 @@ class Config(object):
     def set_publishing_enabled(self, enabled):
         enabled = enabled and True or False
         self.annotations['publisher-publishing-enabled'] = enabled
-
 
 
 class Queue(object):
@@ -310,7 +308,6 @@ class Queue(object):
         self._set_executed_jobs(list_)
 
 
-
 class Job(Persistent):
     """
     A Job object contains action, object and the user who triggered the job.
@@ -352,9 +349,9 @@ class Job(Persistent):
             filename = '%s.%s.%s.json' % (
                 # on plone root we use the path as uid, now we have to replace
                 # the '/' by '_' to provide a good name
-                self.objectUID.replace('/','_'),
+                self.objectUID.replace('/', '_'),
                 time.strftime('%Y%m%d-%H%M%S'),
-                str(i).rjust(3, '0')
+                str(i).rjust(3, '0'),
                 )
             file = os.path.join(dir, filename)
             if os.path.exists(file):
@@ -412,7 +409,6 @@ class Job(Persistent):
         os.rename(self.dataFile, path)
         self.dataFile = path
 
-
     def getObject(self, context):
         """
         Returns the object with UID stored in this Job. This method
@@ -423,7 +419,8 @@ class Job(Persistent):
         @rtype:             Plone object
         """
         reference_tool = getToolByName(context, 'reference_catalog')
-        return self.is_root and context.portal_url.getPortalObject() or reference_tool.lookupObject(self.objectUID)
+        return self.is_root and context.portal_url.getPortalObject() or \
+            reference_tool.lookupObject(self.objectUID)
 
     def executed_with_states(self, entries):
         """ entries: {'date': <datetime ...>, <Realm1 ..>: <State1 ..>,
@@ -451,8 +448,8 @@ class Job(Persistent):
 
 class Realm(Persistent):
     """
-    A Realm object provides information about a target plone instance (receiver)
-    which should have installed ftw.publisher.receiver.
+    A Realm object provides information about a target plone instance
+    (receiver) which should have installed ftw.publisher.receiver.
     It stores and provides information such as URL or credentials.
     URL+username should be unique!
     """
@@ -470,7 +467,7 @@ class Realm(Persistent):
         @type active:       boolean or int
         @param url:         URL to the plone site of the target realm
         @type url:          string
-        @param username:    Username of the user to publish data with on this realm
+        @param username:    Username to login on target realm
         @type username:     string
         @param password:    Password of the User with **username**
         @type password:     string
@@ -479,4 +476,3 @@ class Realm(Persistent):
         self.url = url
         self.username = username
         self.password = password
-
