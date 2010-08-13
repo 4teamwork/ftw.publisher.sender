@@ -350,7 +350,9 @@ class Job(Persistent):
         file = None
         while not file:
             filename = '%s.%s.%s.json' % (
-                self.objectUID.replace('/','_'), # on plone root we have we use the path as uid, now we habe to replace the '/' by '_' to provide a good name
+                # on plone root we use the path as uid, now we have to replace
+                # the '/' by '_' to provide a good name
+                self.objectUID.replace('/','_'),
                 time.strftime('%Y%m%d-%H%M%S'),
                 str(i).rjust(3, '0')
                 )

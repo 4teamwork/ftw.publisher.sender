@@ -34,6 +34,8 @@ from Products.Five import BrowserView
 from z3c.form import form, field, button
 from z3c.form import interfaces
 from zope.component import getUtility
+from zope.publisher.interfaces import Retry
+from ZODB.POSException import ConflictError
 
 # plone imports
 from Products.statusmessages.interfaces import IStatusMessage
@@ -338,6 +340,8 @@ class ListExecutedJobs(PublisherConfigletView):
             date = 'unknown'
             try:
                 date = job.executed_list[-1]['date'].strftime('%d.%m.%Y %H:%M')
+            except (ConflictError, Retry):
+                raise
             except:
                 pass
             ctrl = ' '.join((
@@ -352,9 +356,11 @@ class ListExecutedJobs(PublisherConfigletView):
             maximum_length = 35
             if len(shortened_title) > maximum_length:
                 try:
-                   shortened_title = shortened_title.decode('utf8')
-                   shortened_title = shortened_title[:maximum_length] + u' ...'
-                   shortened_title = shortened_title.encode('utf8')
+                    shortened_title = shortened_title.decode('utf8')
+                    shortened_title = shortened_title[:maximum_length] + u' ...'
+                    shortened_title = shortened_title.encode('utf8')
+                except (ConflictError, Retry):
+                    raise
                 except:
                     pass
             yield {

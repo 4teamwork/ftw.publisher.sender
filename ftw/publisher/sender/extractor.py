@@ -35,6 +35,8 @@ from ftw.publisher.core.interfaces import IDataCollector
 from ftw.publisher.core.utils import decode_for_json
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from zExceptions import NotFound
+from zope.publisher.interfaces import Retry
+from ZODB.POSException import ConflictError
 
 class Extractor(object):
     """
@@ -104,11 +106,13 @@ class Extractor(object):
                     # catch notfound, some zope objects (ex. syndication_information of a topic)
                     # has no getObjectPosition
                     pass
-                    
+
         # create metadata dict
         uid = self.is_root and self.getRelativePath() or self.object.UID()
         try:
             wf_info = self.object.portal_workflow.getInfoFor(self.object, 'review_state')
+        except (ConflictError, Retry):
+            raise
         except Exception:
             wf_info = ''
         # get schema path
