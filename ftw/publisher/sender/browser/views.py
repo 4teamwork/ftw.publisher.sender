@@ -24,43 +24,38 @@
 #
 __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
-# python imports
-from datetime import datetime
-from StringIO import StringIO
-from urllib2 import URLError
-from threading import RLock
-from httplib import BadStatusLine
-import logging
-import traceback
-import sys
-import transaction
-
-# zope imports
-from Products.Five import BrowserView
-
-# plone imports
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
-
-# publisher imports
-from ftw.publisher.sender.utils import sendJsonToRealm
+from StringIO import StringIO
+from datetime import datetime
+from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
-from ftw.publisher.core import states
-from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
-
-# event
 from ftw.publisher.sender.events import AfterPushEvent
+from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
+from ftw.publisher.sender.utils import sendJsonToRealm
+from httplib import BadStatusLine
+from threading import RLock
+from urllib2 import URLError
 from zope import event
+import logging
+import sys
+import traceback
+import transaction
+
 
 """
-@var BATCH_SIZE:        Maximum amount of Jobs to be performed at one ExecuteQueue call
+@var BATCH_SIZE:        Maximum amount of Jobs to be performed at one
+ExecuteQueue call
 """
 BATCH_SIZE = 0
 
+
 class PublishObject(BrowserView):
-    """
-    This BrowserView adds the current object (self.context) to the publishing queue.
+    """This BrowserView adds the current object (self.context) to the
+    publishing queue.
+
     """
     def __call__(self, no_response=False, msg=None, *args, **kwargs):
         """
@@ -75,7 +70,7 @@ class PublishObject(BrowserView):
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
-            self.logger.warning('Could not create push job for blacklisted ' +\
+            self.logger.warning('Could not create push job for blacklisted '+\
                                     'object (%s at %s)' % (
                     self.context.Title(),
                     '/'.join(self.context.getPhysicalPath())))
@@ -111,8 +106,9 @@ class PublishObject(BrowserView):
 
 
 class MoveObject(BrowserView):
-    """
-    This BrowserView adds the current object (self.context) to the publishing queue for renaming.
+    """This BrowserView adds the current object (self.context) to the
+    publishing queue for renaming.
+
     """
     def __call__(self, no_response=False, msg=None, *args, **kwargs):
         """
@@ -126,7 +122,7 @@ class MoveObject(BrowserView):
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
-            self.logger.warning('Could not create move job for blacklisted ' +\
+            self.logger.warning('Could not create move job for blacklisted '+\
                                     'object (%s at %s)' % (
                     self.context.Title(),
                     '/'.join(self.context.getPhysicalPath())))
@@ -179,8 +175,8 @@ class DeleteObject(BrowserView):
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
-            self.logger.warning('Could not create delete job for blacklisted ' +\
-                                    'object (%s at %s)' % (
+            self.logger.warning('Could not create delete job for blacklisted '
+                                'object (%s at %s)' % (
                     self.context.Title(),
                     '/'.join(self.context.getPhysicalPath())))
             if not no_response:
@@ -215,8 +211,9 @@ class DeleteObject(BrowserView):
 
 
 class ExecuteQueue(BrowserView):
-    """
-    Executes the Queue and sends BATCH_SIZE amount of Jobs to the target realms.
+    """Executes the Queue and sends BATCH_SIZE amount of Jobs to the target
+    realms.
+
     """
 
     def execute_single_job(self, job):
@@ -301,7 +298,8 @@ class ExecuteQueue(BrowserView):
         @rtype: list
         """
         if '_activeRealms' not in dir(self):
-            self._activeRealms = [r for r in self.config.getRealms() if r.active]
+            self._activeRealms = [r for r in self.config.getRealms()
+                                  if r.active]
         return self._activeRealms
 
     def execute(self):
@@ -318,7 +316,8 @@ class ExecuteQueue(BrowserView):
                 self.queue.countJobs(),
                 len(self.getActiveRealms()),
                 ))
-        while self.queue.countJobs()>0 and (BATCH_SIZE<1 or jobCounter<BATCH_SIZE):
+        while self.queue.countJobs()>0 and (BATCH_SIZE<1 or
+                                            jobCounter<BATCH_SIZE):
             jobCounter += 1
             # get job from queue
             job = self.queue.popJob()
@@ -347,17 +346,18 @@ class ExecuteQueue(BrowserView):
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted(job.objectPath):
             self.logger.error('blacklisted: "%s" on "%s" (at %s | UID %s)' % (
-                job.action,
-                job.objectTitle,
-                job.objectPath,
-                job.objectUID,
-                ))
-            self.error_logger.error('blacklisted: "%s" on "%s" (at %s | UID %s)' % (
-                job.action,
-                job.objectTitle,
-                job.objectPath,
-                job.objectUID,
-                ))
+                    job.action,
+                    job.objectTitle,
+                    job.objectPath,
+                    job.objectUID,
+                    ))
+            self.error_logger.error(
+                'blacklisted: "%s" on "%s" (at %s | UID %s)' % (
+                    job.action,
+                    job.objectTitle,
+                    job.objectPath,
+                    job.objectUID,
+                    ))
             return False
 
         # get data from chache file
@@ -380,13 +380,15 @@ class ExecuteQueue(BrowserView):
             state = sendJsonToRealm(json, realm, 'publisher.receive')
             if isinstance(state, states.ErrorState):
                 self.logger.error('... got result: %s' % state.toString())
-                self.error_logger.error('executing "%s" on "%s" (at %s | UID %s)' % (
+                self.error_logger.error(
+                    'executing "%s" on "%s" (at %s | UID %s)' % (
                         job.action,
                         job.objectTitle,
                         job.objectPath,
                         job.objectUID,
                         ))
-                self.error_logger.error('... got result: %s' % state.toString())
+                self.error_logger.error('... got result: %s' %
+                                        state.toString())
             else:
                 self.logger.info('... got result: %s' % state.toString())
             state_entries[realm] = state
