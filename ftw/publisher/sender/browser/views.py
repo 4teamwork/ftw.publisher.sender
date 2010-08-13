@@ -28,6 +28,7 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from StringIO import StringIO
+from ZODB.POSException import ConflictError
 from datetime import datetime
 from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
@@ -39,6 +40,7 @@ from httplib import BadStatusLine
 from threading import RLock
 from urllib2 import URLError
 from zope import event
+from zope.publisher.interfaces import Retry
 import logging
 import sys
 import traceback
@@ -326,6 +328,8 @@ class ExecuteQueue(BrowserView):
             try:
                 # execute job
                 self.executeJob(job)
+            except (ConflictError, Retry):
+                raise
             except (URLError, BadStatusLine):
                 raise
             except:
