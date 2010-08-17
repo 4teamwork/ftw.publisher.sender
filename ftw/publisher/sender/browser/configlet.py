@@ -41,6 +41,7 @@ from ZODB.POSException import ConflictError
 from Products.statusmessages.interfaces import IStatusMessage
 from plone.z3cform import z2
 from ftw.table.interfaces import ITableGenerator
+from Products.CMFPlone import Batch
 
 # publisher imports
 from ftw.publisher.sender.persistence import Realm
@@ -48,6 +49,9 @@ from ftw.publisher.sender.interfaces import IQueue, IConfig
 from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
 from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.publisher.core import states
+
+
+EXECUTED_JOBS_BATCH_SIZE = 10
 
 # -- Forms
 
@@ -264,6 +268,7 @@ class ListJobs(PublisherConfigletView):
 class ListExecutedJobs(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
+
         redirect = False
         if self.request.get('button.cleanup'):
             for job in self.queue.get_executed_jobs()[:]:
@@ -315,6 +320,13 @@ class ListExecutedJobs(PublisherConfigletView):
             url = './@@publisher-config-listExecutedJobs'
             return self.request.RESPONSE.redirect(url)
 
+        # BATCH
+        # create a fake iterable object with the length of all objects,
+        # but we dont want to load them all..
+        fake_data = ' ' * self.queue.get_executed_jobs_length()
+        b_start = int(self.request.get('b_start', 0))
+        self.batch = Batch(fake_data, EXECUTED_JOBS_BATCH_SIZE, b_start)
+
         return super(ListExecutedJobs, self).__call__(*args, **kwargs)
 
     def render_table(self):
@@ -323,9 +335,10 @@ class ListExecutedJobs(PublisherConfigletView):
         return generator.generate(self._get_data(), columns)
 
     def _get_data(self):
-        jobs = list(self.queue.get_executed_jobs())
-        jobs.reverse()
-        for job in jobs:
+        b_start = int(self.request.get('b_start', 0))
+        b_end = b_start + EXECUTED_JOBS_BATCH_SIZE
+        entries = self.queue.get_executed_jobs(b_start, b_end)
+        for key, job in entries:
             state = job.get_latest_executed_entry()
             state_name = getattr(state, 'localized_name', None)
             if state_name:

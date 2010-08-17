@@ -14,7 +14,9 @@
           Portal status message
         </div>
 
-        <h1 class="documentFirstHeading">Queue</h1>
+        <h1 class="documentFirstHeading" i18n:translate="headline_executed_jobs">
+          Executed jobs
+        </h1>
 
         <a href=""
            class="link-parent"
@@ -24,7 +26,14 @@
 
         <br />
 
-        <tal:TABLE tal:replace="structure view/render_table" />
+        <tal:batch_config tal:define="batch view/batch;
+                                      template_id string:@@publisher-config-listExecutedJobs">
+
+          <div metal:use-macro="here/batch_macros/macros/navigation" />
+          <tal:TABLE tal:replace="structure view/render_table" />
+          <div metal:use-macro="here/batch_macros/macros/navigation" />
+
+        </tal:batch_config>
 
         <hr />
 

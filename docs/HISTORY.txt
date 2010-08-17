@@ -5,6 +5,9 @@ Changelog
 1.2
 ---
 
+* Added batching to executed jobs view
+  [17.08.2010, jbaumann]
+
 * Added upgrade step for migrating the executed jobs storage to IOBTree
   [17.08.2010, jbaumann]
 
