@@ -26,8 +26,10 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 
 from Acquisition import aq_inner
+from BTrees.IOBTree import IOBTree
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.Transience.Transience import Increaser
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from interfaces import IConfig, IQueue
@@ -285,27 +287,76 @@ class Queue(object):
         """
         return self.getJobs().pop(0)
 
-    def get_executed_jobs(self):
-        return self.annotations.get('publisher-executed', PersistentList())
+    def _get_executed_jobs_storage(self):
+        """Returns the IOBTree storage object for executed jobs.
+        """
+        if self.annotations.get('publisher-executed', _marker) == _marker:
+            self.annotations['publisher-executed'] = IOBTree()
+        return self.annotations['publisher-executed']
 
-    def _set_executed_jobs(self, list_):
-        if not isinstance(list_, PersistentList):
-            raise ValueError('Expected PersistentList')
-        self.annotations['publisher-executed'] = list_
+    def _generate_next_executed_jobs_storage_key(self):
+        """Returns a transaction-safe auto-increment value
+        http://pyyou.wordpress.com/2009/12/09/how-to-add-a-counter-without-conflict-error-in-zope
+
+        """
+        ann_key = 'publisher-executed-key-auto-increment'
+        # get the increaser stored in the annotations
+        if ann_key not in self.annotations.keys():
+            self.annotations[ann_key] = Increaser(0)
+        inc = self.annotations[ann_key]
+        # increase by one
+        inc.set(inc() + 1)
+        # check the current max key
+        try:
+            current_max_key = self._get_executed_jobs_storage().maxKey()
+        except ValueError:
+            # the storage is empty, start with 0
+            current_max_key = 0
+        while current_max_key >= inc():
+            inc.set(inc() + 1)
+        # set and return the new value
+        self.annotations[ann_key] = inc
+        return inc()
+
+    def get_executed_jobs(self, start=0, end=None):
+        """Returns a iterator of executed jobs. You can make a batch by
+        providing a range with `start` and `end` parameters. The start and
+        end parameters represent the index number in the storage, so we can
+        expect that the length of the iterate is `end - start`, if there
+        are enough objects in the storage.
+        A key / value pair is returned.
+
+        """
+        data = self._get_executed_jobs_storage()
+        if start == 0 and end == None:
+            # return all
+            return data.iteritems()
+        else:
+            # make a batch without touching unused values
+            # the iteritems() method wants the min-key and the
+            # max-key which is used as filter then. So we need to map
+            # our `start` and `end` (which is the index) to the max-
+            # and min-*keys*
+            keys = data.keys()[start:end]
+            return data.iteritems(min(keys), max(keys))
+
+    def get_executed_jobs_length(self):
+        """Returns the amount of currently stored executed jobs.
+        """
+        return len(self._get_executed_jobs_storage().keys())
 
     def append_executed_job(self, job):
-        if not isinstance(job, Job):
-            raise ValueError('Expected Job object')
-        list_ = self.get_executed_jobs()
-        list_.append(job)
-        self._set_executed_jobs(list_)
+        """Add another
+        """
+        data = self._get_executed_jobs_storage()
+        key = self._generate_next_executed_jobs_storage_key()
+        data.insert(key, job)
+        return key
 
-    def remove_executed_job(self, job):
-        if not isinstance(job, Job):
-            raise ValueError('Expected Job object')
-        list_ = self.get_executed_jobs()
-        list_.remove(job)
-        self._set_executed_jobs(list_)
+    def remove_executed_job(self, key, default=None):
+        """Removes the job with the `key` from the executed jobs storage.
+        """
+        return self._get_executed_jobs_storage().pop(key, default)
 
 
 class Job(Persistent):

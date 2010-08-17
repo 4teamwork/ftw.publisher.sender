@@ -1,4 +1,5 @@
 Test the storage
+================
 
 Create some stuff for testing
     >>> self.folder.invokeFactory('Folder', 'foo', title='Foo')
@@ -14,7 +15,7 @@ Queue is empty by default
     >>> queue.countJobs()
     0
 
-    >>> len(queue.get_executed_jobs())
+    >>> queue.get_executed_jobs_length()
     0
 
 Add a job for the folder
@@ -29,13 +30,29 @@ Act as we just published the job
     >>> job = queue.popJob()
     >>> job
     <ftw.publisher.sender.persistence.Job object at ...>
-    >>> queue.append_executed_job(job)
+    >>> key = queue.append_executed_job(job)
+    >>> key
+    1
     >>> queue.countJobs()
     0
-    >>> len(queue.get_executed_jobs())
+    >>> queue.get_executed_jobs_length()
     1
-    >>> queue.get_executed_jobs()
-    [<ftw.publisher.sender.persistence.Job object at ...>]
-    >>> queue.remove_executed_job(queue.get_executed_jobs()[0])
-    >>> queue.get_executed_jobs()
+    >>> list(queue.get_executed_jobs())
+    [(1, <ftw.publisher.sender.persistence.Job object at ...>)]
+    >>> queue.remove_executed_job(key)
+    <ftw.publisher.sender.persistence.Job object at ...>
+    >>> list(queue.get_executed_jobs())
     []
+
+Let's add some more objects to the executed jobs list and try to
+get them in a batch. The key is generated with auto-increment, so
+we start at key "2" now since we already had a "1" earlier in this
+test.
+    >>> for i in range(10):
+    ...     foo = queue.append_executed_job('obj %i' % i)
+    >>> queue.get_executed_jobs_length()
+    10
+    >>> list(queue.get_executed_jobs(start=0, end=2))
+    [(2, 'obj 0'), (3, 'obj 1')]
+    >>> list(queue.get_executed_jobs(start=4, end=5))
+    [(6, 'obj 4')]

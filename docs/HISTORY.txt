@@ -5,6 +5,10 @@ Changelog
 1.2
 ---
 
+* Added some storage tests and changed the executed jobs storage to
+  a IOBTree storage for better performance.
+  [17.08.2010, jbaumann]
+
 
 1.1
 ---
