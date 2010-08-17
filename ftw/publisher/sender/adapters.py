@@ -41,6 +41,13 @@ class PathBlacklist(object):
             blocked_path = blocked_path.strip()
             if path == blocked_path:
                 return True
-            if blocked_path.endswith('*') and path.startswith(blocked_path[:-1]):
-                return True
+            if blocked_path.endswith('*') and \
+                    path.startswith(blocked_path[:-1]):
+                if path == blocked_path[:-1]:
+                    return True
+                elif blocked_path[-2] != '/' and \
+                        path[len(blocked_path) - 1] == '/':
+                    return False
+                else:
+                    return True
         return False
