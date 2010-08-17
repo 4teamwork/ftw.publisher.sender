@@ -358,6 +358,11 @@ class Queue(object):
         """
         return self._get_executed_jobs_storage().pop(key, default)
 
+    def get_executed_job_by_key(self, key):
+        """Returns a executed job according to its internal storage key
+        """
+        return self._get_executed_jobs_storage()[key]
+
 
 class Job(Persistent):
     """

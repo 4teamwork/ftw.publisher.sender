@@ -56,3 +56,11 @@ test.
     [(2, 'obj 0'), (3, 'obj 1')]
     >>> list(queue.get_executed_jobs(start=4, end=5))
     [(6, 'obj 4')]
+
+And we should be able to get a specific job by key.
+    >>> queue.get_executed_job_by_key(6)
+    'obj 4'
+    >>> queue.get_executed_job_by_key(1000)
+    Traceback (most recent call last):
+    ...
+    KeyError: 1000

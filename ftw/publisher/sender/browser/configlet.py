@@ -51,7 +51,7 @@ from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.publisher.core import states
 
 
-EXECUTED_JOBS_BATCH_SIZE = 10
+EXECUTED_JOBS_BATCH_SIZE = 100
 
 # -- Forms
 
@@ -297,24 +297,19 @@ class ListExecutedJobs(PublisherConfigletView):
                     job.removeJob()
             redirect = True
 
-        deleteJob = self.request.get('delete.job')
-        if deleteJob:
-            for job in self.queue.get_executed_jobs():
-                if job.get_filename() == deleteJob:
-                    self.queue.remove_executed_job(job)
-                    job.removeJob()
-                    redirect = True
-                    break
-
         requeueJob = self.request.get('requeue.job')
         if requeueJob:
-            for job in self.queue.get_executed_jobs():
-                if job.get_filename() == requeueJob:
-                    self.queue.remove_executed_job(job)
-                    job.move_jsonfile_to(self.config.getDataFolder())
-                    self.queue.appendJob(job)
-                    redirect = True
-                    break
+            key = int(requeueJob)
+            try:
+                job = self.queue.get_executed_job_by_key(key)
+            except KeyError:
+                # could not find job
+                pass
+            else:
+                self.queue.remove_executed_job(key)
+                job.move_jsonfile_to(self.config.getDataFolder())
+                self.queue.appendJob(job)
+                redirect = True
 
         if redirect:
             url = './@@publisher-config-listExecutedJobs'
@@ -323,7 +318,7 @@ class ListExecutedJobs(PublisherConfigletView):
         # BATCH
         # create a fake iterable object with the length of all objects,
         # but we dont want to load them all..
-        fake_data = ' ' * self.queue.get_executed_jobs_length()
+        fake_data = xrange(self.queue.get_executed_jobs_length())
         b_start = int(self.request.get('b_start', 0))
         self.batch = Batch(fake_data, EXECUTED_JOBS_BATCH_SIZE, b_start)
 
@@ -335,9 +330,17 @@ class ListExecutedJobs(PublisherConfigletView):
         return generator.generate(self._get_data(), columns)
 
     def _get_data(self):
+        # get a batched part of the executed jobs. But we need to start
+        # batching at the end, get the batch forward and then reverse,
+        # because we want the newest job at the top.
         b_start = int(self.request.get('b_start', 0))
-        b_end = b_start + EXECUTED_JOBS_BATCH_SIZE
-        entries = self.queue.get_executed_jobs(b_start, b_end)
+        jobs_length = self.queue.get_executed_jobs_length()
+        end = jobs_length - b_start
+        start = end - EXECUTED_JOBS_BATCH_SIZE
+        if start < 0:
+            start = 0
+        entries = list(self.queue.get_executed_jobs(start, end))
+        entries.reverse()
         for key, job in entries:
             state = job.get_latest_executed_entry()
             state_name = getattr(state, 'localized_name', None)
@@ -359,14 +362,14 @@ class ListExecutedJobs(PublisherConfigletView):
                 pass
             ctrl = ' '.join((
                     '<a href="./@@publisher-config-executed-job-details' +\
-                        '?job=%s">Details</a>' % job.get_filename(),
+                        '?job=%s">Details</a>' % key,
+                    '|',
                     '<a href="./@@publisher-config-listExecutedJobs' +\
-                        '?requeue.job=%s">Queue</a>' % job.get_filename(),
-                    '<a href="./@@publisher-config-listExecutedJobs' +\
-                        '?delete.job=%s">Delete</a>' % job.get_filename(),
+                        '?requeue.job=%s">Queue</a>' % key,
                     ))
             shortened_title = job.objectTitle
             maximum_length = 35
+
             if len(shortened_title) > maximum_length:
                 try:
                     shortened_title = shortened_title.decode('utf8')
