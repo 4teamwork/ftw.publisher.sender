@@ -5,9 +5,15 @@ Changelog
 1.2
 ---
 
+* Added upgrade step for migrating the executed jobs storage to IOBTree
+  [17.08.2010, jbaumann]
+
 * Added some storage tests and changed the executed jobs storage to
   a IOBTree storage for better performance.
   [17.08.2010, jbaumann]
+
+UPGRADES:
+* portal_setup: run the ftw.publisher.sender upgrade step for migrating storage
 
 
 1.1

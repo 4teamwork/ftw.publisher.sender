@@ -32,15 +32,26 @@
       factory=".adapters.PathBlacklist"
       />
 
-  <!-- Upgrade step for the migration -->
+  <!-- Remove annotations upgrade step -->
   <genericsetup:upgradeStep
       sortkey="1"
       source="publisher"
       destination="ftw.publisher"
       title="upgrade from publisher to ftw.publisher"
-      description="Fixes the front page title"
+      description="Remove publisher annotations"
       profile="ftw.publisher.sender:default"
       handler=".upgrades.RemoveAnnotations"
+      />
+
+  <!-- Migrate executed jobs storage  -->
+  <genericsetup:upgradeStep
+      sortkey="2"
+      source="1.1"
+      destination="1.2"
+      title="Migrate executed jobs storage to IOBTree"
+      description="Migrate from PersistentList to IOBTree"
+      profile="ftw.publisher.sender:default"
+      handler=".upgrades.upgrade_executed_jobs_storage"
       />
 
   <subscriber
