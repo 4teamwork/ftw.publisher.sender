@@ -37,7 +37,7 @@
       sortkey="1"
       source="publisher"
       destination="ftw.publisher"
-      title="upgrade from publisher to ftw.publisher"
+      title="Remove publisher annotations"
       description="Remove publisher annotations"
       profile="ftw.publisher.sender:default"
       handler=".upgrades.RemoveAnnotations"
