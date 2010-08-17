@@ -126,7 +126,7 @@ class Config(object):
                                                              'publisher']))
         # create if not existing
         if not os.path.exists(path):
-            os.mkdir(path)
+            os.makedirs(path)
         return path
 
     def get_executed_folder(self):

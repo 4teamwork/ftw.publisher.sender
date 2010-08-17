@@ -1,0 +1,41 @@
+Test the storage
+
+Create some stuff for testing
+    >>> self.folder.invokeFactory('Folder', 'foo', title='Foo')
+    'foo'
+    >>> foo = self.folder.get('foo')
+    >>> foo
+    <ATFolder at /plone/Members/test_user_1_/foo>
+
+    >>> from ftw.publisher.sender.interfaces import IQueue
+    >>> queue = IQueue(self.portal)
+
+Queue is empty by default
+    >>> queue.countJobs()
+    0
+
+    >>> len(queue.get_executed_jobs())
+    0
+
+Add a job for the folder
+    >>> queue.createJob('push', foo, 'user')
+    <ftw.publisher.sender.persistence.Job object at ...>
+    >>> queue.countJobs()
+    1
+    >>> queue.getJobs()
+    [<ftw.publisher.sender.persistence.Job object at ...>]
+
+Act as we just published the job
+    >>> job = queue.popJob()
+    >>> job
+    <ftw.publisher.sender.persistence.Job object at ...>
+    >>> queue.append_executed_job(job)
+    >>> queue.countJobs()
+    0
+    >>> len(queue.get_executed_jobs())
+    1
+    >>> queue.get_executed_jobs()
+    [<ftw.publisher.sender.persistence.Job object at ...>]
+    >>> queue.remove_executed_job(queue.get_executed_jobs()[0])
+    >>> queue.get_executed_jobs()
+    []

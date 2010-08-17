@@ -10,6 +10,7 @@ MODULENAMES = [
 
 TESTFILES = [
     'blacklist.txt',
+    'storage.txt',
 ]
 
 OPTIONFLAGS = (doctest.NORMALIZE_WHITESPACE|
