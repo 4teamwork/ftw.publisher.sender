@@ -363,6 +363,48 @@ class Queue(object):
         """
         return self._get_executed_jobs_storage()[key]
 
+    def clear_executed_jobs(self):
+        """Removes all jobs from the executed jobs storage.
+        """
+        for key, job in self.get_executed_jobs():
+            job.removeJob()
+        self._get_executed_jobs_storage().clear()
+
+    def remove_executed_jobs_older_than(self, time):
+        """Removes all executed jobs which are older
+        than `time` (datetime instance).
+
+        """
+
+        def _get_date_of_job(job):
+            """Returns the date of the newest execution of this job or None.
+            """
+            if getattr(job, 'executed_list', None) == None:
+                return None
+            elif len(job.executed_list) == 0:
+                return None
+            else:
+                return job.executed_list[-1]['date']
+
+        # start end
+        data = self._get_executed_jobs_storage()
+        for key in tuple(data.keys()):
+            job = data.get(key)
+            if _get_date_of_job(job) < time:
+                self.remove_executed_job(key)
+            else:
+                break
+
+    def remove_jobs_by_filter(self, filter_method):
+        """Removs jobs by a filter method.
+        The `filter_method` gets the `key` and the `job` as parameters.
+        If it returns `True` the job os deleted.
+
+        """
+        for key, job in tuple(self.get_executed_jobs()):
+            if filter_method(key, job):
+                self.remove_executed_job(key)
+
 
 class Job(Persistent):
     """
