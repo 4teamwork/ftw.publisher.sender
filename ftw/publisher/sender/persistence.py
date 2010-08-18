@@ -30,6 +30,7 @@ from BTrees.IOBTree import IOBTree
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.Transience.Transience import Increaser
+from datetime import datetime
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from interfaces import IConfig, IQueue
@@ -331,6 +332,10 @@ class Queue(object):
         if start == 0 and end == None:
             # return all
             return data.iteritems()
+
+        elif start > end or start == end:
+            return ()
+
         else:
             # make a batch without touching unused values
             # the iteritems() method wants the min-key and the
@@ -390,8 +395,12 @@ class Queue(object):
         data = self._get_executed_jobs_storage()
         for key in tuple(data.keys()):
             job = data.get(key)
-            if _get_date_of_job(job) < time:
+            date = _get_date_of_job(job)
+            if not date:
+                continue
+            elif date < time:
                 self.remove_executed_job(key)
+                job.removeJob()
             else:
                 break
 
@@ -404,6 +413,7 @@ class Queue(object):
         for key, job in tuple(self.get_executed_jobs()):
             if filter_method(key, job):
                 self.remove_executed_job(key)
+                job.removeJob()
 
 
 class Job(Persistent):

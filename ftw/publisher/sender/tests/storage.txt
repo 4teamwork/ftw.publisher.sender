@@ -22,6 +22,10 @@ Queue is empty by default
     >>> queue.get_executed_jobs_length()
     0
 
+We should be able to get it:
+    >>> tuple(queue.get_executed_jobs())
+    ()
+
 Add a job for the folder
     >>> queue.createJob('push', foo, 'user')
     <ftw.publisher.sender.persistence.Job object at ...>
@@ -98,3 +102,16 @@ Test the `remove_jobs_by_filter` method:
     >>> entry_to_delete not in tuple(queue.get_executed_jobs())
     True
 
+Then remove all jobs:
+    >>> queue.clear_executed_jobs()
+    >>> tuple(queue.get_executed_jobs())
+    ()
+
+If we have a empty storage and we calculate some batching we may get
+the jobs like this:
+    >>> tuple(queue.get_executed_jobs(0, 0))
+    ()
+
+It also should return a empty tuple when we make illogical query:
+    >>> tuple(queue.get_executed_jobs(10, 2))
+    ()

@@ -49,6 +49,7 @@ from ftw.publisher.sender.interfaces import IQueue, IConfig
 from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
 from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.publisher.core import states
+from ftw.publisher.sender import message_factory as _
 
 
 EXECUTED_JOBS_BATCH_SIZE = 100
@@ -271,30 +272,13 @@ class ListExecutedJobs(PublisherConfigletView):
 
         redirect = False
         if self.request.get('button.cleanup'):
-            for job in self.queue.get_executed_jobs()[:]:
-                self.queue.remove_executed_job(job)
-                job.removeJob()
+            self.queue.clear_executed_jobs()
             redirect = True
-
-        if self.request.get('button.delete.successfuls'):
-            for job in self.queue.get_executed_jobs():
-                state = job.get_latest_executed_entry()
-                if isinstance(state, states.SuccessState):
-                    self.queue.remove_executed_job(job)
-                    job.removeJob()
-                redirect = True
 
         if self.request.get('button.delete.olderthan'):
             days = int(self.request.get('days'))
-            delta = datetime.timedelta(days)
-            now = datetime.datetime.now()
-            for job in self.queue.get_executed_jobs():
-                if getattr(job, 'executed_list', None) == None:
-                    continue
-                xdate = job.executed_list[-1]['date']
-                if xdate + delta < now:
-                    self.queue.remove_executed_job(job)
-                    job.removeJob()
+            date = datetime.datetime.now() - datetime.timedelta(days)
+            self.queue.remove_executed_jobs_older_than(date)
             redirect = True
 
         requeueJob = self.request.get('requeue.job')
@@ -390,6 +374,15 @@ class ListExecutedJobs(PublisherConfigletView):
                 'Username': job.username,
                 '': ctrl,
                 }
+
+    def get_translated_cleanup_prompt(self):
+        """Returns the converted prompt string which is displayed when
+        clicking on "cleanup".
+
+        """
+        return self.context.translate(_(
+                u'prompt_cleanup',
+                default=u'Are you shure to delete all executed jobs?'))
 
 
 class ExecutedJobDetails(PublisherConfigletView):
