@@ -49,7 +49,7 @@
               </tr>
               <tr>
                 <th i18n:translate="th_action">Action</th>
-                <td tal:content="job/action" />
+                <td tal:content="view/get_translated_action" />
               </tr>
               <tr>
                 <th i18n:translate="th_username">Username</th>

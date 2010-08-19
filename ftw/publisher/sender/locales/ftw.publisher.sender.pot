@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-08-19 11:54+0000\n"
+"POT-Creation-Date: 2010-08-19 14:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Execute"
 msgstr ""
 
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:152
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:159
 msgid "Object move/rename action has been added to the queue."
 msgstr ""
 
@@ -43,11 +43,11 @@ msgid "Realm:"
 msgstr ""
 
 #: ftw.publisher.sender/ftw/publisher/sender/browser/publishformgen.py:76
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:101
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:108
 msgid "This object has been added to the queue."
 msgstr ""
 
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:205
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:212
 msgid "This object will be deleted at the remote sites."
 msgstr ""
 
@@ -61,6 +61,11 @@ msgstr ""
 msgid "Up to executed jobs"
 msgstr ""
 
+#. Default: "Delete"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:60
+msgid "action_delete"
+msgstr ""
+
 #. Default: "Disable"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:133
 msgid "action_disable_publishing"
@@ -71,13 +76,23 @@ msgstr ""
 msgid "action_enable_publishing"
 msgstr ""
 
+#. Default: "Move"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:59
+msgid "action_move"
+msgstr ""
+
+#. Default: "Push"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:58
+msgid "action_push"
+msgstr ""
+
 #. Default: "Add path"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:18
 msgid "button_add_path"
 msgstr ""
 
 #. Default: "Save Realm"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:137
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:72
 msgid "button_save_realm"
 msgstr ""
 
@@ -92,17 +107,17 @@ msgid "delete_job"
 msgstr ""
 
 #. Default: "The data file of the job is missing."
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:428
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:431
 msgid "error_job_data_file_missing"
 msgstr ""
 
 #. Default: "Connection to realm failed: ${msg}"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:593
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:596
 msgid "error_realm_connection_failed"
 msgstr ""
 
 #. Default: "Could not find realm"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:583
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:586
 msgid "error_realm_not_found"
 msgstr ""
 
@@ -147,12 +162,12 @@ msgid "help_add_path"
 msgstr ""
 
 #. Default: "The job has been deleted."
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:437
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:440
 msgid "info_job_deleted"
 msgstr ""
 
 #. Default: "The job has been executed."
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:448
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:451
 msgid "info_job_executed"
 msgstr ""
 
@@ -167,12 +182,12 @@ msgid "info_path_removed"
 msgstr ""
 
 #. Default: "Connection okay"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:589
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:592
 msgid "info_realm_connection_okay"
 msgstr ""
 
 #. Default: "The job has been moved to the queue."
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:422
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:425
 msgid "info_requeued_job"
 msgstr ""
 
@@ -307,7 +322,7 @@ msgid "link_test_realm"
 msgstr ""
 
 #. Default: "Are you shure to delete all executed jobs?"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:404
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:407
 msgid "prompt_cleanup"
 msgstr ""
 

@@ -54,6 +54,15 @@ from ftw.publisher.sender import message_factory as _
 
 EXECUTED_JOBS_BATCH_SIZE = 100
 
+
+# lets translate the actions with i18ndude
+TRANSLATED_ACTIONS = {
+    'push': _(u'action_push', default=u'Push'),
+    'move': _(u'action_move', default=u'Move'),
+    'delete': _(u'action_delete', default=u'Delete'),
+    }
+
+
 # -- Forms
 
 class CreateRealmForm(form.Form):
@@ -356,6 +365,9 @@ class ListExecutedJobs(PublisherConfigletView):
             if isinstance(state, states.ErrorState):
                 colored_state = '<span class="error" style="color:red;">' +\
                     '%s</span>' % self.context.translate(state_name)
+            elif isinstance(state, states.WarningState):
+                colored_state = '<span class="error" style="color:orange;">' +\
+                    '%s</span>' % self.context.translate(state_name)
             else:
                 colored_state = '<span class="success">%s</span>' % state_name
             date = 'unknown'
@@ -390,7 +402,8 @@ class ListExecutedJobs(PublisherConfigletView):
                     job.objectPath + '/view',
                     job.objectTitle,
                     shortened_title),
-                columns['action']: job.action,
+                columns['action']: TRANSLATED_ACTIONS.get(job.action,
+                                                          job.action),
                 columns['state']: colored_state,
                 columns['username']: job.username,
                 columns['']: ctrl,
@@ -468,6 +481,9 @@ class ExecutedJobDetails(PublisherConfigletView):
             return self.context.translate(name)
         else:
             return state.__class__.__name__
+
+    def get_translated_action(self):
+        return TRANSLATED_ACTIONS.get(self.job.action, self.job.action)
 
 
 class CleanJobs(PublisherConfigletView):
