@@ -390,39 +390,56 @@ class ExecutedJobDetails(PublisherConfigletView):
     def __call__(self, *args, **kwargs):
         redirect_to = None
 
+        self.key = int(self.request.get('job'))
+        self.job = self.queue.get_executed_job_by_key(self.key)
+
         if self.request.get('button.requeue'):
-            job = self.get_job()
-            self.queue.remove_executed_job(job)
-            job.move_jsonfile_to(self.config.getDataFolder())
-            self.queue.appendJob(job)
-            redirect_to = './@@publisher-config'
+            if self.job.json_file_exists():
+                self.queue.remove_executed_job(self.key)
+                self.job.move_jsonfile_to(self.config.getDataFolder())
+                self.queue.appendJob(self.job)
+                msg = _(u'info_requeued_job',
+                        default=u'The job has been moved to the queue.')
+                IStatusMessage(self.request).addStatusMessage(msg,
+                                                              type='info')
+                redirect_to = './@@publisher-config'
+            else:
+                msg = _(u'error_job_data_file_missing',
+                        default=u'The data file of the job is missing.')
+                IStatusMessage(self.request).addStatusMessage(msg,
+                                                              type='error')
 
         if self.request.get('button.delete'):
-            job = self.get_job()
-            self.queue.remove_executed_job(job)
-            if job.json_file_exists():
-                job.removeJob()
+            self.queue.remove_executed_job(self.key)
+            if self.job.json_file_exists():
+                self.job.removeJob()
+            msg = _(u'info_job_deleted',
+                    default=u'The job has been deleted.')
+            IStatusMessage(self.request).addStatusMessage(msg,
+                                                          type='info')
             redirect_to = './@@publisher-config-listExecutedJobs'
 
         if self.request.get('button.execute'):
-            job = self.get_job()
-            if job.json_file_exists():
+            if self.job.json_file_exists():
                 portal = self.context.portal_url.getPortalObject()
                 execview = portal.restrictedTraverse('@@publisher.executeQueue')
-                execview.execute_single_job(job)
+                execview.execute_single_job(self.job)
+                msg = _(u'info_job_executed',
+                        default=u'The job has been executed.')
+                IStatusMessage(self.request).addStatusMessage(msg,
+                                                              type='info')
+            else:
+                msg = _(u'error_job_data_file_missing',
+                        default=u'The data file of the job is missing.')
+                IStatusMessage(self.request).addStatusMessage(msg,
+                                                              type='error')
             redirect_to = './@@publisher-config-executed-job-details?job=' + \
-                job.get_filename()
+                str(self.key)
 
         if redirect_to:
             return self.request.RESPONSE.redirect(redirect_to)
 
         return super(ExecutedJobDetails, self).__call__(*args, **kwargs)
-
-    def get_job(self):
-        job_filename = self.request.get('job')
-        for job in self.queue.get_executed_jobs():
-            if job.get_filename() == job_filename:
-                return job
 
     def get_translated_state_name(self, state):
         name = getattr(state, 'localized_name', None)

@@ -25,7 +25,7 @@
         <tal:job tal:define="job view/get_job">
 
           <form action="./@@publisher-config-executed-job-details" method="POST">
-            <input type="hidden" name="job" tal:attributes="value job/get_filename" />
+            <input type="hidden" name="job" tal:attributes="value view/get_job_key" />
             <input type="submit" name="button.requeue" value="Re-Queue" />
             <input type="submit" name="button.execute" value="Execute" />
             <input type="submit" name="button.delete" value="Delete" />
