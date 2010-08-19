@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-06-14 12:18+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"POT-Creation-Date: 2010-08-19 11:54+0000\n"
+"PO-Revision-Date: 2010-08-19 13:57+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -12,38 +12,144 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:149
+#: ftw.publisher.sender/ftw/publisher/sender/browser/list_executed_jobs.pt:42
+msgid "Cleanup list"
+msgstr "Leeren"
+
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:34
+#: ftw.publisher.sender/ftw/publisher/sender/browser/list_executed_jobs.pt:55
+msgid "Delete"
+msgstr "Löschen"
+
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:32
+msgid "Execute"
+msgstr "Ausführen"
+
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:152
 msgid "Object move/rename action has been added to the queue."
 msgstr "Verschiebung/Umbenennung des Objekts wurde zur Warteschlange hinzugefügt."
 
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:30
+msgid "Re-Queue"
+msgstr "In Warteschlange verschieben"
+
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:74
+msgid "Realm:"
+msgstr "Zielserver"
+
 #: ftw.publisher.sender/ftw/publisher/sender/browser/publishformgen.py:76
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:100
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:101
 msgid "This object has been added to the queue."
 msgstr "Das Objekt wurde zur Warteschlange hinzugefügt."
 
-#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:201
+#: ftw.publisher.sender/ftw/publisher/sender/browser/views.py:205
 msgid "This object will be deleted at the remote sites."
 msgstr "Das Objekt wird auf den entfernten Seiten gelöscht."
+
+#: ftw.publisher.sender/ftw/publisher/sender/browser/addRealm.pt:17
+#: ftw.publisher.sender/ftw/publisher/sender/browser/editRealm.pt:20
+#: ftw.publisher.sender/ftw/publisher/sender/browser/list_executed_jobs.pt:21
+msgid "Up to Publisher Control Panel"
+msgstr "Zurück zur Publisher-Konfiguration"
+
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:19
+msgid "Up to executed jobs"
+msgstr "Zurück zur Liste der Ausgeführten Aufträge"
+
+#. Default: "Disable"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:133
+msgid "action_disable_publishing"
+msgstr "Sperren"
+
+#. Default: "Enable"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:136
+msgid "action_enable_publishing"
+msgstr "Aktivieren"
 
 #. Default: "Add path"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:18
 msgid "button_add_path"
 msgstr "Hinzufügen"
 
+#. Default: "Save Realm"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:137
+msgid "button_save_realm"
+msgstr "Speichern"
+
+#. Default: "Are you sure to delete all jobs in the queue?"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:262
+msgid "confirm_clear_queue"
+msgstr "Sind Sie sicher, dass sie alle Aufträge aus der Warteschleife löschen wollen?"
+
+#. Default: "Delete"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:56
+msgid "delete_job"
+msgstr "Löschen"
+
+#. Default: "The data file of the job is missing."
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:428
+msgid "error_job_data_file_missing"
+msgstr "Die Auftrags-Datei ist nicht mehr vorhanden."
+
+#. Default: "Connection to realm failed: ${msg}"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:593
+msgid "error_realm_connection_failed"
+msgstr "Verbindung fehlgeschlagen: ${msg}"
+
+#. Default: "Could not find realm"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:583
+msgid "error_realm_not_found"
+msgstr "Konnte Zielserver-Konfiguration nicht finden."
+
+#. Default: "Execute"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:52
+msgid "execute_job"
+msgstr "Ausführen"
+
 #. Default: "Add path"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:15
 msgid "form_label_add_path"
 msgstr "Pfad hinzufügen"
+
+#. Default: "Add Realm"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/addRealm.pt:14
+msgid "heading_add_realm"
+msgstr "Zielserver hinzufügen"
 
 #. Default: "Path Blacklist"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:17
 msgid "heading_path_blacklist"
 msgstr "Pfad Blacklist"
 
+#. Default: "Queue"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:17
+msgid "heading_queue"
+msgstr "Warteschleife"
+
+#. Default: "Executed jobs"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/list_executed_jobs.pt:17
+msgid "headline_executed_jobs"
+msgstr "Ausgeführte Aufträge"
+
+#. Default: "Publisher Control Panel"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:17
+msgid "headline_publisher_control_panel"
+msgstr "Publisher Konfiguration"
+
 #. Default: "Add a exact or a wildcard path. Valid pfaths are: \"/platform/foo\", \"/platform/foo/*\" or \"/platform/foo*\" invalid are paths like \"/platform/foo*bar\" or \"foo/bar\"."
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:30
 msgid "help_add_path"
 msgstr "Pfade können genau sein oder mit einem *-Zeichen enden (wildcard). Gültige Pfad: \"/platform/foo\", \"/platform/foo/*\" oder \"/platform/foo*\". Ungültige Pfade: \"/platform/foo*bar\", \"foo/bar\"."
+
+#. Default: "The job has been deleted."
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:437
+msgid "info_job_deleted"
+msgstr "Der Auftrag wurde gelöscht."
+
+#. Default: "The job has been executed."
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:448
+msgid "info_job_executed"
+msgstr "Der Auftrag wurde ausgeführt."
 
 #. Default: "Path added"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist.py:29
@@ -55,10 +161,60 @@ msgstr "Pfad hinzugefügt"
 msgid "info_path_removed"
 msgstr "Pfad ${path} von Blacklist gelöscht"
 
+#. Default: "Connection okay"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:589
+msgid "info_realm_connection_okay"
+msgstr "Verbindung zu Zielserver erfolgreich."
+
+#. Default: "The job has been moved to the queue."
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:422
+msgid "info_requeued_job"
+msgstr "Der Auftrag wurde in die Warteschleife verschoben."
+
+#. Default: "Job cache directory:"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:149
+msgid "label_cache_directory"
+msgstr "Zwischenspeicher der Auftrags-Dateien"
+
+#. Default: "Edit realm"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/editRealm.pt:17
+msgid "label_edit_realm"
+msgstr "Zielserver bearbeiten"
+
+#. Default: "Infos"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:39
+msgid "label_infos"
+msgstr "Infos"
+
 #. Default: "Path"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:61
+#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:64
 msgid "label_path"
 msgstr "Pfad"
+
+#. Default: "Active"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:34
+msgid "label_realm_active"
+msgstr "aktiviert"
+
+#. Default: "Password"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:46
+msgid "label_realm_password"
+msgstr "Passwort"
+
+#. Default: "URL to the Plone-Site"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:38
+msgid "label_realm_url"
+msgstr "URL zur Plone-Site auf dem Zielserver"
+
+#. Default: "Username"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/interfaces.py:42
+msgid "label_realm_username"
+msgstr "Benutzername"
+
+#. Default: "Runs"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:66
+msgid "label_runs"
+msgstr "Läufe"
 
 #. Default: "Blacklisted paths"
 #: ftw.publisher.sender/ftw/publisher/sender/browser/blacklist_listing.pt:41
@@ -70,9 +226,165 @@ msgstr "Ignorierte Pfade"
 msgid "legend_blacklst_add_path"
 msgstr "Pfad zu Blacklist hinzufügen"
 
+#. Default: "Disable publishing"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:119
+msgid "legend_disable_publishing"
+msgstr "Publikation sperren"
+
+#. Default: "Information"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:146
+msgid "legend_information"
+msgstr "Information"
+
+#. Default: "Queue"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:32
+msgid "legend_queue"
+msgstr "Warteschleife"
+
+#. Default: "Realms"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:74
+msgid "legend_realms"
+msgstr "Zielserver"
+
+#. Default: "Clear queue"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:51
+msgid "link_clear_queue"
+msgstr "Warteschleife leeren"
+
+#. Default: "Create realm"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:75
+msgid "link_create_realm"
+msgstr "Zielserver erstellen"
+
+#. Default: "Delete"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:98
+msgid "link_delete_realm"
+msgstr "Löschen"
+
+#. Default: "Edit"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:93
+msgid "link_edit_realm"
+msgstr "Bearbeiten"
+
+#. Default: "Execute queue"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:58
+msgid "link_execute_queue"
+msgstr "Warteschleife ausführen"
+
+#. Default: "Details"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:332
+msgid "link_job_details"
+msgstr "Details"
+
+#. Default: "List executed jobs"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:46
+msgid "link_list_executed_jobs"
+msgstr "Liste der ausgeführten Aufträge"
+
+#. Default: "List queued jobs"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:41
+msgid "link_list_queued_jobs"
+msgstr "Warteschleife anzeigen"
+
 #. Default: "Path Blacklist"
-#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:40
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:63
 msgid "link_path_blacklist"
 msgstr "Blacklist"
+
+#. Default: "Requeue"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:335
+msgid "link_requeue_job"
+msgstr "Warteschleife"
+
+#. Default: "Test"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:104
+msgid "link_test_realm"
+msgstr "Test"
+
+#. Default: "Are you shure to delete all executed jobs?"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:404
+msgid "prompt_cleanup"
+msgstr "Sind Sie sicher, dass Sie alle ausgeführten Aufträge löschen wollen?"
+
+#. Default: "Disabled"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:127
+msgid "state_disabled"
+msgstr "gesperrt"
+
+#. Default: "Enabled"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:125
+msgid "state_enabled"
+msgstr "Aktiviert"
+
+#. Default: "There are ${amount} jobs in the queue."
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:35
+msgid "text_amount_of_jobs"
+msgstr "Momentan sind ${amount} Aufträge in der Warteschleife."
+
+#. Default: "Delete jobs older than ${amount_field} days: ${delete_button}"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/list_executed_jobs.pt:54
+msgid "text_delete_old_jobs"
+msgstr "Aufträge, die älter als ${amount_field} Tage sind ${delete_button}"
+
+#. Default: "Publishing is currently ${state} &raquo; ${change-action}"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:132
+msgid "text_publishing_activated"
+msgstr "Das Publizieren ist momentan ${state} &raquo; ${change-action}"
+
+#. Default: "Action"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:280
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:51
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:32
+msgid "th_action"
+msgstr "Aktion"
+
+#. Default: "Active"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:80
+msgid "th_active"
+msgstr "Aktiv"
+
+#. Default: "Data length"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:59
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:34
+msgid "th_data_length"
+msgstr "Datengrösse"
+
+#. Default: "Date"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:278
+msgid "th_date"
+msgstr "Datum"
+
+#. Default: "Object"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:31
+msgid "th_object"
+msgstr "Objekt"
+
+#. Default: "Path"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:47
+msgid "th_path"
+msgstr "Pfad"
+
+#. Default: "State"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:281
+msgid "th_state"
+msgstr "Status"
+
+#. Default: "Title"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:279
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:42
+msgid "th_title"
+msgstr "Titel"
+
+#. Default: "URL"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/publisherConfig.pt:81
+msgid "th_url"
+msgstr "URL"
+
+#. Default: "Username"
+#: ftw.publisher.sender/ftw/publisher/sender/browser/configlet.py:282
+#: ftw.publisher.sender/ftw/publisher/sender/browser/executed_job_details.pt:55
+#: ftw.publisher.sender/ftw/publisher/sender/browser/listJobs.pt:33
+msgid "th_username"
+msgstr "Benutzername"
 
 

@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="here/prefs_main_template/macros/master"
-      i18n:domain="plone">
+      i18n:domain="ftw.publisher.sender">
 
   <body>
 
@@ -18,60 +18,61 @@
 
         <a href=""
            class="link-parent"
+           i18n:translate=""
            tal:attributes="href string:$portal_url/@@publisher-config-listExecutedJobs">
           Up to executed jobs
         </a>
 
-        <tal:job tal:define="job view/get_job">
+        <tal:job tal:define="job view/job">
 
           <form action="./@@publisher-config-executed-job-details" method="POST">
-            <input type="hidden" name="job" tal:attributes="value view/get_job_key" />
-            <input type="submit" name="button.requeue" value="Re-Queue" />
-            <input type="submit" name="button.execute" value="Execute" />
-            <input type="submit" name="button.delete" value="Delete" />
+            <input type="hidden" name="job" tal:attributes="value view/key" />
+            <input type="submit" name="button.requeue" value="Re-Queue"
+                   i18n:attributes="value" />
+            <input type="submit" name="button.execute" value="Execute"
+                   i18n:attributes="value" />
+            <input type="submit" name="button.delete" value="Delete"
+                   i18n:attributes="value" />
           </form>
 
           <fieldset>
-            <legend>Infos</legend>
+            <legend i18n:translate="label_infos">Infos</legend>
             <table>
               <tr>
-                <th>Title</th>
+                <th i18n:translate="th_title">Title</th>
                 <td><a href="" tal:content="job/objectTitle"
                        tal:attributes="href job/objectPath"></a></td>
               </tr>
               <tr>
-                <th>Path</th>
+                <th i18n:translate="th_path">Path</th>
                 <td tal:content="job/objectPath" />
               </tr>
               <tr>
-                <th>Action</th>
+                <th i18n:translate="th_action">Action</th>
                 <td tal:content="job/action" />
               </tr>
               <tr>
-                <th>Username</th>
+                <th i18n:translate="th_username">Username</th>
                 <td tal:content="job/username" />
               </tr>
               <tr>
-                <th>Data length</th>
+                <th i18n:translate="th_data_length">Data length</th>
                 <td><span tal:replace="job/getSize" /> bytes</td>
               </tr>
             </table>
           </fieldset>
 
-          <fieldset tal:condition="job/executed_exception|nothing">
-            <legend>Exceptions when trying to execute</legend>
-            <pre class="exception" tal:content="job/executed_exception" />
-          </fieldset>
-
           <fieldset tal:condition="job/executed_list|nothing">
-            <legend>Runs</legend>
+            <legend i18n:translate="label_runs">Runs</legend>
 
             <tal:RUN tal:repeat="run job/executed_list">
               <div class="run">
                 <b tal:content="run/date" /><br />
                 <tal:REALM tal:repeat="entry run/items">
                   <tal:not_date tal:condition="python:entry[0] != 'date'">
-                    <i>Realm: <span tal:replace="python:entry[0].username" /> @
+                    <i>
+                      <i18n:realm i18n:translate="">Realm:</i18n:realm>
+                      <span tal:replace="python:entry[0].username" /> @
                       <span tal:replace="python:entry[0].url" />
                     </i><br/>
                     <div tal:content="python:view.get_translated_state_name(entry[1])" />

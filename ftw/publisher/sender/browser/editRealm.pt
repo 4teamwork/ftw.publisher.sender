@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="here/prefs_main_template/macros/master"
-      i18n:domain="plone">
+      i18n:domain="ftw.publisher.sender">
 
 <body>
 
@@ -14,10 +14,12 @@
           Portal status message
         </div>
 
-        <h1 class="documentFirstHeading">Publisher Control Panel</h1>
+        <h1 class="documentFirstHeading"
+            i18n:translate="label_edit_realm">Edit realm</h1>
 
         <a href=""
            class="link-parent"
+           i18n:translate=""
            tal:attributes="href string:$portal_url/@@publisher-config">
             Up to Publisher Control Panel
         </a>

@@ -236,7 +236,7 @@ class ExecuteQueue(BrowserView):
         # move json file
         job.move_jsonfile_to(self.config.get_executed_folder())
         # add to executed list
-        self.queue.append_executed_job(job)
+        return self.queue.append_executed_job(job)
 
     def __call__(self, *args, **kwargs):
         """

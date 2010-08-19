@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="here/prefs_main_template/macros/master"
-      i18n:domain="plone">
+      i18n:domain="ftw.publisher.sender">
 
   <body>
 
@@ -14,46 +14,72 @@
           Portal status message
         </div>
 
-        <h1 class="documentFirstHeading">Publisher Control Panel</h1>
+        <h1 class="documentFirstHeading"
+            i18n:translate="headline_publisher_control_panel">
+          Publisher Control Panel</h1>
 
         <a href=""
            class="link-parent"
            tal:attributes="href string:$portal_url/plone_control_panel"
-           i18n:translate="label_up_to_plone_setup">
+           i18n:translate="label_up_to_plone_setup"
+           i18n:domain="plone">
           Up to Site Setup
         </a>
 
         <br />
 
         <fieldset>
-          <legend>Queue</legend>
-          <dl>
-            <dt>Amount of jobs in the queue</dt>
-            <dd tal:content="view/getQueueSize">666666</dd>
-          </dl>
-          <dl>
-            <dt></dt>
-            <dd>
-              <a href="@@publisher-config-listJobs" class="standalone">List jobs</a><br />
-              <a href="@@publisher-config-listExecutedJobs" class="standalone">List Executed jobs</a><br />
-              <a href="@@publisher-config-cleanJobs" class="standalone" onclick="return confirm('Are you sure to delete all jobs in the queue?')">Clean queue</a><br />
-              <a href="@@publisher-config-executeJobs" class="standalone">Execute Jobs</a><br />
+          <legend i18n:translate="legend_queue">Queue</legend>
+          <p i18n:translate="text_amount_of_jobs">
+            There are
+            <b tal:content="view/getQueueSize" i18n:name="amount">666666</b>
+            jobs in the queue.
+          </p>
+
+          <ul>
+            <li>
+              <a href="@@publisher-config-listJobs" class="standalone"
+                 i18n:translate="link_list_queued_jobs">
+                List queued jobs
+              </a>
+            </li><li>
+              <a href="@@publisher-config-listExecutedJobs" class="standalone"
+                 i18n:translate="link_list_executed_jobs">
+                List executed jobs
+              </a>
+            </li><li>
+              <a href="@@publisher-config-cleanJobs" class="standalone"
+                 tal:define="msg view/get_clear_confirm_message"
+                 tal:attributes="onclick string:return confirm('$msg')"
+                 i18n:translate="link_clear_queue">
+                Clear queue
+              </a>
+            </li><li>
+              <a href="@@publisher-config-executeJobs" class="standalone"
+                 i18n:translate="link_execute_queue">
+                Execute queue
+              </a>
+            </li><li>
               <a href="@@publisher-config-blacklist" class="standalone"
-                 i18n:translate="link_path_blacklist"
-                 i18n:domain="ftw.publisher.sender">Path Blacklist</a><br />
-            </dd>
-            <dl>
+                 i18n:translate="link_path_blacklist">
+                Path Blacklist
+              </a>
+            </li>
+          </ul>
         </fieldset>
 
+        <br />
+
         <fieldset>
-          <legend>Realms</legend>
-          <a href="@@publisher-config-addRealm" class="standalone">New Realm</a>
+          <legend i18n:translate="legend_realms">Realms</legend>
+          <a href="@@publisher-config-addRealm" class="standalone"
+             i18n:translate="link_create_realm">Create realm</a>
           <table class="listing">
             <thead>
               <tr>
-                <th>Active</th>
-                <th>URL</th>
-                <th>Username</th>
+                <th i18n:translate="th_active">Active</th>
+                <th i18n:translate="th_url">URL</th>
+                <th i18n:translate="th_username">Username</th>
                 <th></th>
               </tr>
             </thead>
@@ -67,15 +93,18 @@
                     <a href="@@publisher-config-editRealm?id=X"
                        tal:attributes="href string:@@publisher-config-editRealm?form.widgets.id=${realm/id}"
                        class="context"
+                       i18n:translate="link_edit_realm"
                        >Edit</a>
                     <a href="@@publisher-config-deleteRealm?id=X"
                        tal:attributes="href string:@@publisher-config-deleteRealm?id=${realm/id}"
                        onclick="return confirm('Are you sure to delete this realm?')"
                        class="context"
+                       i18n:translate="link_delete_realm"
                        >Delete</a>
                     <a href="@@publisher-config-testRealm?id=X"
                        tal:attributes="href string:@@publisher-config-testRealm?id=${realm/id}"
                        class="context"
+                       i18n:translate="link_test_realm"
                        >Test</a>
                   </td>
                 </tr>
@@ -84,26 +113,41 @@
           </table>
         </fieldset>
 
+        <br />
+
         <fieldset>
-          <legend>Disable publishing</legend>
-          <p>
+          <legend i18n:translate="legend_disable_publishing">
+            Disable publishing</legend>
+          <p i18n:translate="text_publishing_activated"
+             tal:define="enabled view/config/publishing_enabled">
             Publishing is currently
-            <tal:ENABLED tal:condition="view/config/publishing_enabled">
-              <b>Enabled</b>
-              &raquo; <a href="./@@publisher-config?disable-publishing=1">Disable</a>
-            </tal:ENABLED>
-            <tal:DISABLED tal:condition="not:view/config/publishing_enabled">
-              <b style="color:red;">Disabled</b>
-              &raquo; <a href="./@@publisher-config?enable-publishing=1">Enable</a>
-            </tal:DISABLED>
+            <i18n:state i18n:name="state">
+              <b tal:condition="enabled"
+                 i18n:translate="state_enabled">Enabled</b>
+              <b tal:condition="not:enabled"
+                 i18n:translate="state_disabled"
+                 style="color:red;">Disabled</b>
+            </i18n:state>
+            &raquo;
+            <i18n:action i18n:name="change-action">
+              <a tal:condition="enabled"
+                 href="./@@publisher-config?disable-publishing=1"
+                 i18n:translate="action_disable_publishing">Disable</a>
+              <a tal:condition="not:enabled"
+                 href="./@@publisher-config?enable-publishing=1"
+                 i18n:translate="action_enable_publishing">Enable</a>
+            </i18n:action>
           </p>
         </fieldset>
 
+        <br />
+
         <fieldset>
-          <legend>Information</legend>
+          <legend i18n:translate="legend_information">Information</legend>
           <table class="publisher_infos">
             <tr>
-              <td>Job cache directory:</td>
+              <td><b i18n:translate="label_cache_directory">
+                  Job cache directory:</b></td>
               <td tal:content="view/get_cache_folder_path" />
             </tr>
           </table>

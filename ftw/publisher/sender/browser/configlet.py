@@ -69,7 +69,7 @@ class CreateRealmForm(form.Form):
     ignoreContext = True
     label = u'Add Realm'
 
-    @button.buttonAndHandler(u'Add Realm')
+    @button.buttonAndHandler(_(u'button_save_realm', default=u'Save Realm'))
     def handleAdd(self, action):
         """
         This handler handles a click on the "Add Realm"-Button.
@@ -134,7 +134,7 @@ class EditRealmForm(form.EditForm):
         super(EditRealmForm, self).updateWidgets()
         self.widgets['id'].mode = interfaces.HIDDEN_MODE
 
-    @button.buttonAndHandler(u'Save Realm')
+    @button.buttonAndHandler(_(u'button_save_realm', default=u'Save Realm'))
     def handleSave(self, action):
         """
         """
@@ -256,6 +256,13 @@ class ConfigView(PublisherConfigletView):
     def get_cache_folder_path(self):
         return self.config.getDataFolder()
 
+    def get_clear_confirm_message(self):
+        """Translated confirm message for clearing the queue
+        """
+        return self.context.translate(_(
+                u'confirm_clear_queue',
+                default=u'Are you sure to delete all jobs in the queue?'))
+
 
 class ListJobs(PublisherConfigletView):
 
@@ -267,6 +274,13 @@ class ListJobs(PublisherConfigletView):
 
 
 class ListExecutedJobs(PublisherConfigletView):
+
+    COLUMNS = (('date', _(u'th_date', default=u'Date')),
+               ('title', _(u'th_title', default=u'Title')),
+               ('action', _(u'th_action', default=u'Action')),
+               ('state', _(u'th_state', default=u'State')),
+               ('username', _(u'th_username', default=u'Username')),
+               ('', ''))
 
     def __call__(self, *args, **kwargs):
 
@@ -310,10 +324,17 @@ class ListExecutedJobs(PublisherConfigletView):
 
     def render_table(self):
         generator = getUtility(ITableGenerator, 'ftw.tablegenerator')
-        columns = ('Date', 'Title', 'Action', 'State', 'Username', '')
+        columns = [c[1] for c in ListExecutedJobs.COLUMNS]
         return generator.generate(self._get_data(), columns)
 
     def _get_data(self):
+        columns = dict(ListExecutedJobs.COLUMNS)
+        i18n_details = self.context.translate(_(
+                u'link_job_details',
+                default=u'Details'))
+        i18n_requeu = self.context.translate(_(
+                u'link_requeue_job',
+                default='Requeue'))
         # get a batched part of the executed jobs. But we need to start
         # batching at the end, get the batch forward and then reverse,
         # because we want the newest job at the top.
@@ -346,10 +367,10 @@ class ListExecutedJobs(PublisherConfigletView):
                 pass
             ctrl = ' '.join((
                     '<a href="./@@publisher-config-executed-job-details' +\
-                        '?job=%s">Details</a>' % key,
+                        '?job=%s">%s</a>' % (key, i18n_details),
                     '|',
                     '<a href="./@@publisher-config-listExecutedJobs' +\
-                        '?requeue.job=%s">Queue</a>' % key,
+                        '?requeue.job=%s">%s</a>' % (key, i18n_requeu),
                     ))
             shortened_title = job.objectTitle
             maximum_length = 35
@@ -364,15 +385,15 @@ class ListExecutedJobs(PublisherConfigletView):
                 except:
                     pass
             yield {
-                'Date': date,
-                'Title': '<a href="%s" title="%s">%s</a>' % (
+                columns['date']: date,
+                columns['title']: '<a href="%s" title="%s">%s</a>' % (
                     job.objectPath + '/view',
                     job.objectTitle,
                     shortened_title),
-                'Action': job.action,
-                'State': colored_state,
-                'Username': job.username,
-                '': ctrl,
+                columns['action']: job.action,
+                columns['state']: colored_state,
+                columns['username']: job.username,
+                columns['']: ctrl,
                 }
 
     def get_translated_cleanup_prompt(self):
@@ -472,9 +493,9 @@ class ExecuteJob(PublisherConfigletView):
             raise Exception('No job found')
         portal = self.context.portal_url.getPortalObject()
         execview = portal.restrictedTraverse('@@publisher.executeQueue')
-        execview.execute_single_job(job)
+        key = execview.execute_single_job(job)
         redirect_to = './@@publisher-config-executed-job-details?job=' + \
-            job.get_filename()
+            str(key)
         return self.request.RESPONSE.redirect(redirect_to)
 
     def get_job(self):
@@ -559,15 +580,19 @@ class TestRealm(PublisherConfigletView):
         id = self.context.request.get('id', '')
         realm = self.getRealmById(id)
         if not realm:
-            self.statusMessage('Could not find realm', 'error')
+            self.statusMessage(_(u'error_realm_not_found',
+                                 default=u'Could not find realm'), 'error')
         else:
-            responseText = sendRequestToRealm({}, realm, 'publisher.testConnection')
+            responseText = sendRequestToRealm({}, realm,
+                                              'publisher.testConnection')
             if responseText=='ok':
-                self.statusMessage('Connection okay')
+                self.statusMessage(_(u'info_realm_connection_okay',
+                                     default=u'Connection okay'))
             else:
                 self.statusMessage(
-                    'Connection failed: %s' % responseText,
-                    'error'
-                    )
+                    _(u'error_realm_connection_failed',
+                      default=u'Connection to realm failed: ${msg}',
+                      mapping=dict(msg=responseText)),
+                    type='error')
         return self.request.RESPONSE.redirect('./@@publisher-config')
 

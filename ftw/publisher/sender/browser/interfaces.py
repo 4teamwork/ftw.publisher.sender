@@ -31,28 +31,31 @@ from zope.interface import Interface
 
 class IRealmSchema(Interface):
     active = schema.Bool(
-        title = u'Active',
-        )
+        title=_(u'label_realm_active',
+                default=u'Active'))
+
     url = schema.URI(
-        title = u'URL to the Plone-Site',
-        )
+        title=_(u'label_realm_url',
+                u'URL to the Plone-Site'))
+
     username = schema.TextLine(
-        title = u'Username',
-        )
+        title=_(u'label_realm_username',
+                u'Username'))
+
     password = schema.Password(
-        title = u'Password',
-        )
+        title=_(u'label_realm_password',
+                u'Password'))
 
 
 class IEditRealmSchema(IRealmSchema):
 
     id = schema.TextLine(
-        title = u'id',
-        )
+        title = u'id')
+
     password = schema.Password(
-        title = u'Password',
-        required = False,
-        )
+        title=_(u'label_realm_password',
+                u'Password'),
+        required = False)
 
 
 class IBlacklistPathSchema(Interface):
@@ -60,5 +63,4 @@ class IBlacklistPathSchema(Interface):
     path = schema.TextLine(
         title = _(u'label_path',
                   default=u'Path'),
-        required=True
-        )
+        required=True)
