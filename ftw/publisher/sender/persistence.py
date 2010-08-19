@@ -30,7 +30,6 @@ from BTrees.IOBTree import IOBTree
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.Transience.Transience import Increaser
-from datetime import datetime
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from interfaces import IConfig, IQueue
