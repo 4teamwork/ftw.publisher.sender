@@ -153,6 +153,10 @@
           </table>
         </fieldset>
 
+        <br />
+
+        <div tal:replace="structure provider:ftw.publisher.sender-configlet" />
+
       </div>
     </div>
 

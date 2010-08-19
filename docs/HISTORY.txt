@@ -5,6 +5,9 @@ Changelog
 1.2
 ---
 
+* Added viewlet manager on configlet page.
+  [19.08.2010, jbaumann]
+
 * Do not catch BadStatusLine exceptions since the should be moved
   to the executed jobs list like when regular exceptions occur.
   [19.08.2010, jbaumann]

@@ -26,6 +26,7 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 from zope import interface
 from zope.component.interfaces import IObjectEvent
+from zope.viewlet.interfaces import IViewletManager
 
 class IConfig(interface.Interface):
     """
@@ -53,3 +54,11 @@ class IPathBlacklist(interface.Interface):
         """ Checks if the adapter the context, the given
         `context` or the given `path` is blacklisted.
         """
+
+
+class IConfigletViewletManager(IViewletManager):
+    """Viewlet manager for the ftw.publisher.sender configlet. It can be
+    used by plugins to make themselves configurable within the default
+    configlet.
+
+    """
