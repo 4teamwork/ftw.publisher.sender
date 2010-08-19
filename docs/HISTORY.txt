@@ -5,6 +5,10 @@ Changelog
 1.2
 ---
 
+* Do not catch BadStatusLine exceptions since the should be moved
+  to the executed jobs list like when regular exceptions occur.
+  [19.08.2010, jbaumann]
+
 * Added batching to executed jobs view
   [17.08.2010, jbaumann]
 

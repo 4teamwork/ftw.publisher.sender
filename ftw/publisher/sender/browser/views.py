@@ -36,7 +36,6 @@ from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.events import AfterPushEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.utils import sendJsonToRealm
-from httplib import BadStatusLine
 from threading import RLock
 from urllib2 import URLError
 from zope import event
@@ -330,7 +329,7 @@ class ExecuteQueue(BrowserView):
                 self.executeJob(job)
             except (ConflictError, Retry):
                 raise
-            except (URLError, BadStatusLine):
+            except URLError:
                 raise
             except:
                 # print the exception to the publisher error log
