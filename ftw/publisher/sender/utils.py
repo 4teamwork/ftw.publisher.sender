@@ -26,13 +26,17 @@ __author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
 
 # global imports
 import os.path
+import sys
+import traceback
 import urllib
 import urllib2
 import base64
+from httplib import BadStatusLine
 
 # publisher imports
 from ftw.publisher.sender.persistence import Realm
 from ftw.publisher.core import communication
+from ftw.publisher.core.states import ConnectionLost
 
 
 def sendJsonToRealm(json, realm, serverAction):
@@ -51,7 +55,11 @@ def sendJsonToRealm(json, realm, serverAction):
     if not isinstance(realm, Realm):
         TypeError('Excpected Realm instance')
     data = {'jsondata' : json}
-    html = sendRequestToRealm(data, realm, serverAction)
+    try:
+        html = sendRequestToRealm(data, realm, serverAction)
+    except BadStatusLine:
+        exc = ''.join(traceback.format_exception(*sys.exc_info()))
+        return ConnectionLost(exc)
     return communication.parseResponse(html)
 
 
