@@ -23,6 +23,6 @@ class QueueExecutedEvent(ObjectEvent):
 
     interface.implements(IQueueExecutedEvent)
 
-    def __init__(self, portal, log):
-        self.portal = self.context = portal
+    def __init__(self, context, log):
+        ObjectEvent.__init__(self, context)
         self.log = log
