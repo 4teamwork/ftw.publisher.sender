@@ -33,7 +33,7 @@ from datetime import datetime
 from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
-from ftw.publisher.sender.events import AfterPushEvent
+from ftw.publisher.sender.events import AfterPushEvent, QueueExecutedEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.utils import sendJsonToRealm
 from threading import RLock
@@ -286,6 +286,7 @@ class ExecuteQueue(BrowserView):
         # unlock
         self.get_lock_object().release()
 
+        event.notify(QueueExecutedEvent(portal, log))
         return log
 
     def get_lock_object(self):

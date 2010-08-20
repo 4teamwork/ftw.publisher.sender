@@ -5,6 +5,9 @@ Changelog
 1.2
 ---
 
+* Added `QueueExecutedEvent`
+  [20.08.2010, jbaumann]
+
 * Added viewlet manager on configlet page.
   [19.08.2010, jbaumann]
 

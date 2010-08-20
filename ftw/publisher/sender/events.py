@@ -1,6 +1,6 @@
 from zope.component.interfaces import ObjectEvent
 from zope import interface
-from interfaces import IAfterPushEvent
+from interfaces import IAfterPushEvent, IQueueExecutedEvent
 
 
 class AfterPushEvent(ObjectEvent):
@@ -15,3 +15,14 @@ class AfterPushEvent(ObjectEvent):
         
         self.state = state 
 
+
+class QueueExecutedEvent(ObjectEvent):
+    """The queue was executed successfully.
+    The event is fired on the portal object.
+    """
+
+    interface.implements(IQueueExecutedEvent)
+
+    def __init__(self, portal, log):
+        self.portal = self.context = portal
+        self.log = log

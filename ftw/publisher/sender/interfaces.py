@@ -45,6 +45,13 @@ class IAfterPushEvent(IObjectEvent):
     Event gets fired, after object is pushed to the realm
     """
 
+
+class IQueueExecutedEvent(IObjectEvent):
+    """The queue was executed successfully.
+    The event is fired on the portal object.
+    """
+
+
 class IPathBlacklist(interface.Interface):
     """ Adapter interface for the PathBlacklist adapter which
     knows if the object is blacklisted.
