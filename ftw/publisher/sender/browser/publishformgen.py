@@ -34,6 +34,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 # publisher imports
 from ftw.publisher.sender.persistence import Queue
 from ftw.publisher.sender import getLogger
+from ftw.publisher.sender import message_factory as _
 
 
 """

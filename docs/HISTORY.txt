@@ -5,6 +5,9 @@ Changelog
 1.2
 ---
 
+* Added missing message factory import in publishploneformgen.py
+  [24.08.2010, jbaumann]
+
 * Added `QueueExecutedEvent`
   [20.08.2010, jbaumann]
 
