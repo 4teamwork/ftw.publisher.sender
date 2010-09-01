@@ -608,7 +608,7 @@ class TestRealm(PublisherConfigletView):
                 self.statusMessage(
                     _(u'error_realm_connection_failed',
                       default=u'Connection to realm failed: ${msg}',
-                      mapping=dict(msg=responseText)),
+                      mapping=dict(msg=responseText.decode('utf-8'))),
                     type='error')
         return self.request.RESPONSE.redirect('./@@publisher-config')
 
