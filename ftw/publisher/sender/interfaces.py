@@ -52,6 +52,13 @@ class IQueueExecutedEvent(IObjectEvent):
     """
 
 
+class IBeforeQueueExecutionEvent(IObjectEvent):
+    """The `BeforeQueueExecutionEvent` is fired before
+    executing a queue. Be aware that the transaction may
+    be aborted if there is an error.
+    """
+
+
 class IPathBlacklist(interface.Interface):
     """ Adapter interface for the PathBlacklist adapter which
     knows if the object is blacklisted.

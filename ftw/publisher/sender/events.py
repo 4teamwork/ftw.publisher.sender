@@ -1,6 +1,7 @@
 from zope.component.interfaces import ObjectEvent
 from zope import interface
 from interfaces import IAfterPushEvent, IQueueExecutedEvent
+from interfaces import IBeforeQueueExecutionEvent
 
 
 class AfterPushEvent(ObjectEvent):
@@ -11,9 +12,22 @@ class AfterPushEvent(ObjectEvent):
         self.action = job.action
         self.title = job.objectTitle
         self.path = job.objectPath
-        self.uid = job.objectUID    
-        
-        self.state = state 
+        self.uid = job.objectUID
+
+        self.state = state
+
+
+class BeforeQueueExecutionEvent(ObjectEvent):
+    """The `BeforeQueueExecutionEvent` is fired before
+    executing a queue. Be aware that the transaction may
+    be aborted if there is an error.
+    """
+
+    interface.implements(IBeforeQueueExecutionEvent)
+
+    def __init__(self, context, queue):
+        ObjectEvent.__init__(self, context)
+        self.queue = queue
 
 
 class QueueExecutedEvent(ObjectEvent):

@@ -34,6 +34,7 @@ from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.events import AfterPushEvent, QueueExecutedEvent
+from ftw.publisher.sender.events import BeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.utils import sendJsonToRealm
 from threading import RLock
@@ -250,6 +251,7 @@ class ExecuteQueue(BrowserView):
         self.config = IConfig(self.context)
         portal = self.context.portal_url.getPortalObject()
         self.queue = IQueue(portal)
+        event.notify(BeforeQueueExecutionEvent(portal, self.queue))
         # prepare logger
         self.logger = getLogger()
         self.error_logger = getErrorLogger()
