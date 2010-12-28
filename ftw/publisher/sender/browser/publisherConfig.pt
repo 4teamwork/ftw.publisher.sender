@@ -143,6 +143,25 @@
         <br />
 
         <fieldset>
+          <legend i18n:translate="legend_disablelocking">Disable locking</legend>
+          <p>
+            Locking is currently
+            <tal:ENABLED tal:condition="view/config/locking_enabled">
+              <b i18n:translate="label_enable_locking">Enabled</b>
+              &raquo; <a href="./@@publisher-config?enable-locking=0"
+                         i18n:translate="action_disable_locking">Disable</a>
+            </tal:ENABLED>
+            <tal:DISABLED tal:condition="not:view/config/locking_enabled">
+              <b style="color:red;" i18n:translate="label_disable_locking">
+                  Disabled
+              </b>
+              &raquo; <a href="./@@publisher-config?enable-locking=1"
+                         i18n:translate="action_enable_locking">Enable</a>
+            </tal:DISABLED>
+          </p>
+        </fieldset>
+
+        <fieldset>
           <legend i18n:translate="legend_information">Information</legend>
           <table class="publisher_infos">
             <tr>

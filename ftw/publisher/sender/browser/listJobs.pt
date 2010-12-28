@@ -31,7 +31,7 @@
               <th i18n:translate="th_object">Object</th>
               <th i18n:translate="th_action">Action</th>
               <th i18n:translate="th_username">Username</th>
-              <th i18n:translate="th_data_length">Data Length</th>
+              <th i18n:translate="th_data_length">Data length</th>
               <th></th>
             </tr>
           </thead>

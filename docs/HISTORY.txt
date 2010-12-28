@@ -5,6 +5,14 @@ Changelog
 1.3
 ---
 
+* Added some german translations and added plain english po-file
+  [28.12.2010, mathias.leimgruber] 
+
+* Merged lock-config-branch into trunk
+  Bei Direktem Publishing ohne Queu macht das Locking keinen Sinn. 
+  Daher kann man nun das Locking einschalten/ausschalten. 
+  [13.07.2010, mathias.leimgruber]
+
 * Added new IBeforeQueueExecutionEvent, which allows third party packages to do dome stuff.
   [jbaumann]
 
