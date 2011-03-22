@@ -1,0 +1,5 @@
+ftw.publisher.sender.egg-info
+build
+dist
+*.pyc
+*.mo
