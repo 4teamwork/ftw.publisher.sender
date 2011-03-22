@@ -14,8 +14,8 @@ setup(name='ftw.publisher.sender',
           ' (Maintainer: %s)' % maintainer,
       long_description=open("README.rst").read() + "\n" + \
           open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
+        "Framework :: Plone",
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
@@ -23,27 +23,30 @@ setup(name='ftw.publisher.sender',
       author='%s, 4teamwork GmbH' % maintainer,
       author_email='mailto:info@4teamwork.ch',
       maintainer=maintainer,
-      url='http://psc.4teamwork.ch/4teamwork/ftw/ftw.publisher.sender',
+      url='https://github.com/4teamwork/ftw.publisher.sender',
       license='GPL2',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['ftw', 'ftw.publisher'],
       include_package_data=True,
       zip_safe=False,
+
       install_requires=[
-        'ftw.publisher.core',
-        'Products.PloneFormGen',
         'setuptools',
-        # -*- Extra requirements: -*-
+        'ftw.publisher.core',
+        'ftw.table',
         'plone.z3cform',
-        'simplejson',
         'z3c.autoinclude',
         'z3c.form',
-        'ftw.table',
         ],
+
       extras_require={
         'tests': tests_require,
+        'PloneFormGen': ['Products.PloneFormGen'],
+        'python2.4': ['simplejson']
         },
+
       tests_require=tests_require,
+
       entry_points="""
       # -*- Entry points: -*-
       [z3c.autoinclude.plugin]
