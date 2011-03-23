@@ -130,5 +130,6 @@ Credits
 Sponsored by `4teamwork GmbH <http://www.4teamwork.ch/>`_.
 
 Authors:
+
 - `jone <http://github.com/jone>`_
 - `maethu <https://github.com/maethu>`_
