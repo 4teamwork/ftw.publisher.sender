@@ -6,6 +6,7 @@ maintainer = 'Jonas Baumann'
 
 tests_require = [
     'collective.testcaselayer',
+    'Products.PloneFormGen',
     ]
 
 setup(name='ftw.publisher.sender',
