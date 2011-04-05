@@ -5,12 +5,6 @@ from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.persistence import Queue
 
 
-"""
-@var BATCH_SIZE:        Maximum amount of Jobs to be performed at one ExecuteQueue call
-"""
-BATCH_SIZE = 0
-
-
 class PublishObject(BrowserView):
     """
     This BrowserView adds the current object (self.context) to the publishing queue.
