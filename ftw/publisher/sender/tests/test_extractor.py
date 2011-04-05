@@ -46,17 +46,19 @@ class TestExtractor(PloneTestCase):
 
     def test_getMetadata(self):
         metadata = self.extractor.getMetadata('delete')
-        # uid=metadata['UID']
-        expected_metadata = {'UID': 'a9e37ee08e61ce943ad074e6905b4004',
-         'portal_type': 'Document',
-         'modified': 'MODIFIED',
-         'physicalPath': '/Members/test_user_1_/test-doc-1',
-         'schema_path': 'Products.ATContentTypes.content.document.ATDocument.schema',
-         'sibling_positions': {'topic1': 1,
-                               'test-doc-1': 0},
-         'action': 'delete',
-         'review_state': 'private',
-         'id': 'test-doc-1'}
+
+        expected_metadata = {
+            'UID': metadata['UID'],
+            'portal_type': 'Document',
+            'modified': 'MODIFIED',
+            'physicalPath': '/Members/test_user_1_/test-doc-1',
+            'schema_path':
+                'Products.ATContentTypes.content.document.ATDocument.schema',
+            'sibling_positions': {'topic1': 1,
+                                  'test-doc-1': 0},
+            'action': 'delete',
+            'review_state': 'private',
+            'id': 'test-doc-1'}
 
         self.assertTrue('modified' in metadata)
         metadata['modified'] = 'MODIFIED'
