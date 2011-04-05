@@ -1,70 +1,70 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:five="http://namespaces.zope.org/five"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
-    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
-    i18n_domain="ftw.publisher.sender">
+      xmlns="http://namespaces.zope.org/zope"
+      xmlns:five="http://namespaces.zope.org/five"
+      xmlns:i18n="http://namespaces.zope.org/i18n"
+      xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+      xmlns:zcml="http://namespaces.zope.org/zcml"
+      i18n_domain="ftw.publisher.sender">
 
-  <!-- Include configuration for dependencies listed in setup.py -->
-  <include package="z3c.autoinclude" file="meta.zcml" />
-  <includeDependencies package="." />
+    <!-- Include configuration for dependencies listed in setup.py -->
+    <include package="z3c.autoinclude" file="meta.zcml" />
+    <includeDependencies package="." />
 
-  <!-- include ploneformgen, if installed -->
-  <configure zcml:condition="installed Products.PloneFormGen">
-      <include package="Products.PloneFormGen" />
-  </configure>
+    <!-- include ploneformgen, if installed -->
+    <configure zcml:condition="installed Products.PloneFormGen">
+        <include package="Products.PloneFormGen" />
+    </configure>
 
-  <i18n:registerTranslations directory="locales" />
+    <i18n:registerTranslations directory="locales" />
 
-  <include package=".browser" />
-  <include package=".viewlets" />
-  <include file="profiles.zcml" />
+    <include package=".browser" />
+    <include package=".viewlets" />
+    <include file="profiles.zcml" />
 
-  <adapter
-      provides=".interfaces.IConfig"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-      factory=".persistence.Config"
-      />
+    <adapter
+          provides=".interfaces.IConfig"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+          factory=".persistence.Config"
+          />
 
-  <adapter
-      provides=".interfaces.IQueue"
-      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-      factory=".persistence.Queue"
-      />
+    <adapter
+          provides=".interfaces.IQueue"
+          for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+          factory=".persistence.Queue"
+          />
 
-  <adapter
-      provides=".interfaces.IPathBlacklist"
-      for="*"
-      factory=".adapters.PathBlacklist"
-      />
+    <adapter
+          provides=".interfaces.IPathBlacklist"
+          for="*"
+          factory=".adapters.PathBlacklist"
+          />
 
-  <!-- Remove annotations upgrade step -->
-  <genericsetup:upgradeStep
-      sortkey="1"
-      source="publisher"
-      destination="ftw.publisher"
-      title="Remove publisher annotations"
-      description="Remove publisher annotations"
-      profile="ftw.publisher.sender:default"
-      handler=".upgrades.RemoveAnnotations"
-      />
+    <!-- Remove annotations upgrade step -->
+    <genericsetup:upgradeStep
+          sortkey="1"
+          source="publisher"
+          destination="ftw.publisher"
+          title="Remove publisher annotations"
+          description="Remove publisher annotations"
+          profile="ftw.publisher.sender:default"
+          handler=".upgrades.RemoveAnnotations"
+          />
 
-  <!-- Migrate executed jobs storage  -->
-  <genericsetup:upgradeStep
-      sortkey="2"
-      source="1.1"
-      destination="1.2"
-      title="Migrate executed jobs storage to IOBTree"
-      description="Migrate from PersistentList to IOBTree"
-      profile="ftw.publisher.sender:default"
-      handler=".upgrades.upgrade_executed_jobs_storage"
-      />
+    <!-- Migrate executed jobs storage  -->
+    <genericsetup:upgradeStep
+          sortkey="2"
+          source="1.1"
+          destination="1.2"
+          title="Migrate executed jobs storage to IOBTree"
+          description="Migrate from PersistentList to IOBTree"
+          profile="ftw.publisher.sender:default"
+          handler=".upgrades.upgrade_executed_jobs_storage"
+          />
 
-  <subscriber
-      for="Products.Archetypes.interfaces.IBaseContent
-           zope.app.container.interfaces.IObjectMovedEvent"
-      handler=".eventhandlers.add_move_job"
-      />
+    <subscriber
+          for="Products.Archetypes.interfaces.IBaseContent
+               zope.app.container.interfaces.IObjectMovedEvent"
+          handler=".eventhandlers.add_move_job"
+          />
 
 </configure>

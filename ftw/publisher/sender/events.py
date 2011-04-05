@@ -1,7 +1,7 @@
-from zope.component.interfaces import ObjectEvent
-from zope import interface
 from interfaces import IAfterPushEvent, IQueueExecutedEvent
 from interfaces import IBeforeQueueExecutionEvent
+from zope import interface
+from zope.component.interfaces import ObjectEvent
 
 
 class AfterPushEvent(ObjectEvent):

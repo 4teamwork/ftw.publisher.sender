@@ -1,55 +1,22 @@
-#
-# File:     communication.py
-# Author:   Jonas Baumann <j.baumann@4teamwork.ch>
-# Modified: 06.03.2009
-#
-# Copyright (c) 2007 by 4teamwork.ch
-#
-# GNU General Public License (GPL)
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-# 02110-1301, USA.
-#
-__author__ = """Jonas Baumann <j.baumann@4teamwork.ch>"""
-
-# python imports
-import md5
-from persistent.list import PersistentList
-import datetime
-
-# Zope imports
+from Products.CMFPlone import Batch
 from Products.Five import BrowserView
+from Products.statusmessages.interfaces import IStatusMessage
+from ZODB.POSException import ConflictError
+from ftw.publisher.core import states
+from ftw.publisher.sender import message_factory as _
+from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
+from ftw.publisher.sender.interfaces import IQueue, IConfig
+from ftw.publisher.sender.persistence import Realm
+from ftw.publisher.sender.utils import sendRequestToRealm
+from ftw.table.interfaces import ITableGenerator
+from persistent.list import PersistentList
+from plone.z3cform import z2
 from z3c.form import form, field, button
 from z3c.form import interfaces
 from zope.component import getUtility
 from zope.publisher.interfaces import Retry
-from ZODB.POSException import ConflictError
-
-# plone imports
-from Products.statusmessages.interfaces import IStatusMessage
-from plone.z3cform import z2
-from ftw.table.interfaces import ITableGenerator
-from Products.CMFPlone import Batch
-
-# publisher imports
-from ftw.publisher.sender.persistence import Realm
-from ftw.publisher.sender.interfaces import IQueue, IConfig
-from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
-from ftw.publisher.sender.utils import sendRequestToRealm
-from ftw.publisher.core import states
-from ftw.publisher.sender import message_factory as _
+import datetime
+import md5
 
 
 EXECUTED_JOBS_BATCH_SIZE = 100
@@ -227,7 +194,7 @@ class ConfigView(PublisherConfigletView):
         if self.request.has_key('enable-locking'):
             self.config.set_locking_enabled(self.request.get('enable-locking'))
             redirect = True
-            
+
 
         if redirect:
             return self.request.RESPONSE.redirect('./@@publisher-config')
@@ -617,4 +584,3 @@ class TestRealm(PublisherConfigletView):
                       mapping=dict(msg=responseText.decode('utf-8'))),
                     type='error')
         return self.request.RESPONSE.redirect('./@@publisher-config')
-

@@ -1,10 +1,10 @@
 from Products.Five import BrowserView
+from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.sender import message_factory as _
-from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.browser.interfaces import IBlacklistPathSchema
+from ftw.publisher.sender.interfaces import IConfig
 from ftw.table.interfaces import ITableGenerator
 from plone.z3cform import z2
-from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form import form, field, button
 from zope.component import getUtility
 
