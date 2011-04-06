@@ -11,8 +11,7 @@ tests_require = [
 
 setup(name='ftw.publisher.sender',
       version=version,
-      description="Sender package for publisher product" + \
-          ' (Maintainer: %s)' % maintainer,
+      description="Staging and publishing addon for Plone contents.",
       long_description=open("README.rst").read() + "\n" + \
           open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
