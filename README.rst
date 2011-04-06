@@ -61,22 +61,22 @@ ftw.publisher.sender
   The sender package provides a configuration panel and is responsible for
   sending contents to the target instance. It's usually installed on a
   **editorial site**.
-  `source <https://github.com/4teamwork/ftw.publisher.sender>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.sender>`_
+  `ftw.publisher.sender source <https://github.com/4teamwork/ftw.publisher.sender>`_ |
+  `ftw.publisher.sender pypi <http://pypi.python.org/pypi/ftw.publisher.sender>`_
 
 ftw.publisher.receiver
   The receiver package is installed on the **public site** and is the target
   of the publishing process. It has tools for receiving a request and creating,
   updating or deleting objects which should be published or retrieved.
-  `source <https://github.com/4teamwork/ftw.publisher.receiver>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.receiver>`_
+  `ftw.publisher.receiver source <https://github.com/4teamwork/ftw.publisher.receiver>`_ |
+  `ftw.publisher.receiver pypi <http://pypi.python.org/pypi/ftw.publisher.receiver>`_
 
 ftw.publisher.core
   The core package is installed on both, sender and receiver instances. It
   provides adapters for serializing and unserializing components of plone
   contents (such as portlets).
-  `source <https://github.com/4teamwork/ftw.publisher.core>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.core>`_
+  `ftw.publisher.core source <https://github.com/4teamwork/ftw.publisher.core>`_ |
+  `ftw.publisher.core pypi <http://pypi.python.org/pypi/ftw.publisher.core>`_
 
 
 *Optional packages:*
@@ -84,8 +84,8 @@ ftw.publisher.core
 ftw.publisher.example
   This example package provides a publisher-bound workflow and shows how to
   write an integration package for this use case.
-  `source <https://github.com/4teamwork/ftw.publisher.example>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.example>`_
+  `ftw.publisher.example source <https://github.com/4teamwork/ftw.publisher.example>`_ |
+  `ftw.publisher.example pypi <http://pypi.python.org/pypi/ftw.publisher.example>`_
 
 
 Installation & Usage
