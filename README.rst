@@ -86,8 +86,8 @@ Optional packages:
 ftw.publisher.example
   This example package provides a publisher-bound workflow and shows how to
   write an integration package for this use case.
-  `source <https://github.com/4teamwork/ftw.publisher.exmaple>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.exmaple>`_
+  `source <https://github.com/4teamwork/ftw.publisher.example>`_ |
+  `pypi <http://pypi.python.org/pypi/ftw.publisher.example>`_
 
 
 =====
