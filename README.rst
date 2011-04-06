@@ -89,30 +89,6 @@ ftw.publisher.example
   `source <https://github.com/4teamwork/ftw.publisher.exmaple>`_ |
   `pypi <http://pypi.python.org/pypi/ftw.publisher.exmaple>`_
 
-ftw.publisher.mailreport
-  Addon for periodically sending reports to one or more mail adresses. The
-  reports include the total of succeded and failed jobs and optionally also
-  embeds tracebacks of the failed jobs for further investigation. The package
-  is installed on the sender instance.
-  `source <https://github.com/4teamwork/ftw.publisher.mailreport>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.mailreport>`_
-
-ftw.publisher.monitor
-  Addon package for monitoring the queue. In some cases (network problems,
-  instance not running, etc) the job-queue may not be executed properly.
-  This monitor sends e-mail notifications when amount of pending jobs in
-  the queue reach a configurable threshold. It's installed on the sender
-  instance.
-  `source <https://github.com/4teamwork/ftw.publisher.monitor>`_ |
-  `pypi <http://pypi.python.org/pypi/ftw.publisher.monitor>`_
-
-ftw.publisher.controlling
-  Addon package providing an additional control panel with various statistics
-  and reports. It is installed on both, sender and receiver, since it is able
-  to compare the state of objects on both installations. With this tool it's
-  possible to find inconsistency such as missing objects on one instance or
-  incoherent workflow states.
-
 
 =====
 Links
