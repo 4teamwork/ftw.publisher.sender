@@ -83,6 +83,12 @@ ftw.publisher.core
 
 Optional packages:
 
+ftw.publisher.example
+  This example package provides a publisher-bound workflow and shows how to
+  write an integration package for this use case.
+  `source <https://github.com/4teamwork/ftw.publisher.exmaple>`_ |
+  `pypi <http://pypi.python.org/pypi/ftw.publisher.exmaple>`_
+
 ftw.publisher.mailreport
   Addon for periodically sending reports to one or more mail adresses. The
   reports include the total of succeded and failed jobs and optionally also
