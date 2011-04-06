@@ -1,4 +1,3 @@
-============
 Introduction
 ============
 
@@ -53,7 +52,6 @@ certain ones. Therefore it is easyer to implement custom adapters for
 those annotations which need to be published.
 
 
-========
 Packages
 ========
 
@@ -90,7 +88,6 @@ ftw.publisher.example
   `pypi <http://pypi.python.org/pypi/ftw.publisher.example>`_
 
 
-====================
 Installation & Usage
 ====================
 
@@ -101,9 +98,6 @@ package and the
 See also the `wiki https://github.com/4teamwork/ftw.publisher.sender/wiki`_.
 
 
-
-
-=====
 Links
 =====
 
@@ -118,7 +112,6 @@ Here are some additional links:
 - Wiki: https://github.com/4teamwork/ftw.publisher.sender/wiki
 
 
-=======
 Credits
 =======
 
