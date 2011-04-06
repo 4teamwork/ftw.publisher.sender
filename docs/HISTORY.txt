@@ -10,11 +10,11 @@ Changelog
 ---
 
 * Added some german translations and added plain english po-file
-  [28.12.2010, mathias.leimgruber] 
+  [28.12.2010, mathias.leimgruber]
 
 * Merged lock-config-branch into trunk
-  Bei Direktem Publishing ohne Queu macht das Locking keinen Sinn. 
-  Daher kann man nun das Locking einschalten/ausschalten. 
+  Bei Direktem Publishing ohne Queu macht das Locking keinen Sinn.
+  Daher kann man nun das Locking einschalten/ausschalten.
   [13.07.2010, mathias.leimgruber]
 
 * Added new IBeforeQueueExecutionEvent, which allows third party packages to do dome stuff.
@@ -55,14 +55,12 @@ UPGRADES:
 ---
 
 * Issue #148 Robustes Error-Handling, falls auf dem Ziel-System der Publisher nicht erreichbar ist
-  https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/148/
   [02.07.2010, jbaumann]
 
 * Use the translated communication state names
   [01.07.2010, jbaumann]
 
 * Issue #151 ftw.publisher: getDataFolder nicht persistent speichern
-  https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/151/
   [28.06.2010, jbaumann]
 
 * Show json cache path in configuration
@@ -90,7 +88,6 @@ UPGRADES:
 -----
 
 * Issue #150 publisher: Move-Jobs funktionieren nicht
-  https://extranet.4teamwork.ch/projects/integration-zug.ch-izug/tracker-integration-zug.ch-izug/150/
   [22.06.2010, jbaumann]
 
 * Fixed fixed namespace_packages in setup.py
