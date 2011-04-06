@@ -5,6 +5,10 @@ Changelog
 1.4
 ---
 
+* Cleanup, move to github (https://github.com/4teamwork/ftw.publisher.sender)
+  and prepare for release.
+  [jbaumann]
+
 
 1.3
 ---
