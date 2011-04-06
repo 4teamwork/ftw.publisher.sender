@@ -57,7 +57,7 @@ those annotations which need to be published.
 Packages
 ========
 
-Mandatory packages:
+*Mandatory packages:*
 
 ftw.publisher.sender
   The sender package provides a configuration panel and is responsible for
@@ -81,13 +81,26 @@ ftw.publisher.core
   `pypi <http://pypi.python.org/pypi/ftw.publisher.core>`_
 
 
-Optional packages:
+*Optional packages:*
 
 ftw.publisher.example
   This example package provides a publisher-bound workflow and shows how to
   write an integration package for this use case.
   `source <https://github.com/4teamwork/ftw.publisher.example>`_ |
   `pypi <http://pypi.python.org/pypi/ftw.publisher.example>`_
+
+
+====================
+Installation & Usage
+====================
+
+Take a look at the
+`ftw.pubisher.example <https://github.com/4teamwork/ftw.publisher.example>`_
+package and the
+`example buildout <https://github.com/4teamwork/ftw.publisher-example-buildout>`_.
+See also the `wiki https://github.com/4teamwork/ftw.publisher.sender/wiki`_.
+
+
 
 
 =====
