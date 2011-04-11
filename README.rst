@@ -95,7 +95,7 @@ Take a look at the
 `ftw.pubisher.example <https://github.com/4teamwork/ftw.publisher.example>`_
 package and the
 `example buildout <https://github.com/4teamwork/ftw.publisher-example-buildout>`_.
-See also the `wiki https://github.com/4teamwork/ftw.publisher.sender/wiki`_.
+See also the `wiki <https://github.com/4teamwork/ftw.publisher.sender/wiki>`_.
 
 
 Links
