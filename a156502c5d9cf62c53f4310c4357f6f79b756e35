@@ -1,0 +1,42 @@
+Started by timer
+Checkout:workspace / /var/lib/jenkins/jobs/ftw.publisher.sender/workspace - hudson.remoting.LocalChannel@14c61a6
+Using strategy: Default
+Last Built Revision: Revision a156502c5d9cf62c53f4310c4357f6f79b756e35 (origin/master)
+Checkout:workspace / /var/lib/jenkins/jobs/ftw.publisher.sender/workspace - hudson.remoting.LocalChannel@14c61a6
+Fetching changes from the remote Git repository
+Fetching upstream changes from git@github.com:4teamwork/ftw.publisher.sender.git
+Seen branch in repository origin/master
+Commencing build of Revision a156502c5d9cf62c53f4310c4357f6f79b756e35 (origin/master)
+Checking out Revision a156502c5d9cf62c53f4310c4357f6f79b756e35 (origin/master)
+[workspace] $ /bin/sh -xe /tmp/hudson3465863073544730023.sh
++ '[' '!' -L buildout.cfg ']'
++ '[' '!' -x bin/buildout ']'
++ bin/develop up --force
+INFO: Queued 'ftw.publisher.core' for update.
+INFO: Queued 'ftw.table' for update.
+INFO: Updated 'ftw.table' with git.
+ERROR: git pull of 'ftw.table' failed.
+ERROR: error: SSL certificate problem, verify that the CA cert is OK. Details:
+ERROR: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed while accessing https://github.com/4teamwork/ftw.table.git/info/refs
+ERROR:
+ERROR: fatal: HTTP request failed
+ERROR:
+INFO: Updated 'ftw.publisher.core' with git.
+ERROR: git pull of 'ftw.publisher.core' failed.
+ERROR: error: SSL certificate problem, verify that the CA cert is OK. Details:
+ERROR: error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed while accessing https://github.com/4teamwork/ftw.publisher.core.git/info/refs
+ERROR:
+ERROR: fatal: HTTP request failed
+ERROR:
+ERROR: There have been errors, see messages above.
+[TASKS] Scanning workspace files for tasks...
+Recording test results
+Performing Post build task...
+Match found for : : True
+Logical operation result is TRUE
+Running script  : /var/lib/jenkins/scripts/git-note-result-async.sh
+[workspace] $ /bin/sh -xe /tmp/hudson4064786582011057772.sh
++ /var/lib/jenkins/scripts/git-note-result-async.sh
+POST BUILD TASK : SUCCESS
+END OF POST BUILD TASK : 0
+Finished: FAILURE
