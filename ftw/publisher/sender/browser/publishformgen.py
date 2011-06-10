@@ -29,11 +29,14 @@ class PublishObject(BrowserView):
                 '/'.join(self.context.getPhysicalPath()),
                 ))
 
-        # get all blocks and add them to the queue too
-        items = self.context.objectValues()
-        for item in items:
-            queue.createJob('push', item, username)
-
+        # Get all items recursively and add theme to the queue
+        def add_item_to_queue(items):
+            for item in items:
+                queue.createJob('push', item, username)
+                subitems = item.objectValues()
+                if subitems:
+                    add_item_to_queue(subitems)
+        add_item_to_queue(self.context.objectValues())
 
         # status message
         if msg is None:
