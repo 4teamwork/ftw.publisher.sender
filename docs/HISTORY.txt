@@ -5,8 +5,11 @@ Changelog
 1.5
 ---
 
-* Fix PloneFormGen publish support. 
-  Recursively publish all items from a FormFolder. 
+* Fixed authentication problem (base64) (issue #1)
+  [jbaumann]
+
+* Fix PloneFormGen publish support.
+  Recursively publish all items from a FormFolder.
   [10.06.2011, mathias.leimgruber]
 
 1.4

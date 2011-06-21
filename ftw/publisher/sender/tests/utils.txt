@@ -1,0 +1,52 @@
+
+    >>> from ftw.publisher.sender import utils
+    >>> from ftw.publisher.sender.persistence import Realm
+    >>> import base64
+    >>> import urllib2
+
+Mock the request:
+
+    >>> class RequestMock(object):
+    ...     def __init__(self, url, data='', headers={}):
+    ...         self.url = url
+    ...         self.data = data
+    ...         self.headers = headers
+    ...     def read(self):
+    ...         return self
+    ...     def get_username_password(self):
+    ...         cookies = dict([c.strip().split('=', 1) for c in
+    ...                         self.headers.get('Cookie').split(
+    ...                             '\n', 1)[0].split(',')])
+    ...         ac = cookies.get('__ac')
+    ...         user, pwd = base64.b64decode(ac).split(':')
+    ...         return user.decode('hex'), pwd.decode('hex')
+
+    >>> def urlopen(request):
+    ...     return request
+    >>> ori_request = urllib2.Request
+    >>> ori_urlopen = urllib2.urlopen
+    >>> urllib2.Request = RequestMock
+    >>> urllib2.urlopen = urlopen
+
+Test the cookie:
+
+    >>> realm = Realm(1, 'http://nohost/target',
+    ...               'foo',
+    ...               'pwd')
+    >>> req = utils.sendRequestToRealm({}, realm, 'bar')
+    >>> req
+    <RequestMock object at ...>
+    >>> req.get_username_password()
+    ('foo', 'pwd')
+
+    >>> realm2 = Realm(1, 'http://nohost/target',
+    ...                'aratherlongusername',
+    ...                'andaverylongwpasswordfortestingbase64encodingproperly')
+    >>> req = utils.sendRequestToRealm({}, realm2, 'bar')
+    >>> req.get_username_password()
+    ('aratherlongusername', 'andaverylongwpasswordfortestingbase64encodingproperly')
+
+
+Remove mock:
+    >>> urllib2.Request = ori_request
+    >>> urllib2.urlopen = ori_urlopen

@@ -11,6 +11,7 @@ MODULENAMES = [
 TESTFILES = [
     'blacklist.txt',
     'storage.txt',
+    'utils.txt',
 ]
 
 OPTIONFLAGS = (doctest.NORMALIZE_WHITESPACE|
@@ -21,15 +22,15 @@ OPTIONFLAGS = (doctest.NORMALIZE_WHITESPACE|
 def test_suite():
 
     suite = unittest.TestSuite()
-    
+
     for testfile in TESTFILES:
         fdfs = ZopeTestCase.FunctionalDocFileSuite(
             testfile,
             optionflags=OPTIONFLAGS,
             test_class=ptc.FunctionalTestCase,)
         fdfs.layer = flayer.layer
-        suite.addTest(fdfs)    
-    
+        suite.addTest(fdfs)
+
     for module in MODULENAMES:
         fdts = ZopeTestCase.FunctionalDocTestSuite(
             module,

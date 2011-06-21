@@ -50,8 +50,9 @@ def sendRequestToRealm(data, realm, serverAction):
     if not isinstance(realm, Realm):
         TypeError('Excpected Realm instance')
     url = os.path.join(realm.url, serverAction)
-    credentials = ':'.join([realm.username.encode('hex'), realm.password.encode('hex')])
-    credentials = str(base64.encodestring(credentials)).strip()
+    credentials = ':'.join([realm.username.encode('hex'),
+                            realm.password.encode('hex')])
+    credentials = str(base64.b64encode(credentials)).strip()
     headers = {
         'User-Agent'            : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
         'Content-Type'          : 'application/x-www-form-urlencoded',
