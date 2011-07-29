@@ -1,9 +1,11 @@
 from Products.PloneTestCase.ptc import PloneTestCase
 from ftw.publisher.core.interfaces import IDataCollector
+from ftw.publisher.core.utils import encode_after_json
 from ftw.publisher.sender.extractor import Extractor
 from ftw.publisher.sender.tests.layer import Layer
 from zope.component import getAdapters
 import unittest
+import simplejson
 
 
 class TestExtractor(PloneTestCase):
@@ -64,6 +66,28 @@ class TestExtractor(PloneTestCase):
         metadata['modified'] = 'MODIFIED'
 
         self.assertEquals(expected_metadata, metadata)
+
+    def test_ignoreFields(self):
+        # first all fields are in data
+        jsondata = self.extractor(self.testdoc1, 'push')
+        # decode from json
+        data = simplejson.loads(jsondata)
+        data = encode_after_json(data)
+        self.assertTrue('description' in data['field_data_adapter'])
+        self.assertTrue('excludeFromNav' in data['field_data_adapter'])
+
+        # now ignore some fields
+        from ftw.publisher.sender.interfaces import IConfig
+        config = IConfig(self.portal)
+        config.set_ignored_fields({'Document':['description', 'excludeFromNav']})
+
+        jsondata = self.extractor(self.testdoc1, 'push')
+        # decode from json
+        data = simplejson.loads(jsondata)
+        data = encode_after_json(data)
+        self.assertTrue('description' not in data['field_data_adapter'])
+        self.assertTrue('excludeFromNav' not in data['field_data_adapter'])
+
 
     def test_getRelativePath(self):
         path = self.extractor.getRelativePath()
