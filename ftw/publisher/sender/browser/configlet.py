@@ -2,6 +2,9 @@ from Products.CMFPlone import Batch
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from ZODB.POSException import ConflictError
+from Products.CMFCore.utils import getToolByName
+from persistent.list import PersistentList
+from persistent.dict import PersistentDict
 from ftw.publisher.core import states
 from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
@@ -9,7 +12,6 @@ from ftw.publisher.sender.interfaces import IQueue, IConfig
 from ftw.publisher.sender.persistence import Realm
 from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.table.interfaces import ITableGenerator
-from persistent.list import PersistentList
 from plone.z3cform import z2
 from z3c.form import form, field, button
 from z3c.form import interfaces
@@ -189,6 +191,24 @@ class ConfigView(PublisherConfigletView):
         elif self.request.get('disable-publishing'):
             self.config.set_publishing_enabled(False)
             redirect = True
+        elif self.request.get('submit_ignored_fields'):
+            ignore = {}
+            add_ignore_id = self.request.get('add_ignore_id', None)
+            add_ignore_fields = self.request.get('add_ignore_fields', None)
+            #override saved ignores
+            for ign_id in self.request.get('ign_ids', []):
+                ign = self.request.get(ign_id, '')
+                if ign.replace('\r\n','').strip():
+                    ignore[ign_id] = PersistentList(
+                        [term.strip() for term in ign.split('\r\n') if term])
+            # add new ignores
+            if add_ignore_id and add_ignore_fields:
+                fields = add_ignore_fields.split('\r\n')
+                ignore[add_ignore_id] = PersistentList(
+                    [term.strip() for term in fields if term])
+
+            self.config.set_ignored_fields(PersistentDict(ignore))
+            redirect = True
 
         #set locking flag
         if self.request.has_key('enable-locking'):
@@ -199,6 +219,18 @@ class ConfigView(PublisherConfigletView):
         if redirect:
             return self.request.RESPONSE.redirect('./@@publisher-config')
         return super(ConfigView, self).__call__(*args, **kwargs)
+
+    def getTypesInformation(self):
+        """ Gets the ignored types form annotations.
+            Returns the types with ignored fields and in second position
+            all other types.
+        """
+        types_tool = getToolByName(self.context, 'portal_types')
+        portal_types = types_tool.listTypeInfo()
+        ignored_types = self.config.get_ignored_fields()
+        portal_types = [ptype for ptype in portal_types \
+                              if ptype.id not in ignored_types.keys()]
+        return [ignored_types, portal_types]
 
     def getQueueSize(self):
         return IQueue(self.context).countJobs()
