@@ -5,6 +5,8 @@ Changelog
 1.6
 ---
 
+* Ignored fields can be configurated, which will be ignored by the publisher.
+  [29.07.2011, jinfanger]
 
 1.5
 ---

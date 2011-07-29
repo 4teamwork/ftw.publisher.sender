@@ -2,6 +2,7 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from ZODB.POSException import ConflictError
 from ftw.publisher.core.interfaces import IDataCollector
 from ftw.publisher.core.utils import decode_for_json
+from ftw.publisher.sender.interfaces import IConfig
 from zExceptions import NotFound
 from zope.component import getAdapters
 from zope.publisher.interfaces import Retry
@@ -34,6 +35,16 @@ class Extractor(object):
         # gets the metadata, we dont use an adapter in this case,
         # cause metdata is the most important data-set we need
         data['metadata'] = self.getMetadata(action)
+
+        # remove ignored fields
+        portal = self.object.portal_url.getPortalObject()
+        config = IConfig(portal)
+        ignore = config.get_ignored_fields()
+        for ptype, fields in ignore.items():
+            if data['metadata']['portal_type'] == ptype:
+                for field in fields:
+                    if field in data['field_data_adapter']:
+                        del data['field_data_adapter'][field]
 
         if action == 'move':
             #read out data from event_information attr

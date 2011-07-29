@@ -8,6 +8,7 @@ from ftw.publisher.sender import extractor
 from interfaces import IConfig, IQueue
 from persistent import Persistent
 from persistent.list import PersistentList
+from persistent.dict import PersistentDict
 from plone.memoize import instance
 from zope import interface, component
 from zope.annotation.interfaces import IAnnotations
@@ -175,6 +176,18 @@ class Config(object):
             enabled = bool(enabled == '1')
         self.annotations['publisher-locking-enabled'] = bool(enabled)
 
+    def get_ignored_fields(self):
+        """ Returns a PersistentDict if there are no ignored-fields yet.
+        """
+        return self.annotations.get('publisher-ignored-fields',
+                                    PersistentDict())
+
+    def set_ignored_fields(self, dictionary):
+        """ Sets the publisher-ignored-fields.
+            Example:
+            {'FormSaveDataAdapter': ['SavedFormInput',]}
+        """
+        self.annotations['publisher-ignored-fields'] = dictionary
 
 class Queue(object):
     """
