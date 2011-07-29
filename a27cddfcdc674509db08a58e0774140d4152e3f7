@@ -1,0 +1,468 @@
+Started by an SCM change
+Checkout:workspace / /var/lib/jenkins/jobs/ftw.publisher.sender/workspace - hudson.remoting.LocalChannel@1556aec
+Using strategy: Default
+Last Built Revision: Revision 05753e475cde3be1793929c9d215a8dddbd9bf27 (origin/master)
+Checkout:workspace / /var/lib/jenkins/jobs/ftw.publisher.sender/workspace - hudson.remoting.LocalChannel@1556aec
+Fetching changes from the remote Git repository
+Fetching upstream changes from git@github.com:4teamwork/ftw.publisher.sender.git
+Seen branch in repository origin/master
+Commencing build of Revision a27cddfcdc674509db08a58e0774140d4152e3f7 (origin/master)
+Checking out Revision a27cddfcdc674509db08a58e0774140d4152e3f7 (origin/master)
+[workspace] $ /bin/sh -xe /tmp/hudson6860614875372570506.sh
++ '[' '!' -L buildout.cfg ']'
++ '[' '!' -x bin/buildout ']'
++ bin/develop up --force
+INFO: Queued 'ftw.publisher.core' for update.
+INFO: Queued 'ftw.table' for update.
+INFO: Updated 'ftw.publisher.core' with git.
+INFO: Updated 'ftw.table' with git.
++ bin/buildout
+mr.developer: Queued 'ftw.publisher.core' for checkout.
+mr.developer: Queued 'ftw.table' for checkout.
+mr.developer: Skipped checkout of existing package 'ftw.publisher.core'.
+mr.developer: Skipped checkout of existing package 'ftw.table'.
+Develop: '/var/lib/jenkins/jobs/ftw.publisher.sender/workspace/src/ftw.publisher.core'
+warning: no files found matching '*.txt'
+warning: no previously-included files matching '._*' found anywhere in distribution
+Develop: '/var/lib/jenkins/jobs/ftw.publisher.sender/workspace/src/ftw.table'
+warning: no previously-included files matching '._*' found anywhere in distribution
+Develop: '/var/lib/jenkins/jobs/ftw.publisher.sender/workspace/.'
+warning: no previously-included files matching '._*' found anywhere in distribution
+Unused options for buildout: 'eggs'.
+Updating _mr.developer.
+Updating zope2.
+Updating fake eggs
+Updating instance.
+Updating test.
++ bin/test --xml -s ftw.publisher.sender
+/var/lib/jenkins/jobs/ftw.publisher.sender/workspace/ftw/publisher/sender/persistence.py:15: DeprecationWarning: zope.app.annotation has moved to zope.annotation. Import of zope.app.annotation will become unsupported in Zope 3.5
+  from zope.app.annotation.interfaces import IAttributeAnnotatable
+/var/lib/jenkins/jobs/ftw.publisher.sender/workspace/ftw/publisher/sender/persistence.py:15: DeprecationWarning: zope.app.annotation.interfaces has moved to zope.annotation.interfaces. Import of zope.app.annotation.interfaces will become unsupported in Zope 3.5
+  from zope.app.annotation.interfaces import IAttributeAnnotatable
+Running ftw.publisher.sender.tests.flayer.Layer tests:
+  Set up Products.PloneTestCase.layer.ZCML in 6.909 seconds.
+  Set up Products.PloneTestCase.layer.PloneSite/var/lib/jenkins/zope/eggs/Products.PlonePAS-3.12-py2.4.egg/Products/PlonePAS/setuphandlers.py:39: DeprecationWarning: portal_groups.getGroupIds is deprecated and will be removed in Plone 4.0. Use PAS searchGroups instead
+  existing = gtool.listGroupIds()
+ in 15.369 seconds.
+  Set up collective.testcaselayer.ptc.PTCLayer in 0.092 seconds.
+  Set up collective.testcaselayer.mail.MockMailHostLayer in 1.213 seconds.
+  Set up collective.testcaselayer.common.CommonPTCLayer in 0.161 seconds.
+  Set up ftw.publisher.sender.tests.flayer.Layer in 1.519 seconds.
+  Ran 5 tests with 0 failures and 0 errors in 19.640 seconds.
+Running ftw.publisher.sender.tests.layer.IntegrationTestLayer tests:
+  Tear down ftw.publisher.sender.tests.flayer.Layer in 0.001 seconds.
+  Tear down collective.testcaselayer.common.CommonPTCLayer in 0.001 seconds.
+  Tear down collective.testcaselayer.mail.MockMailHostLayer in 0.000 seconds.
+  Set up ftw.publisher.sender.tests.layer.IntegrationTestLayer in 1.892 seconds.
+  Ran 9 tests with 0 failures and 0 errors in 1.951 seconds.
+Tearing down left over layers:
+  Tear down ftw.publisher.sender.tests.layer.IntegrationTestLayer in 0.001 seconds.
+  Tear down collective.testcaselayer.ptc.PTCLayer in 0.001 seconds.
+  Tear down Products.PloneTestCase.layer.PloneSite in 0.939 seconds.
+  Tear down Products.PloneTestCase.layer.ZCML in 0.006 seconds.
+Total: 14 tests, 0 failures, 0 errors in 50.988 seconds.
++ pylint ftw.publisher.sender
++ tee pylint.txt
+ftw/publisher/sender/events.py:1: [W0403] Relative import 'interfaces', should be 'ftw.publisher.sender.interfaces'
+ftw/publisher/sender/events.py:2: [W0403] Relative import 'interfaces', should be 'ftw.publisher.sender.interfaces'
+ftw/publisher/sender/adapters.py:7: [C0301] Line too long (92/80)
+ftw/publisher/sender/adapters.py:21: [C0301] Line too long (88/80)
+ftw/publisher/sender/extractor.py:18: [W0622, Extractor.__call__] Redefining built-in 'object'
+ftw/publisher/sender/extractor.py:18: [R0914, Extractor.__call__] Too many local variables (20/15)
+ftw/publisher/sender/extractor.py:146: [R0201, Extractor.convertToJson] Method could be a function
+ftw/publisher/sender/extractor.py:29: [W0201, Extractor.__call__] Attribute 'is_root' defined outside __init__
+ftw/publisher/sender/extractor.py:28: [W0201, Extractor.__call__] Attribute 'object' defined outside __init__
+ftw/publisher/sender/persistence.py:8: [W0403] Relative import 'interfaces', should be 'ftw.publisher.sender.interfaces'
+ftw/publisher/sender/persistence.py:55: [W0622, Config._setRealms] Redefining built-in 'list'
+ftw/publisher/sender/persistence.py:75: [W0622, Config.appendRealm] Redefining built-in 'list'
+ftw/publisher/sender/persistence.py:88: [W0622, Config.removeRealm] Redefining built-in 'list'
+ftw/publisher/sender/persistence.py:93: [R0201, Config.getDataFolder] Method could be a function
+ftw/publisher/sender/persistence.py:219: [W0622, Queue._setJobs] Redefining built-in 'list'
+ftw/publisher/sender/persistence.py:239: [W0622, Queue.appendJob] Redefining built-in 'list'
+ftw/publisher/sender/persistence.py:264: [W0622, Queue.removeJob] Redefining built-in 'list'
+ftw/publisher/sender/persistence.py:369: [W0612, Queue.clear_executed_jobs] Unused variable 'key'
+ftw/publisher/sender/persistence.py:373: [W0621, Queue.remove_executed_jobs_older_than] Redefining name 'time' from outer scope (line 17)
+ftw/publisher/sender/persistence.py:414: [R0902, Job] Too many instance attributes (8/7)
+ftw/publisher/sender/persistence.py:420: [W0622, Job.__init__] Redefining built-in 'object'
+ftw/publisher/sender/persistence.py:420: [E1002, Job.__init__] Use super on an old style class
+ftw/publisher/sender/persistence.py:440: [W0622, Job._extractData] Redefining built-in 'object'
+ftw/publisher/sender/persistence.py:450: [W0622, Job._extractData] Redefining built-in 'file'
+ftw/publisher/sender/persistence.py:448: [W0622, Job._extractData] Redefining built-in 'dir'
+ftw/publisher/sender/persistence.py:498: [W0622, Job.move_jsonfile_to] Redefining built-in 'dir'
+ftw/publisher/sender/persistence.py:499: [W0612, Job.move_jsonfile_to] Unused variable 'oridir'
+ftw/publisher/sender/persistence.py:546: [W0631, Job.get_latest_executed_entry] Using possibly undefined loop variable 'state'
+ftw/publisher/sender/persistence.py:513: [W0201, Job.move_jsonfile_to] Attribute 'dataFile' defined outside __init__
+ftw/publisher/sender/persistence.py:533: [W0201, Job.executed_with_states] Attribute 'executed_list' defined outside __init__
+ftw/publisher/sender/notifier/statusmessage.py:6: [C0301] Line too long (86/80)
+ftw/publisher/sender/notifier/statusmessage.py:7: [C0301] Line too long (97/80)
+ftw/publisher/sender/notifier/statusmessage.py:8: [C0301] Line too long (86/80)
+ftw/publisher/sender/tests/test_views.py:25: [C0301] Line too long (106/80)
+ftw/publisher/sender/tests/test_views.py:44: [C0301] Line too long (83/80)
+ftw/publisher/sender/tests/test_views.py:48: [W0511] XXX disabled for now, since installation of PloneFormGen seems
+ftw/publisher/sender/tests/test_views.py:15: [C0324, TestPublishObject.afterSetUp] Comma not followed by a space
+        self.testdoc2 = getattr(self.folder,testdoc2id,None)
+                                           ^^
+ftw/publisher/sender/tests/test_views.py:19: [C0324, TestPublishObject.test_publish_object] Comma not followed by a space
+        self.assertEquals(queue.countJobs(),0)
+                                           ^^
+ftw/publisher/sender/tests/test_views.py:20: [C0324, TestPublishObject.test_publish_object] Comma not followed by a space
+        PublishObject(self.testdoc2,self.testdoc2.REQUEST)()
+                                   ^^
+ftw/publisher/sender/tests/test_views.py:21: [C0324, TestPublishObject.test_publish_object] Comma not followed by a space
+        self.assertEquals(queue.countJobs(),1)
+                                           ^^
+ftw/publisher/sender/tests/test_views.py:25: [C0324, TestPublishObject.test_publish_plonesiteroot] Comma not followed by a space
+        self.assertEquals(isinstance(PublishObject(self.portal,self.portal.REQUEST), PublishObject), True)
+                                                              ^^
+ftw/publisher/sender/tests/test_views.py:15: [W0201, TestPublishObject.afterSetUp] Attribute 'testdoc2' defined outside __init__
+ftw/publisher/sender/tests/test_views.py:34: [C0324, TestDeleteObject.afterSetUp] Comma not followed by a space
+        self.testdoc2 = getattr(self.folder,testdoc2id,None)
+                                           ^^
+ftw/publisher/sender/tests/test_views.py:38: [C0324, TestDeleteObject.test_delete_object] Comma not followed by a space
+        self.assertEquals(queue.countJobs(),0)
+                                           ^^
+ftw/publisher/sender/tests/test_views.py:39: [C0324, TestDeleteObject.test_delete_object] Comma not followed by a space
+        DeleteObject(self.testdoc2,self.testdoc2.REQUEST)()
+                                  ^^
+ftw/publisher/sender/tests/test_views.py:40: [C0324, TestDeleteObject.test_delete_object] Comma not followed by a space
+        self.assertEquals(queue.countJobs(),1)
+                                           ^^
+ftw/publisher/sender/tests/test_views.py:44: [C0324, TestDeleteObject.test_delete_plonesiteroot] Comma not followed by a space
+        self.assertRaises(Exception, DeleteObject(self.portal,self.portal.REQUEST))
+                                                             ^^
+ftw/publisher/sender/tests/test_views.py:34: [W0201, TestDeleteObject.afterSetUp] Attribute 'testdoc2' defined outside __init__
+ftw/publisher/sender/tests/test_extractor.py:32: [W0612, TestExtractor.test_extractor_object] Unused variable 'adapter'
+ftw/publisher/sender/tests/test_extractor.py:45: [W0612, TestExtractor.test_extractor_topic] Unused variable 'adapter'
+ftw/publisher/sender/tests/test_extractor.py:80: [W0404, TestExtractor.test_ignoreFields] Reimport 'IConfig' (imported line 1)
+ftw/publisher/sender/tests/test_extractor.py:20: [W0201, TestExtractor.afterSetUp] Attribute 'topic1' defined outside __init__
+ftw/publisher/sender/tests/test_extractor.py:21: [W0201, TestExtractor.afterSetUp] Attribute 'extractor' defined outside __init__
+ftw/publisher/sender/tests/test_extractor.py:17: [W0201, TestExtractor.afterSetUp] Attribute 'testdoc1' defined outside __init__
+ftw/publisher/sender/tests/flayer.py:8: [W0404, Layer.afterSetUp] Reimport 'ftw.publisher.sender' (imported line 2)
+ftw/publisher/sender/tests/layer.py:7: [W0611] Unused import Products
+ftw/publisher/sender/tests/layer.py:3: [W0611] Unused import ZopeTestCase
+ftw/publisher/sender/browser/configlet.py:10: [C0324] Comma not followed by a space
+from ftw.publisher.sender.browser.interfaces import IRealmSchema,\
+                                                                ^^
+ftw/publisher/sender/browser/configlet.py:64: [C0322, CreateRealmForm.handleAdd] Operator not preceded by a space
+                if realm.url==data['url'] and realm.username==data['username']:
+                            ^^
+ftw/publisher/sender/browser/configlet.py:75: [W0142, CreateRealmForm.handleAdd] Used * or ** magic
+ftw/publisher/sender/browser/configlet.py:80: [W0622, CreateRealmForm.statusMessage] Redefining built-in 'type'
+ftw/publisher/sender/browser/configlet.py:106: [E1002, EditRealmForm.updateWidgets] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:115: [C0112, EditRealmForm.handleSave] Empty docstring
+ftw/publisher/sender/browser/configlet.py:127: [C0322, EditRealmForm.handleSave] Operator not preceded by a space
+                if realm!=currentRealm:
+                        ^^
+ftw/publisher/sender/browser/configlet.py:128: [C0322, EditRealmForm.handleSave] Operator not preceded by a space
+                    if realm.username==data['username'] and\
+                                     ^^
+                       realm.url==data['url']:
+ftw/publisher/sender/browser/configlet.py:143: [W0622, EditRealmForm.statusMessage] Redefining built-in 'type'
+ftw/publisher/sender/browser/configlet.py:148: [R0201, EditRealmForm.makeRealmId] Method could be a function
+ftw/publisher/sender/browser/configlet.py:151: [W0622, EditRealmForm.getRealmById] Redefining built-in 'id'
+ftw/publisher/sender/browser/configlet.py:162: [E1002, PublisherConfigletView.__init__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:167: [R0201, PublisherConfigletView.makeRealmId] Method could be a function
+ftw/publisher/sender/browser/configlet.py:170: [W0622, PublisherConfigletView.getRealmById] Redefining built-in 'id'
+ftw/publisher/sender/browser/configlet.py:176: [W0622, PublisherConfigletView.statusMessage] Redefining built-in 'type'
+ftw/publisher/sender/browser/configlet.py:184: [E1002, ConfigView.__call__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:258: [W0622, ConfigView.getRealms] Redefining built-in 'id'
+ftw/publisher/sender/browser/configlet.py:297: [E1002, ListExecutedJobs.__call__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:342: [R0914, ListExecutedJobs._get_data] Too many local variables (18/15)
+ftw/publisher/sender/browser/configlet.py:333: [W0201, ListExecutedJobs.__call__] Attribute 'batch' defined outside __init__
+ftw/publisher/sender/browser/configlet.py:428: [E1002, ExecutedJobDetails.__call__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:432: [W0201, ExecutedJobDetails.__call__] Attribute 'job' defined outside __init__
+ftw/publisher/sender/browser/configlet.py:431: [W0201, ExecutedJobDetails.__call__] Attribute 'key' defined outside __init__
+ftw/publisher/sender/browser/configlet.py:497: [W0212, CleanJobs.__call__] Access to a protected member _setJobs of a client class
+ftw/publisher/sender/browser/configlet.py:504: [E1002, ExecuteJobs.__call__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:507: [W0201, ExecuteJobs.__call__] Attribute 'output' defined outside __init__
+ftw/publisher/sender/browser/configlet.py:551: [E1002, AddRealm.__call__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:557: [W0621, AddRealm.renderForm] Redefining name 'form' from outer scope (line 17)
+ftw/publisher/sender/browser/configlet.py:558: [E1102, AddRealm.renderForm] form is not callable
+ftw/publisher/sender/browser/configlet.py:552: [W0201, AddRealm.__call__] Attribute 'form' defined outside __init__
+ftw/publisher/sender/browser/configlet.py:565: [W0622, EditRealm.__call__] Redefining built-in 'id'
+ftw/publisher/sender/browser/configlet.py:563: [E1002, EditRealm.__call__] Use super on an old style class
+ftw/publisher/sender/browser/configlet.py:584: [W0621, EditRealm.renderForm] Redefining name 'form' from outer scope (line 17)
+ftw/publisher/sender/browser/configlet.py:585: [E1102, EditRealm.renderForm] form is not callable
+ftw/publisher/sender/browser/configlet.py:579: [W0201, EditRealm.__call__] Attribute 'form' defined outside __init__
+ftw/publisher/sender/browser/configlet.py:591: [W0622, DeleteRealm.__call__] Redefining built-in 'id'
+ftw/publisher/sender/browser/configlet.py:604: [W0622, TestRealm.__call__] Redefining built-in 'id'
+ftw/publisher/sender/browser/configlet.py:612: [C0322, TestRealm.__call__] Operator not preceded by a space
+            if responseText=='ok':
+                           ^^
+ftw/publisher/sender/browser/views.py:243: [C0301] Line too long (83/80)
+ftw/publisher/sender/browser/views.py:27: [W0105] String statement has no effect
+ftw/publisher/sender/browser/views.py:46: [W0201, PublishObject.__call__] Attribute 'logger' defined outside __init__
+ftw/publisher/sender/browser/views.py:98: [W0201, MoveObject.__call__] Attribute 'logger' defined outside __init__
+ftw/publisher/sender/browser/views.py:151: [W0201, DeleteObject.__call__] Attribute 'logger' defined outside __init__
+ftw/publisher/sender/browser/views.py:204: [E1103, ExecuteQueue.execute_single_job] Instance of 'IQueue' has no 'getJobs' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:205: [E1103, ExecuteQueue.execute_single_job] Instance of 'IQueue' has no 'removeJob' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:206: [E1103, ExecuteQueue.execute_single_job] Instance of 'IQueue' has no 'get_executed_jobs' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:207: [E1103, ExecuteQueue.execute_single_job] Instance of 'IQueue' has no 'remove_executed_job' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:211: [E1103, ExecuteQueue.execute_single_job] Instance of 'IConfig' has no 'get_executed_folder' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:213: [E1103, ExecuteQueue.execute_single_job] Instance of 'IQueue' has no 'append_executed_job' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:233: [E1103, ExecuteQueue.__call__] Instance of 'IConfig' has no 'publishing_enabled' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:237: [E1103, ExecuteQueue.__call__] Instance of 'IConfig' has no 'locking_enabled' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:243: [E1103, ExecuteQueue.__call__] Instance of 'IConfig' has no 'locking_enabled' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:257: [E1103, ExecuteQueue.__call__] Instance of 'IConfig' has no 'locking_enabled' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:257: [C0321, ExecuteQueue.__call__] More than one statement on a single line
+ftw/publisher/sender/browser/views.py:268: [E1103, ExecuteQueue.__call__] Instance of 'IConfig' has no 'locking_enabled' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:268: [C0321, ExecuteQueue.__call__] More than one statement on a single line
+ftw/publisher/sender/browser/views.py:276: [W0212, ExecuteQueue.get_lock_object] Access to a protected member _lock of a client class
+ftw/publisher/sender/browser/views.py:284: [E1103, ExecuteQueue.getActiveRealms] Instance of 'IConfig' has no 'getRealms' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:296: [E1103, ExecuteQueue.execute] Instance of 'IQueue' has no 'countJobs' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:299: [E1103, ExecuteQueue.execute] Instance of 'IQueue' has no 'countJobs' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:302: [E1103, ExecuteQueue.execute] Instance of 'IQueue' has no 'countJobs' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:306: [E1103, ExecuteQueue.execute] Instance of 'IQueue' has no 'popJob' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:321: [E1103, ExecuteQueue.execute] Instance of 'IConfig' has no 'get_executed_folder' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:322: [E1103, ExecuteQueue.execute] Instance of 'IQueue' has no 'append_executed_job' member (but some types could not be inferred)
+ftw/publisher/sender/browser/views.py:227: [W0201, ExecuteQueue.__call__] Attribute 'queue' defined outside __init__
+ftw/publisher/sender/browser/views.py:284: [W0201, ExecuteQueue.getActiveRealms] Attribute '_activeRealms' defined outside __init__
+ftw/publisher/sender/browser/views.py:230: [W0201, ExecuteQueue.__call__] Attribute 'logger' defined outside __init__
+ftw/publisher/sender/browser/views.py:225: [W0201, ExecuteQueue.__call__] Attribute 'config' defined outside __init__
+ftw/publisher/sender/browser/views.py:231: [W0201, ExecuteQueue.__call__] Attribute 'error_logger' defined outside __init__
+ftw/publisher/sender/browser/publishformgen.py:18: [W0201, PublishObject.__call__] Attribute 'logger' defined outside __init__
+ftw/publisher/sender/browser/blacklist.py:33: [C0301] Line too long (83/80)
+ftw/publisher/sender/browser/blacklist.py:51: [C0301] Line too long (83/80)
+ftw/publisher/sender/browser/blacklist.py:67: [C0301] Line too long (87/80)
+ftw/publisher/sender/browser/blacklist.py:19: [C0322, AddPathForm.handleAdd] Operator not preceded by a space
+                               default=u'Add path'))
+                                      ^
+    def handleAdd(self, action):
+ftw/publisher/sender/browser/blacklist.py:38: [E1002, PathBlacklistView.__init__] Use super on an old style class
+ftw/publisher/sender/browser/blacklist.py:43: [E1002, PathBlacklistView.__call__] Use super on an old style class
+ftw/publisher/sender/browser/blacklist.py:60: [W0621, PathBlacklistView.render_add_form] Redefining name 'form' from outer scope (line 8)
+ftw/publisher/sender/browser/blacklist.py:61: [E1102, PathBlacklistView.render_add_form] form is not callable
+ftw/publisher/sender/browser/blacklist.py:71: [R0201, PathBlacklistView._table_columns] Method could be a function
+ftw/publisher/sender/browser/interfaces.py:1: [R0801] Similar lines in 2 files
+==ftw.publisher.sender.browser.publishformgen:41
+==ftw.publisher.sender.browser.views:73
+        if msg is None:
+            msg = _(u'This object has been added to the queue.')
+        IStatusMessage(self.request).addStatusMessage(
+            msg,
+            type='info'
+            )
+        if not no_response:
+            return self.request.RESPONSE.redirect('./view')
+ftw/publisher/sender/browser/interfaces.py:1: [R0801] Similar lines in 2 files
+==ftw.publisher.sender.browser.publishformgen:24
+==ftw.publisher.sender.browser.views:66
+        queue.createJob('push', self.context, username)
+        self.logger.info('Created "%s" Job for "%s" at %s' % (
+                'push',
+                self.context.Title(),
+                '/'.join(self.context.getPhysicalPath()),
+                ))
+
+ftw/publisher/sender/browser/interfaces.py:1: [R0801] Similar lines in 3 files
+==ftw.publisher.sender.browser.publishformgen:43
+==ftw.publisher.sender.browser.views:126
+==ftw.publisher.sender.browser.views:179
+        IStatusMessage(self.request).addStatusMessage(
+            msg,
+            type='info'
+            )
+        if not no_response:
+            return self.request.RESPONSE.redirect('./view')
+
+Report
+======
+1245 statements analysed.
+
+External dependencies
+---------------------
+::
+
+    ftw
+      \-publisher
+        \-sender (ftw.publisher.sender.tests.flayer)
+          \-browser
+          | \-interfaces
+          | | \-IBlacklistPathSchema (ftw.publisher.sender.browser.blacklist)
+          | | \-IEditRealmSchema (ftw.publisher.sender.browser.configlet)
+          | | \-IRealmSchema (ftw.publisher.sender.browser.configlet)
+          | \-views
+          |   \-DeleteObject (ftw.publisher.sender.tests.test_views)
+          |   \-PublishObject (ftw.publisher.sender.tests.test_views)
+          \-events
+          | \-AfterPushEvent (ftw.publisher.sender.browser.views)
+          | \-BeforeQueueExecutionEvent (ftw.publisher.sender.browser.views)
+          | \-QueueExecutedEvent (ftw.publisher.sender.browser.views)
+          \-extractor (ftw.publisher.sender.persistence)
+          | \-Extractor (ftw.publisher.sender.tests.test_extractor)
+          \-getErrorLogger (ftw.publisher.sender.browser.views)
+          \-getLogger (ftw.publisher.sender.browser.views,ftw.publisher.sender.browser.publishformgen)
+          \-interfaces
+          | \-IAfterPushEvent (ftw.publisher.sender.events)
+          | \-IBeforeQueueExecutionEvent (ftw.publisher.sender.events)
+          | \-IConfig (ftw.publisher.sender.persistence,ftw.publisher.sender.adapters,ftw.publisher.sender.browser.configlet,ftw.publisher.sender.extractor,ftw.publisher.sender.tests.test_extractor,ftw.publisher.sender.browser.blacklist,ftw.publisher.sender.browser.views)
+          | \-IPathBlacklist (ftw.publisher.sender.browser.views,ftw.publisher.sender.adapters)
+          | \-IQueue (ftw.publisher.sender.browser.views,ftw.publisher.sender.browser.configlet,ftw.publisher.sender.persistence,ftw.publisher.sender.upgrades)
+          | \-IQueueExecutedEvent (ftw.publisher.sender.events)
+          \-message_factory (ftw.publisher.sender.browser.views,ftw.publisher.sender.browser.publishformgen,ftw.publisher.sender.browser.configlet,ftw.publisher.sender.browser.interfaces,ftw.publisher.sender.browser.blacklist)
+          \-persistence
+          | \-Queue (ftw.publisher.sender.browser.publishformgen,ftw.publisher.sender.tests.test_views)
+          | \-Realm (ftw.publisher.sender.browser.configlet,ftw.publisher.sender.utils)
+          \-tests
+          | \-flayer (ftw.publisher.sender.tests.test_functional_doctests)
+          | \-layer
+          |   \-Layer (ftw.publisher.sender.tests.test_views,ftw.publisher.sender.tests.test_extractor)
+          \-utils
+            \-sendJsonToRealm (ftw.publisher.sender.browser.views)
+            \-sendRequestToRealm (ftw.publisher.sender.browser.configlet)
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |27    |27       |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |1.098 |1.143    |-0.04      |
++-------------------------+------+---------+-----------+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |30     |46       |-16.00     |
++-----------+-------+---------+-----------+
+|refactor   |11     |10       |+1.00      |
++-----------+-------+---------+-----------+
+|warning    |66     |64       |+2.00      |
++-----------+-------+---------+-----------+
+|error      |32     |32       |=          |
++-----------+-------+---------+-----------+
+
+% errors / warnings by module
+-----------------------------
+
++--------------------------------------------+------+--------+---------+-----------+
+|module                                      |error |warning |refactor |convention |
++============================================+======+========+=========+===========+
+|ftw.publisher.sender.browser.views          |56.25 |15.15   |0.00     |10.00      |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.browser.configlet      |31.25 |28.79   |27.27    |20.00      |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.browser.blacklist      |9.38  |1.52    |9.09     |13.33      |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.persistence            |3.12  |27.27   |18.18    |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.tests.test_extractor   |0.00  |9.09    |0.00     |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.extractor              |0.00  |4.55    |18.18    |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.tests.test_views       |0.00  |4.55    |0.00     |40.00      |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.tests.layer            |0.00  |3.03    |0.00     |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.events                 |0.00  |3.03    |0.00     |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.tests.flayer           |0.00  |1.52    |0.00     |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+|ftw.publisher.sender.browser.publishformgen |0.00  |1.52    |0.00     |0.00       |
++--------------------------------------------+------+--------+---------+-----------+
+
+Messages
+--------
+
++-----------+------------+
+|message id |occurrences |
++===========+============+
+|W0201      |24          |
++-----------+------------+
+|W0622      |21          |
++-----------+------------+
+|E1103      |18          |
++-----------+------------+
+|E1002      |11          |
++-----------+------------+
+|C0324      |11          |
++-----------+------------+
+|C0301      |11          |
++-----------+------------+
+|R0201      |5           |
++-----------+------------+
+|C0322      |5           |
++-----------+------------+
+|W0621      |4           |
++-----------+------------+
+|W0612      |4           |
++-----------+------------+
+|W0403      |3           |
++-----------+------------+
+|R0801      |3           |
++-----------+------------+
+|E1102      |3           |
++-----------+------------+
+|W0611      |2           |
++-----------+------------+
+|W0404      |2           |
++-----------+------------+
+|W0212      |2           |
++-----------+------------+
+|R0914      |2           |
++-----------+------------+
+|C0321      |2           |
++-----------+------------+
+|W0631      |1           |
++-----------+------------+
+|W0511      |1           |
++-----------+------------+
+|W0142      |1           |
++-----------+------------+
+|W0105      |1           |
++-----------+------------+
+|R0902      |1           |
++-----------+------------+
+|C0112      |1           |
++-----------+------------+
+
+Global evaluation
+-----------------
+Your code has been rated at 7.86/10 (previous run: 7.65/10)
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |1435   |61.75 |1375     |+60.00     |
++----------+-------+------+---------+-----------+
+|docstring |561    |24.14 |544      |+17.00     |
++----------+-------+------+---------+-----------+
+|comment   |65     |2.80  |61       |+4.00      |
++----------+-------+------+---------+-----------+
+|empty     |263    |11.32 |252      |+11.00     |
++----------+-------+------+---------+-----------+
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |24     |24         |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |47     |47         |=          |48.94       |2.13     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |126    |122        |+4.00      |64.29       |41.27    |
++---------+-------+-----------+-----------+------------+---------+
+|function |12     |12         |=          |58.33       |41.67    |
++---------+-------+-----------+-----------+------------+---------+
+
+[TASKS] Scanning workspace files for tasks...
+Recording test results
+Performing Post build task...
+Match found for : : True
+Logical operation result is TRUE
+Running script  : /var/lib/jenkins/scripts/git-note-result-async.sh
+[workspace] $ /bin/sh -xe /tmp/hudson8608717603675094377.sh
++ /var/lib/jenkins/scripts/git-note-result-async.sh
+POST BUILD TASK : SUCCESS
+END OF POST BUILD TASK : 0
+Finished: SUCCESS
