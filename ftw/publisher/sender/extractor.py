@@ -29,8 +29,8 @@ class Extractor(object):
         self.is_root = IPloneSiteRoot.providedBy(self.object)
         data = {}
         if action not in ['delete', 'move']:
-            adapters = getAdapters((self.object,),IDataCollector)
-            for name,adapter in adapters:
+            adapters = getAdapters((self.object, ), IDataCollector)
+            for name, adapter in adapters:
                 data[name] = adapter.getData()
         # gets the metadata, we dont use an adapter in this case,
         # cause metdata is the most important data-set we need
@@ -48,14 +48,18 @@ class Extractor(object):
 
         if action == 'move':
             #read out data from event_information attr
-            move_data = getattr(self.object,'event_information', None)
-            #make data convertable and shrink amount of data (replace objects by path)
+            move_data = getattr(self.object, 'event_information', None)
+            #make data convertable and shrink amount of data
+            #(replace objects by path)
             del move_data['object']
-            portal_path = '/'.join(self.object.portal_url.getPortalObject().getPhysicalPath())
-            new_parent_path = '/'.join(move_data['newParent'].getPhysicalPath())
+            portal_path = '/'.join(
+                self.object.portal_url.getPortalObject().getPhysicalPath())
+            new_parent_path = '/'.join(
+                move_data['newParent'].getPhysicalPath())
             new_parent_rpath = new_parent_path[len(portal_path):]
             move_data['newParent'] = new_parent_rpath
-            old_parent_path = '/'.join(move_data['oldParent'].getPhysicalPath())
+            old_parent_path = '/'.join(
+                move_data['oldParent'].getPhysicalPath())
             old_parent_rpath = old_parent_path[len(portal_path):]
             move_data['oldParent'] = old_parent_rpath
             move_data['newTitle'] = self.object.Title().decode('utf-8')
@@ -69,7 +73,8 @@ class Extractor(object):
 
     def getMetadata(self, action):
         """
-        Returns a dictionary with metadata about this object. It contains also the action.
+        Returns a dictionary with metadata about this object. It contains also
+        the action.
         @param action:  publishing action [push|delete]
         @type action:   string
         @return:        metadata dictionary
@@ -83,14 +88,16 @@ class Extractor(object):
                 try:
                     positions[obj_id] = parent.getObjectPosition(obj_id)
                 except NotFound:
-                    # catch notfound, some zope objects (ex. syndication_information of a topic)
+                    # catch notfound, some zope objects
+                    # (ex. syndication_information of a topic)
                     # has no getObjectPosition
                     pass
 
         # create metadata dict
         uid = self.is_root and self.getRelativePath() or self.object.UID()
         try:
-            wf_info = self.object.portal_workflow.getInfoFor(self.object, 'review_state')
+            wf_info = self.object.portal_workflow.getInfoFor(
+                self.object, 'review_state')
         except (ConflictError, Retry):
             raise
         except Exception:
@@ -107,13 +114,13 @@ class Extractor(object):
         except AttributeError:
             modifiedDate = None
         data = {
-            'UID' : uid,
-            'id'  : self.object.id,
-            'portal_type' : self.object.portal_type,
-            'action' : action,
-            'physicalPath' : self.getRelativePath(),
-            'sibling_positions' : positions,
-            'review_state' : wf_info,
+            'UID': uid,
+            'id': self.object.id,
+            'portal_type': self.object.portal_type,
+            'action': action,
+            'physicalPath': self.getRelativePath(),
+            'sibling_positions': positions,
+            'review_state': wf_info,
             'schema_path': schema_path,
             'modified': modifiedDate,
             }
@@ -121,12 +128,14 @@ class Extractor(object):
 
     def getRelativePath(self):
         """
-        Returns the relative path (relative to plone site) to the current context object.
+        Returns the relative path (relative to plone site) to the current
+        context object.
         @return:    relative path
         @rtype:     string
         """
         path = '/'.join(self.object.getPhysicalPath())
-        portalPath = '/'.join(self.object.portal_url.getPortalObject().getPhysicalPath())
+        portalPath = '/'.join(
+            self.object.portal_url.getPortalObject().getPhysicalPath())
         if not path.startswith(portalPath):
             raise TypeError('Expected object to be in a portal object -.-')
         relative_path = path[len(portalPath):]
@@ -144,4 +153,3 @@ class Extractor(object):
         """
         data = decode_for_json(data)
         return simplejson.dumps(data, sort_keys=True)
-

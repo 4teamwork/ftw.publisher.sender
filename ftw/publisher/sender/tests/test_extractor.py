@@ -14,27 +14,27 @@ class TestExtractor(PloneTestCase):
     def afterSetUp(self):
         # add some default plone types
         testdoc1id = self.folder.invokeFactory('Document', 'test-doc-1')
-        self.testdoc1 = getattr(self.folder,testdoc1id,None)
+        self.testdoc1 = getattr(self.folder, testdoc1id, None)
         topicid = self.folder.manage_addProduct['ATContentTypes'].addATTopic(
-            id='topic1',title='topic 1')
+            id='topic1', title='topic 1')
         self.topic1 = getattr(self.folder, topicid, None)
         self.extractor = Extractor()
-        self.extractor(self.testdoc1,'delete')
+        self.extractor(self.testdoc1, 'delete')
 
     def test_extractor_object(self):
-        adapters = getAdapters((self.testdoc1,),IDataCollector)
+        adapters = getAdapters((self.testdoc1, ), IDataCollector)
         expected_adapters = [u'field_data_adapter',
                              u'properties_data_adapter',
                              u'backreferences_adapter',
                              u'interface_data_adapter',
                              u'portlet_data_adapter']
         list_adapters = []
-        for name,adapter in adapters:
+        for name, adapter in adapters:
             list_adapters.append(name)
         self.assertEquals(set(expected_adapters), set(list_adapters))
 
     def test_extractor_topic(self):
-        adapters = getAdapters((self.topic1,),IDataCollector)
+        adapters = getAdapters((self.topic1, ), IDataCollector)
         expected_adapters = [u'field_data_adapter',
                              u'properties_data_adapter',
                              u'backreferences_adapter',
@@ -42,7 +42,7 @@ class TestExtractor(PloneTestCase):
                              u'interface_data_adapter',
                              u'portlet_data_adapter']
         list_adapters = []
-        for name,adapter in adapters:
+        for name, adapter in adapters:
             list_adapters.append(name)
         self.assertEquals(set(expected_adapters), set(list_adapters))
 
@@ -79,7 +79,8 @@ class TestExtractor(PloneTestCase):
         # now ignore some fields
         from ftw.publisher.sender.interfaces import IConfig
         config = IConfig(self.portal)
-        config.set_ignored_fields({'Document':['description', 'excludeFromNav']})
+        config.set_ignored_fields({'Document': ['description',
+                                                'excludeFromNav']})
 
         jsondata = self.extractor(self.testdoc1, 'push')
         # decode from json
@@ -88,10 +89,10 @@ class TestExtractor(PloneTestCase):
         self.assertTrue('description' not in data['field_data_adapter'])
         self.assertTrue('excludeFromNav' not in data['field_data_adapter'])
 
-
     def test_getRelativePath(self):
         path = self.extractor.getRelativePath()
-        self.assertEquals(path,'/Members/test_user_1_/test-doc-1')
+        self.assertEquals(path, '/Members/test_user_1_/test-doc-1')
+
 
 def test_suite():
     return unittest.defaultTestLoader.loadTestsFromName(__name__)

@@ -189,6 +189,7 @@ class Config(object):
         """
         self.annotations['publisher-ignored-fields'] = dictionary
 
+
 class Queue(object):
     """
     The Queue adapter stores a list of Jobs to process.

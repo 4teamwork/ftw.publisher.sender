@@ -25,7 +25,7 @@ def sendJsonToRealm(json, realm, serverAction):
     """
     if not isinstance(realm, Realm):
         TypeError('Excpected Realm instance')
-    data = {'jsondata' : json}
+    data = {'jsondata': json}
     try:
         html = sendRequestToRealm(data, realm, serverAction)
     except BadStatusLine:
@@ -38,7 +38,8 @@ def sendRequestToRealm(data, realm, serverAction):
     """
     Makes a HTTP-Request to a realm and sends the given data on
     the provided serverAction
-    @param data:            dictionary of parameters to send within the HTTP request
+    @param data:            dictionary of parameters to send within the
+                            HTTP request
     @type data:             dict
     @param realm:           Realm object of the target instance
     @type realm:            Realm
@@ -54,9 +55,9 @@ def sendRequestToRealm(data, realm, serverAction):
                             realm.password.encode('hex')])
     credentials = str(base64.b64encode(credentials)).strip()
     headers = {
-        'User-Agent'            : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
-        'Content-Type'          : 'application/x-www-form-urlencoded',
-        'Cookie'                : '__ac=' + credentials,
+        'User-Agent': 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Cookie': '__ac=' + credentials,
         }
     request = urllib2.Request(url, urllib.urlencode(data), headers)
     response = urllib2.urlopen(request)

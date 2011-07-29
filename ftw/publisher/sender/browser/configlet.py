@@ -7,7 +7,8 @@ from persistent.list import PersistentList
 from persistent.dict import PersistentDict
 from ftw.publisher.core import states
 from ftw.publisher.sender import message_factory as _
-from ftw.publisher.sender.browser.interfaces import IRealmSchema, IEditRealmSchema
+from ftw.publisher.sender.browser.interfaces import IRealmSchema,\
+                                                    IEditRealmSchema
 from ftw.publisher.sender.interfaces import IQueue, IConfig
 from ftw.publisher.sender.persistence import Realm
 from ftw.publisher.sender.utils import sendRequestToRealm
@@ -63,14 +64,13 @@ class CreateRealmForm(form.Form):
                 if realm.url==data['url'] and realm.username==data['username']:
                     self.statusMessage(
                         'This URL / Username combination already exists!',
-                        'error'
-                        )
+                        'error')
                     return
             kwargs = {
-                'active' : data['active'] and 1 or 0,
-                'url' : data['url'],
-                'username' : data['username'],
-                'password' : data['password'],
+                'active': data['active'] and 1 or 0,
+                'url': data['url'],
+                'username': data['username'],
+                'password': data['password'],
                 }
             realm = Realm(**kwargs)
             config.appendRealm(realm)
@@ -88,8 +88,7 @@ class CreateRealmForm(form.Form):
         """
         IStatusMessage(self.request).addStatusMessage(
             message,
-            type=type
-            )
+            type=type)
 
 
 class EditRealmForm(form.EditForm):
@@ -126,7 +125,8 @@ class EditRealmForm(form.EditForm):
             # no other realm should have same url+username
             for realm in config.getRealms():
                 if realm!=currentRealm:
-                    if realm.username==data['username'] and realm.url==data['url']:
+                    if realm.username==data['username'] and\
+                       realm.url==data['url']:
                         self.statusMessage(
                             'This URL / Username combination already exists!',
                             )
@@ -143,8 +143,7 @@ class EditRealmForm(form.EditForm):
     def statusMessage(self, message, type='info'):
         IStatusMessage(self.request).addStatusMessage(
             message,
-            type=type
-            )
+            type=type)
 
     def makeRealmId(self, realm):
         return md5.md5('%s-%s' % (realm.url, realm.username)).hexdigest()
@@ -177,8 +176,7 @@ class PublisherConfigletView(BrowserView):
     def statusMessage(self, message, type='info'):
         IStatusMessage(self.request).addStatusMessage(
             message,
-            type=type
-            )
+            type=type)
 
 
 class ConfigView(PublisherConfigletView):
@@ -198,7 +196,7 @@ class ConfigView(PublisherConfigletView):
             #override saved ignores
             for ign_id in self.request.get('ign_ids', []):
                 ign = self.request.get(ign_id, '')
-                if ign.replace('\r\n','').strip():
+                if ign.replace('\r\n', '').strip():
                     ignore[ign_id] = PersistentList(
                         [term.strip() for term in ign.split('\r\n') if term])
             # add new ignores
@@ -211,7 +209,7 @@ class ConfigView(PublisherConfigletView):
             redirect = True
 
         #set locking flag
-        if self.request.has_key('enable-locking'):
+        if 'enable-locking' in self.request:
             self.config.set_locking_enabled(self.request.get('enable-locking'))
             redirect = True
 
@@ -259,11 +257,11 @@ class ConfigView(PublisherConfigletView):
         for i, realm in enumerate(self.config.getRealms()):
             id = self.makeRealmId(realm)
             realmlist.append({
-                    'id' : id,
-                    'active' : realm.active,
-                    'url' : realm.url,
-                    'username' : realm.username,
-                    'odd' : not ((i/2)*2==i),
+                    'id': id,
+                    'active': realm.active,
+                    'url': realm.url,
+                    'username': realm.username,
+                    'odd': not ((i/2)*2==i),
                     })
         return realmlist
 
@@ -395,7 +393,8 @@ class ListExecutedJobs(PublisherConfigletView):
             if len(shortened_title) > maximum_length:
                 try:
                     shortened_title = shortened_title.decode('utf8')
-                    shortened_title = shortened_title[:maximum_length] + u' ...'
+                    shortened_title = shortened_title[:maximum_length] + \
+                                      u' ...'
                     shortened_title = shortened_title.encode('utf8')
                 except (ConflictError, Retry):
                     raise
@@ -461,7 +460,8 @@ class ExecutedJobDetails(PublisherConfigletView):
         if self.request.get('button.execute'):
             if self.job.json_file_exists():
                 portal = self.context.portal_url.getPortalObject()
-                execview = portal.restrictedTraverse('@@publisher.executeQueue')
+                execview = portal.restrictedTraverse(
+                    '@@publisher.executeQueue')
                 execview.execute_single_job(self.job)
                 msg = _(u'info_job_executed',
                         default=u'The job has been executed.')
@@ -498,11 +498,13 @@ class CleanJobs(PublisherConfigletView):
         self.statusMessage('Removed all jobs from queue')
         return self.request.RESPONSE.redirect('./@@publisher-config')
 
+
 class ExecuteJobs(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
-        self.output = self.context.restrictedTraverse('publisher.executeQueue')()
-        self.output = self.output.replace('\n','<br/>')
+        self.output = self.context.restrictedTraverse(
+            'publisher.executeQueue')()
+        self.output = self.output.replace('\n', '<br/>')
         return super(ExecuteJobs, self).__call__(self, *args, **kwargs)
 
 
@@ -594,6 +596,7 @@ class DeleteRealm(PublisherConfigletView):
             self.config.removeRealm(realm)
             self.statusMessage('Removed realm')
         return self.request.RESPONSE.redirect('./@@publisher-config')
+
 
 class TestRealm(PublisherConfigletView):
 
