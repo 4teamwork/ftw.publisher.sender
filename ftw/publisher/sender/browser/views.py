@@ -328,18 +328,21 @@ class ExecuteQueue(BrowserView):
         @param job:     Job object to execute
         @type job:      Job
         """
+        objTitle = job.objectTitle
+        if isinstance(objTitle, unicode):
+            objTitle = objTitle.encode('utf8')
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted(job.objectPath):
             self.logger.error('blacklisted: "%s" on "%s" (at %s | UID %s)' % (
                     job.action,
-                    job.objectTitle,
+                    objTitle,
                     job.objectPath,
                     job.objectUID,
                     ))
             self.error_logger.error(
                 'blacklisted: "%s" on "%s" (at %s | UID %s)' % (
                     job.action,
-                    job.objectTitle,
+                    objTitle,
                     job.objectPath,
                     job.objectUID,
                     ))
@@ -351,7 +354,7 @@ class ExecuteQueue(BrowserView):
         self.logger.info('-' * 100)
         self.logger.info('executing "%s" on "%s" (at %s | UID %s)' % (
                 job.action,
-                job.objectTitle,
+                objTitle,
                 job.objectPath,
                 job.objectUID,
                 ))
@@ -368,7 +371,7 @@ class ExecuteQueue(BrowserView):
                 self.error_logger.error(
                     'executing "%s" on "%s" (at %s | UID %s)' % (
                         job.action,
-                        job.objectTitle,
+                        objTitle,
                         job.objectPath,
                         job.objectUID,
                         ))

@@ -5,6 +5,9 @@ Changelog
 1.6
 ---
 
+* UnicodeError in log. LogStream should not be mixed utf8 and unicode.
+  [31.08.2011, jinfanger]
+
 * Ignored fields can be configurated, which will be ignored by the publisher.
   [29.07.2011, jinfanger]
 
