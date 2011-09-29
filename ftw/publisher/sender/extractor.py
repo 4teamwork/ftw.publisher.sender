@@ -43,7 +43,8 @@ class Extractor(object):
         for ptype, fields in ignore.items():
             if data['metadata']['portal_type'] == ptype:
                 for field in fields:
-                    if field in data['field_data_adapter']:
+                    if 'field_data_adapter' in data and \
+                       field in data['field_data_adapter']:
                         del data['field_data_adapter'][field]
 
         if action == 'move':

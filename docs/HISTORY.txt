@@ -5,6 +5,9 @@ Changelog
 1.6
 ---
 
+* Fixed error if data-adapter (JSON-data) doesnt contain field_data_adapter.
+  [jinfanger]
+
 * UnicodeError in log. LogStream should not be mixed utf8 and unicode.
   [31.08.2011, jinfanger]
 
