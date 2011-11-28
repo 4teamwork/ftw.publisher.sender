@@ -112,12 +112,8 @@ Here are some additional links:
 - Wiki: https://github.com/4teamwork/ftw.publisher.sender/wiki
 
 
-Credits
-=======
 
-Sponsored by `4teamwork GmbH <http://www.4teamwork.ch/>`_.
+Maintainer
+==========
 
-Authors:
-
-- `jone <http://github.com/jone>`_
-- `maethu <https://github.com/maethu>`_
+This package is produced and maintained by `4teamwork <http://www.4teamwork.ch/>`_ company.
