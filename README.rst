@@ -110,7 +110,7 @@ Here are some additional links:
 - Main github project repository: https://github.com/4teamwork/ftw.publisher.sender
 - Issue tracker: https://github.com/4teamwork/ftw.publisher.sender/issues
 - Wiki: https://github.com/4teamwork/ftw.publisher.sender/wiki
-- Continuous integration: https://jenkins.4teamwork.ch/view/opensource/job/ftw.publisher.sender/
+- Continuous integration: https://jenkins.4teamwork.ch/job/ftw.publisher.sender/
 
 
 
