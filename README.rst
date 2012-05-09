@@ -110,11 +110,12 @@ Here are some additional links:
 - Main github project repository: https://github.com/4teamwork/ftw.publisher.sender
 - Issue tracker: https://github.com/4teamwork/ftw.publisher.sender/issues
 - Wiki: https://github.com/4teamwork/ftw.publisher.sender/wiki
-- Continuous integration: https://jenkins.4teamwork.ch/job/ftw.publisher.sender/
+- Continuous integration: https://jenkins.4teamwork.ch/search?q=ftw.publisher.sender
 
 
+Copyright
+---------
 
-Maintainer
-==========
+This package is copyright by `4teamwork <http://www.4teamwork.ch/>`_.
 
-This package is produced and maintained by `4teamwork <http://www.4teamwork.ch/>`_ company.
+``ftw.publisher.sender`` is licensed under GNU General Public License, version 2.
