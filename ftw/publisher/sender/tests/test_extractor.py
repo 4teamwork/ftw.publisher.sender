@@ -5,7 +5,7 @@ from ftw.publisher.sender.extractor import Extractor
 from ftw.publisher.sender.tests.layer import Layer
 from zope.component import getAdapters
 import unittest
-import simplejson
+import json
 
 
 class TestExtractor(PloneTestCase):
@@ -71,7 +71,7 @@ class TestExtractor(PloneTestCase):
         # first all fields are in data
         jsondata = self.extractor(self.testdoc1, 'push')
         # decode from json
-        data = simplejson.loads(jsondata)
+        data = json.loads(jsondata)
         data = encode_after_json(data)
         self.assertTrue('description' in data['field_data_adapter'])
         self.assertTrue('excludeFromNav' in data['field_data_adapter'])
@@ -84,7 +84,7 @@ class TestExtractor(PloneTestCase):
 
         jsondata = self.extractor(self.testdoc1, 'push')
         # decode from json
-        data = simplejson.loads(jsondata)
+        data = json.loads(jsondata)
         data = encode_after_json(data)
         self.assertTrue('description' not in data['field_data_adapter'])
         self.assertTrue('excludeFromNav' not in data['field_data_adapter'])

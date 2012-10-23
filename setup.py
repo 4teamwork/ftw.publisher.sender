@@ -42,7 +42,6 @@ setup(name='ftw.publisher.sender',
       extras_require={
         'tests': tests_require,
         'PloneFormGen': ['Products.PloneFormGen<=1.6'],
-        'python2.4': ['simplejson']
         },
 
       tests_require=tests_require,

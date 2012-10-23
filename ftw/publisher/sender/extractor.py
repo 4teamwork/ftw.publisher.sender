@@ -6,7 +6,7 @@ from ftw.publisher.sender.interfaces import IConfig
 from zExceptions import NotFound
 from zope.component import getAdapters
 from zope.publisher.interfaces import Retry
-import simplejson
+import json
 
 
 class Extractor(object):
@@ -153,4 +153,4 @@ class Extractor(object):
         @rtype:         string
         """
         data = decode_for_json(data)
-        return simplejson.dumps(data, sort_keys=True)
+        return json.dumps(data, sort_keys=True)
