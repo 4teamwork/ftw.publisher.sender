@@ -12,7 +12,7 @@ from persistent.dict import PersistentDict
 from plone.memoize import instance
 from zope import interface, component
 from zope.annotation.interfaces import IAnnotations
-from zope.app.annotation.interfaces import IAttributeAnnotatable
+from zope.annotation.interfaces import IAttributeAnnotatable
 import os
 import time
 
