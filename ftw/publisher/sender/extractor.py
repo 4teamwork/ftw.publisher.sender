@@ -28,6 +28,7 @@ class Extractor(object):
         self.object = object
         self.is_root = IPloneSiteRoot.providedBy(self.object)
         data = {}
+
         if action not in ['delete', 'move']:
             adapters = getAdapters((self.object, ), IDataCollector)
             for name, adapter in adapters:
@@ -153,4 +154,5 @@ class Extractor(object):
         @rtype:         string
         """
         data = decode_for_json(data)
+
         return json.dumps(data, sort_keys=True)

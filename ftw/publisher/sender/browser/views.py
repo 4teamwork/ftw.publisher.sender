@@ -1,3 +1,4 @@
+from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
@@ -383,7 +384,7 @@ class ExecuteQueue(BrowserView):
         job.executed_with_states(state_entries)
 
         # fire AfterPushEvent
-        obj = self.context.archetype_tool.getObject(job.objectUID)
+        reference_catalog = getToolByName(self.context, 'reference_catalog')
+        obj = reference_catalog.lookupObject(job.objectUID)
         if state is not None:
             event.notify(AfterPushEvent(obj, state, job))
-
