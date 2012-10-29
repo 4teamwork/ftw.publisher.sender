@@ -1,3 +1,4 @@
+from AccessControl.SecurityInfo import ClassSecurityInformation
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from ZODB.POSException import ConflictError
 from ftw.publisher.core.interfaces import IDataCollector
@@ -15,6 +16,9 @@ class Extractor(object):
     pack it with json.
     """
 
+    security = ClassSecurityInformation()
+
+    security.declarePrivate('__call__')
     def __call__(self, object, action):
         """
         Extracts the required data (action dependent) from a object for
@@ -73,6 +77,7 @@ class Extractor(object):
         jsondata = self.convertToJson(data)
         return jsondata
 
+    security.declarePrivate('getMetadata')
     def getMetadata(self, action):
         """
         Returns a dictionary with metadata about this object. It contains also
@@ -128,6 +133,7 @@ class Extractor(object):
             }
         return data
 
+    security.declarePrivate('getRelativePath')
     def getRelativePath(self):
         """
         Returns the relative path (relative to plone site) to the current
@@ -145,6 +151,7 @@ class Extractor(object):
             return '/'
         return relative_path
 
+    security.declarePrivate('convertToJson')
     def convertToJson(self, data):
         """
         Converts a dictionary to a JSON-string
