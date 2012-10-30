@@ -55,7 +55,8 @@ those annotations which need to be published.
 Packages
 ========
 
-*Mandatory packages:*
+Core packages
+-------------
 
 ftw.publisher.sender
   The sender package provides a configuration panel and is responsible for
@@ -79,13 +80,32 @@ ftw.publisher.core
   `ftw.publisher.core pypi <http://pypi.python.org/pypi/ftw.publisher.core>`_
 
 
-*Optional packages:*
+Addon packages
+--------------
 
 ftw.publisher.example
   This example package provides a publisher-bound workflow and shows how to
   write an integration package for this use case.
   `ftw.publisher.example source <https://github.com/4teamwork/ftw.publisher.example>`_ |
   `ftw.publisher.example pypi <http://pypi.python.org/pypi/ftw.publisher.example>`_
+
+ftw.publisher.monitor
+  Sends alert mails when the publisher queue is blocked and publishing does no
+  longer work.
+  `ftw.publisher.monitor source <https://github.com/4teamwork/ftw.publisher.monitor>`_ |
+  `ftw.publisher.monitor pypi <http://pypi.python.org/pypi/ftw.publisher.monitor>`_
+
+ftw.publisher.mailreport
+  Sends scheduled reports about the publishing state (executed jobs, failed jobs, etc.).
+  `ftw.publisher.mailreport source <https://github.com/4teamwork/ftw.publisher.mailreport>`_ |
+  `ftw.publisher.mailreport pypi <http://pypi.python.org/pypi/ftw.publisher.mailreport>`_
+
+ftw.publisher.controlling
+  Views for comparing the editorial and the public site. Detects inconsistencies and problems
+  by comparing the catalogs of the two sites. Useful in workflow based publishing environments.
+  `ftw.publisher.controlling source <https://github.com/4teamwork/ftw.publisher.controlling>`_ |
+  `ftw.publisher.controlling pypi <http://pypi.python.org/pypi/ftw.publisher.controlling>`_
+
 
 
 Installation & Usage
