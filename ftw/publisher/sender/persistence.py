@@ -1,3 +1,4 @@
+from AccessControl.SecurityInfo import ClassSecurityInformation
 from Acquisition import aq_inner
 from BTrees.IOBTree import IOBTree
 from Products.CMFCore.utils import getToolByName
@@ -7,12 +8,12 @@ from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from interfaces import IConfig, IQueue
 from persistent import Persistent
-from persistent.list import PersistentList
 from persistent.dict import PersistentDict
+from persistent.list import PersistentList
 from plone.memoize import instance
 from zope import interface, component
 from zope.annotation.interfaces import IAnnotations
-from zope.app.annotation.interfaces import IAttributeAnnotatable
+from zope.annotation.interfaces import IAttributeAnnotatable
 import os
 import time
 
@@ -28,8 +29,10 @@ class Config(object):
     The Config object is registered via zcml as adapter. It stores the
     configured realms
     """
+
     interface.implements(IConfig)
     component.adapts(IPloneSiteRoot)
+    security = ClassSecurityInformation()
 
     def __init__(self, context):
         """
@@ -44,6 +47,7 @@ class Config(object):
         # get annotations for plone site
         self.annotations = IAnnotations(self.context)
 
+    security.declarePrivate('getRealms')
     def getRealms(self):
         """
         Returns a PersistentList of Realm objects
@@ -52,6 +56,7 @@ class Config(object):
         """
         return self.annotations.get('publisher-realms', PersistentList())
 
+    security.declarePrivate('_setRealms')
     def _setRealms(self, list):
         """
         Stores a PersistentList of Realm objects
@@ -63,6 +68,7 @@ class Config(object):
             raise TypeError('Excpected PersistentList')
         self.annotations['publisher-realms'] = list
 
+    security.declarePrivate('appendRealm')
     def appendRealm(self, realm):
         """
         Appends a Realm to the realm list
@@ -76,6 +82,7 @@ class Config(object):
         list.append(realm)
         self._setRealms(list)
 
+    security.declarePrivate('removeRealm')
     def removeRealm(self, realm):
         """
         Removes a Realm from the realm list
@@ -89,6 +96,7 @@ class Config(object):
         list.remove(realm)
         self._setRealms(list)
 
+    security.declarePrivate('getDataFolder')
     @instance.memoize
     def getDataFolder(self):
         """
@@ -105,12 +113,14 @@ class Config(object):
             os.makedirs(path)
         return path
 
+    security.declarePrivate('get_executed_folder')
     def get_executed_folder(self):
         executed_folder = os.path.join(self.getDataFolder(), 'executed')
         if not os.path.exists(executed_folder):
             os.makedirs(executed_folder)
         return executed_folder
 
+    security.declarePrivate('getPathBlacklist')
     def getPathBlacklist(self):
         """
         Returns a list of paths which are blacklistet and are not
@@ -123,6 +133,7 @@ class Config(object):
             self.setPathBlacklist(blacklist)
         return blacklist
 
+    security.declarePrivate('setPathBlacklist')
     def setPathBlacklist(self, blacklist):
         """
         Sets the path blacklist
@@ -132,6 +143,7 @@ class Config(object):
                              repr(blacklist))
         self.annotations[ANNOTATIONS_PATH_BLACKLIST_KEY] = blacklist
 
+    security.declarePrivate('appendPathToBlacklist')
     def appendPathToBlacklist(self, path):
         """
         Appends a path to the blacklist, if it isnt already blacklisted...
@@ -144,6 +156,7 @@ class Config(object):
             blacklist.append(path)
             self.setPathBlacklist(blacklist)
 
+    security.declarePrivate('removePathFromBlacklist')
     def removePathFromBlacklist(self, path):
         """
         Removes a path from the path blacklist
@@ -158,30 +171,36 @@ class Config(object):
         else:
             return False
 
+    security.declarePrivate('publishing_enabled')
     def publishing_enabled(self):
         """ Returns True if the publishing is enable at the moment
         """
         return self.annotations.get('publisher-publishing-enabled', True)
 
+    security.declarePrivate('set_publishing_enabled')
     def set_publishing_enabled(self, enabled):
         self.annotations['publisher-publishing-enabled'] = bool(enabled)
 
+    security.declarePrivate('locking_enabled')
     def locking_enabled(self):
         """ Returns True if locking is enabled, default is True
         """
         return self.annotations.get('publisher-locking-enabled', True)
 
+    security.declarePrivate('set_locking_enabled')
     def set_locking_enabled(self, enabled):
         if not isinstance(enabled, bool):
             enabled = bool(enabled == '1')
         self.annotations['publisher-locking-enabled'] = bool(enabled)
 
+    security.declarePrivate('get_ignored_fields')
     def get_ignored_fields(self):
         """ Returns a PersistentDict if there are no ignored-fields yet.
         """
         return self.annotations.get('publisher-ignored-fields',
                                     PersistentDict())
 
+    security.declarePrivate('set_ignored_fields')
     def set_ignored_fields(self, dictionary):
         """ Sets the publisher-ignored-fields.
             Example:
@@ -194,8 +213,10 @@ class Queue(object):
     """
     The Queue adapter stores a list of Jobs to process.
     """
+
     interface.implements(IQueue)
     component.adapter(IPloneSiteRoot)
+    security = ClassSecurityInformation()
 
     def __init__(self, context):
         """
@@ -208,6 +229,7 @@ class Queue(object):
         self.context = aq_inner(context.portal_url.getPortalObject())
         self.annotations = IAnnotations(self.context)
 
+    security.declarePrivate('getJobs')
     def getJobs(self):
         """
         Returns a PersistentList of Job objects
@@ -216,6 +238,7 @@ class Queue(object):
         """
         return self.annotations.get('publisher-queue', PersistentList())
 
+    security.declarePrivate('_setJobs')
     def _setJobs(self, list):
         """
         Stores a PersistentList of Job objects
@@ -227,6 +250,7 @@ class Queue(object):
             raise TypeError('Excpected PersistentList')
         self.annotations['publisher-queue'] = list
 
+    security.declarePrivate('appendJob')
     def appendJob(self, job):
         """
         Appends a Job to the queue
@@ -240,6 +264,7 @@ class Queue(object):
         list.append(job)
         self._setJobs(list)
 
+    security.declarePrivate('createJob')
     def createJob(self, *args, **kwargs):
         """
         Creates a new Job object, adds it to the queue
@@ -252,6 +277,7 @@ class Queue(object):
         self.appendJob(job)
         return job
 
+    security.declarePrivate('removeJob')
     def removeJob(self, job):
         """
         Removes a Job from the queue
@@ -265,6 +291,7 @@ class Queue(object):
         list.remove(job)
         self._setJobs(list)
 
+    security.declarePrivate('countJobs')
     def countJobs(self):
         """
         Returns the amount of jobs in the queue.
@@ -274,6 +301,7 @@ class Queue(object):
         """
         return len(self.getJobs())
 
+    security.declarePrivate('popJob')
     def popJob(self):
         """
         Returns the oldest Job from the queue. The Job will be
@@ -283,6 +311,7 @@ class Queue(object):
         """
         return self.getJobs().pop(0)
 
+    security.declarePrivate('_get_executed_jobs_storage')
     def _get_executed_jobs_storage(self):
         """Returns the IOBTree storage object for executed jobs.
         """
@@ -290,6 +319,7 @@ class Queue(object):
             self.annotations['publisher-executed'] = IOBTree()
         return self.annotations['publisher-executed']
 
+    security.declarePrivate('_generate_next_executed_jobs_storage_key')
     def _generate_next_executed_jobs_storage_key(self):
         """Returns a transaction-safe auto-increment value
         http://pyyou.wordpress.com/2009/12/09/how-to-add-a-counter-without-conflict-error-in-zope
@@ -314,6 +344,7 @@ class Queue(object):
         self.annotations[ann_key] = inc
         return inc()
 
+    security.declarePrivate('get_executed_jobs')
     def get_executed_jobs(self, start=0, end=None):
         """Returns a iterator of executed jobs. You can make a batch by
         providing a range with `start` and `end` parameters. The start and
@@ -340,11 +371,13 @@ class Queue(object):
             keys = data.keys()[start:end]
             return data.iteritems(min(keys), max(keys))
 
+    security.declarePrivate('get_executed_jobs_length')
     def get_executed_jobs_length(self):
         """Returns the amount of currently stored executed jobs.
         """
         return len(self._get_executed_jobs_storage().keys())
 
+    security.declarePrivate('append_executed_job')
     def append_executed_job(self, job):
         """Add another
         """
@@ -353,16 +386,19 @@ class Queue(object):
         data.insert(key, job)
         return key
 
+    security.declarePrivate('remove_executed_job')
     def remove_executed_job(self, key, default=None):
         """Removes the job with the `key` from the executed jobs storage.
         """
         return self._get_executed_jobs_storage().pop(key, default)
 
+    security.declarePrivate('get_executed_job_by_key')
     def get_executed_job_by_key(self, key):
         """Returns a executed job according to its internal storage key
         """
         return self._get_executed_jobs_storage()[key]
 
+    security.declarePrivate('clear_executed_jobs')
     def clear_executed_jobs(self):
         """Removes all jobs from the executed jobs storage.
         """
@@ -370,6 +406,7 @@ class Queue(object):
             job.removeJob()
         self._get_executed_jobs_storage().clear()
 
+    security.declarePrivate('remove_executed_jobs_older_than')
     def remove_executed_jobs_older_than(self, time):
         """Removes all executed jobs which are older
         than `time` (datetime instance).
@@ -399,6 +436,7 @@ class Queue(object):
             else:
                 break
 
+    security.declarePrivate('remove_jobs_by_filter')
     def remove_jobs_by_filter(self, filter_method):
         """Removs jobs by a filter method.
         The `filter_method` gets the `key` and the `job` as parameters.
@@ -416,6 +454,8 @@ class Job(Persistent):
     A Job object contains action, object and the user who triggered the job.
     It is stored in the Queue and is executed asynchronous.
     """
+
+    security = ClassSecurityInformation()
 
     def __init__(self, action, object, username):
         """
@@ -437,6 +477,7 @@ class Job(Persistent):
         self.objectTitle = object.pretty_title_or_id()
         self._extractData(object)
 
+    security.declarePrivate('_extractData')
     def _extractData(self, object):
         """
         Extracts the data from the object and stores the JSON string
@@ -467,12 +508,14 @@ class Job(Persistent):
         f.close()
         self.dataFile = file
 
+    security.declarePrivate('getSize')
     def getSize(self):
         try:
             return len(self.getData())
         except IOError:
             return -1
 
+    security.declarePrivate('getData')
     def getData(self):
         """
         Loads the JSON-data from the cache file and returns
@@ -485,6 +528,7 @@ class Job(Persistent):
         f.close()
         return data
 
+    security.declarePrivate('removeJob')
     def removeJob(self):
         """
         Removes the cache file for this job from the file system
@@ -492,9 +536,11 @@ class Job(Persistent):
         if os.path.exists(self.dataFile):
             os.remove(self.dataFile)
 
+    security.declarePrivate('json_file_exists')
     def json_file_exists(self):
         return os.path.exists(self.dataFile)
 
+    security.declarePrivate('move_jsonfile_to')
     def move_jsonfile_to(self, dir):
         oridir, oname = os.path.split(self.dataFile)
         obase = '.'.join(oname.split('.')[:-1])
@@ -512,6 +558,7 @@ class Job(Persistent):
         os.rename(self.dataFile, path)
         self.dataFile = path
 
+    security.declarePrivate('getObject')
     def getObject(self, context):
         """
         Returns the object with UID stored in this Job. This method
@@ -525,6 +572,7 @@ class Job(Persistent):
         return self.is_root and context.portal_url.getPortalObject() or \
             reference_tool.lookupObject(self.objectUID)
 
+    security.declarePrivate('executed_with_states')
     def executed_with_states(self, entries):
         """ entries: {'date': <datetime ...>, <Realm1 ..>: <State1 ..>,
         <Realm2 ..>: <State2 ..>}
@@ -533,6 +581,7 @@ class Job(Persistent):
             self.executed_list = PersistentList()
         self.executed_list.append(entries)
 
+    security.declarePrivate('get_latest_executed_entry')
     def get_latest_executed_entry(self):
         entries_list = getattr(self, 'executed_list', ())
         # get the last entries
@@ -545,6 +594,7 @@ class Job(Persistent):
                 return state
         return state
 
+    security.declarePrivate('get_filename')
     def get_filename(self):
         return os.path.split(self.dataFile)[1]
 
@@ -556,7 +606,9 @@ class Realm(Persistent):
     It stores and provides information such as URL or credentials.
     URL+username should be unique!
     """
+
     interface.implements(IAttributeAnnotatable)
+    security = ClassSecurityInformation()
 
     active = 0
     url = ''

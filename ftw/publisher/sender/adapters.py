@@ -1,3 +1,4 @@
+from AccessControl.SecurityInfo import ClassSecurityInformation
 from Products.ZCatalog import CatalogBrains
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig
 from zope.interface import implements
@@ -7,12 +8,15 @@ class PathBlacklist(object):
     """ The `PathBlacklist` adapter knows if the adapted context or any other context / path
     is blacklisted.
     """
+
     implements(IPathBlacklist)
+    security = ClassSecurityInformation()
 
     def __init__(self, context):
         self.context = context
         self.portal = context.portal_url.getPortalObject()
 
+    security.declarePrivate('is_blacklisted')
     def is_blacklisted(self, context=None, path=None):
         """ Checks if the adapter the context, the given
         `context` or the given `path` is blacklisted.

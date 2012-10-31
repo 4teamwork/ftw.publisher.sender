@@ -1,4 +1,4 @@
-from Products.CMFPlone import Batch
+from Products.CMFPlone.PloneBatch import Batch
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from ZODB.POSException import ConflictError
@@ -588,7 +588,7 @@ class EditRealm(PublisherConfigletView):
 class DeleteRealm(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
-        id = self.context.request.get('id', '')
+        id = self.request.get('id', '')
         realm = self.getRealmById(id)
         if not realm:
             self.statusMessage('Could not find realm', 'error')
@@ -601,7 +601,7 @@ class DeleteRealm(PublisherConfigletView):
 class TestRealm(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
-        id = self.context.request.get('id', '')
+        id = self.request.get('id', '')
         realm = self.getRealmById(id)
         if not realm:
             self.statusMessage(_(u'error_realm_not_found',
