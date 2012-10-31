@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = open('ftw/publisher/sender/version.txt').read().strip()
+version = '1.6.dev0'
 maintainer = 'Jonas Baumann'
 
 tests_require = [
