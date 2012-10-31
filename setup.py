@@ -8,6 +8,7 @@ tests_require = [
     'collective.testcaselayer',
     'Products.PloneFormGen<=1.6',
     'plone.app.testing',
+    'Products.PloneTestCase',
     ]
 
 setup(name='ftw.publisher.sender',
