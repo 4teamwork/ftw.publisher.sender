@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-1.6 (unreleased)
+2.0 (unreleased)
 ----------------
 
 - Fixed error if data-adapter (JSON-data) doesnt contain field_data_adapter.
@@ -13,6 +13,9 @@ Changelog
 
 - Ignored fields can be configurated, which will be ignored by the publisher.
   [jinfanger]
+
+- Drop Plone 3 support.
+  [jone]
 
 
 1.5 (2011-07-05)
