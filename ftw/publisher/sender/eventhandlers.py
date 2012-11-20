@@ -7,7 +7,7 @@ def add_move_job(obj, event):
     This event handles move and rename jobs
     """
 
-    if os.environ['disable-publisher-for-testing']:
+    if os.environ.get('disable-publisher-for-testing', None):
         return
 
     if obj == event.object:
