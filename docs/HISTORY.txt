@@ -5,6 +5,9 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- Add "disable-publisher-for-testing" environment variable for disabling event handler.
+  [jone]
+
 - Fixed error if data-adapter (JSON-data) doesnt contain field_data_adapter.
   [jinfanger]
 

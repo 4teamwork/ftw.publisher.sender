@@ -1,10 +1,15 @@
 from zope.component import queryMultiAdapter
+import os
 
 
 def add_move_job(obj, event):
     """
     This event handles move and rename jobs
     """
+
+    if os.environ['disable-publisher-for-testing']:
+        return
+
     if obj == event.object:
         data = event.__dict__.copy()
         # do nohting, if we are in portal_factory or the item is just created
