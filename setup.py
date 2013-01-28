@@ -17,10 +17,14 @@ setup(name='ftw.publisher.sender',
       long_description=open("README.rst").read() + "\n" + \
           open(os.path.join("docs", "HISTORY.txt")).read(),
 
+      # Get more strings from
+      # http://www.python.org/pypi?%3Aaction=list_classifiers
+
       classifiers=[
-        "Framework :: Plone",
-        "Programming Language :: Python",
-        "Topic :: Software Development :: Libraries :: Python Modules",
+        'Framework :: Plone',
+        'Framework :: Plone :: 4.2',
+        'Programming Language :: Python',
+        'Topic :: Software Development :: Libraries :: Python Modules',
         ],
 
       keywords='publisher sender',
