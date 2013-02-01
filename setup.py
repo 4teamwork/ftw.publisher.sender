@@ -6,7 +6,7 @@ maintainer = 'Jonas Baumann'
 
 tests_require = [
     'collective.testcaselayer',
-    'Products.PloneFormGen<=1.6',
+    'Products.PloneFormGen',
     'plone.app.testing',
     'Products.PloneTestCase',
     ]
@@ -51,7 +51,7 @@ setup(name='ftw.publisher.sender',
 
       extras_require={
         'tests': tests_require,
-        'PloneFormGen': ['Products.PloneFormGen<=1.6'],
+        'PloneFormGen': ['Products.PloneFormGen'],
         },
 
       tests_require=tests_require,
