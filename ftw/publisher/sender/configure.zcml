@@ -63,7 +63,7 @@
 
     <subscriber
           for="Products.Archetypes.interfaces.IBaseContent
-               zope.app.container.interfaces.IObjectMovedEvent"
+               zope.lifecycleevent.interfaces.IObjectMovedEvent"
           handler=".eventhandlers.add_move_job"
           />
 
