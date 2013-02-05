@@ -26,6 +26,10 @@ def upgrade_executed_jobs_storage(portal_setup):
     queue = IQueue(portal)
     annotations = IAnnotations(portal)
 
+    if 'publisher-executed' not in annotations:
+        # No data to migrate.
+        return
+
     # get jobs directly from the annotations - accessing with
     # queue methods is not possible yet
     jobs = list(annotations.get('publisher-executed', []))
