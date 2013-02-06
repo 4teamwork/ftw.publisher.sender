@@ -578,7 +578,8 @@ class EditRealm(PublisherConfigletView):
         if not realm:
             raise Exception('Could not find realm')
         values = realm.__dict__.copy()
-        values['active'] = [unicode(bool(values['active'] and 1 or 0)).lower()]
+        values['active'] = values['active'] and ['selected'] or []
+
         for k, v in values.items():
             key = 'form.widgets.%s' % k
             if key not in self.request.keys():
