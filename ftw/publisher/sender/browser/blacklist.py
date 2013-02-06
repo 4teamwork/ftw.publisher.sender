@@ -5,13 +5,17 @@ from ftw.publisher.sender.browser.interfaces import IBlacklistPathSchema
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.table.interfaces import ITableGenerator
 from plone.z3cform import z2
+from plone.z3cform.interfaces import IWrappedForm
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
 from zope.component import getUtility
+from zope.interface import implements
 
 
 class AddPathForm(form.Form):
+    implements(IWrappedForm)
+
     fields = field.Fields(IBlacklistPathSchema)
     ignoreContext = True
     label = _(u'form_label_add_path',

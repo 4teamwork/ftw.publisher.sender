@@ -15,11 +15,13 @@ from ftw.table.interfaces import ITableGenerator
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
 from plone.z3cform import z2
+from plone.z3cform.interfaces import IWrappedForm
 from z3c.form import button
 from z3c.form import field
 from z3c.form import form
 from z3c.form import interfaces
 from zope.component import getUtility
+from zope.interface import implements
 from zope.publisher.interfaces import Retry
 import datetime
 import md5
@@ -47,6 +49,8 @@ class CreateRealmForm(form.Form):
     @cvar ignoreContext:    do not use context (z3c-form setting)
     @cvar label:            label of the form
     """
+    implements(IWrappedForm)
+
     fields = field.Fields(IRealmSchema)
     ignoreContext = True
     label = u'Add Realm'
@@ -102,6 +106,8 @@ class EditRealmForm(form.EditForm):
     @cvar ignoreContext:    do not use context (z3c-form setting)
     @cvar label:            label of the form
     """
+    implements(IWrappedForm)
+
     fields = field.Fields(IEditRealmSchema)
     ignoreContext = True
     label = u'Edit Realm'
