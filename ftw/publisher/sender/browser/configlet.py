@@ -66,6 +66,7 @@ class CreateRealmForm(form.Form):
         data, errors = self.extractData()
         config = IConfig(self.context)
         if len(errors)==0:
+            assert config.is_update_realms_possible()
             # url + username has to be unique
             for realm in config.getRealms():
                 if realm.url==data['url'] and realm.username==data['username']:
@@ -126,6 +127,7 @@ class EditRealmForm(form.EditForm):
         """
         data, errors = self.extractData()
         config = IConfig(self.context)
+        assert config.is_update_realms_possible()
         if len(errors)==0:
             # get realm
             currentRealm = self.getRealmById(data['id'])
@@ -558,6 +560,7 @@ class RemoveJob(PublisherConfigletView):
 class AddRealm(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
+        assert self.config.is_update_realms_possible()
         self.form = self.renderForm()
         return super(AddRealm, self).__call__(*args, **kwargs)
 
@@ -570,6 +573,7 @@ class AddRealm(PublisherConfigletView):
 class EditRealm(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
+        assert self.config.is_update_realms_possible()
         # set object values
         id = self.request.get('form.widgets.id', '')
         if id and isinstance(id, str):
@@ -598,6 +602,7 @@ class EditRealm(PublisherConfigletView):
 class DeleteRealm(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
+        assert self.config.is_update_realms_possible()
         id = self.request.get('id', '')
         realm = self.getRealmById(id)
         if not realm:

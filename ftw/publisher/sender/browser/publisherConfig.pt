@@ -73,7 +73,10 @@
         <fieldset>
           <legend i18n:translate="legend_realms">Realms</legend>
           <a href="@@publisher-config-addRealm" class="standalone"
-             i18n:translate="link_create_realm">Create realm</a>
+             i18n:translate="link_create_realm"
+             tal:condition="view/config/is_update_realms_possible">
+              Create realm
+          </a>
           <table class="listing">
             <thead>
               <tr>
@@ -94,12 +97,14 @@
                        tal:attributes="href string:@@publisher-config-editRealm?form.widgets.id=${realm/id}"
                        class="context"
                        i18n:translate="link_edit_realm"
+                       tal:condition="view/config/is_update_realms_possible"
                        >Edit</a>
                     <a href="@@publisher-config-deleteRealm?id=X"
                        tal:attributes="href string:@@publisher-config-deleteRealm?id=${realm/id}"
                        onclick="return confirm('Are you sure to delete this realm?')"
                        class="context"
                        i18n:translate="link_delete_realm"
+                       tal:condition="view/config/is_update_realms_possible"
                        >Delete</a>
                     <a href="@@publisher-config-testRealm?id=X"
                        tal:attributes="href string:@@publisher-config-testRealm?id=${realm/id}"

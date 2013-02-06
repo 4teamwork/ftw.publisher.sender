@@ -3,6 +3,7 @@ from zope.i18nmessageid import MessageFactory
 
 
 message_factory = MessageFactory('ftw.publisher.sender')
+_ = message_factory
 
 
 def getLogger():

@@ -1,5 +1,11 @@
+from ftw.publisher.sender import _
 from zope import interface
 from zope.component.interfaces import IObjectEvent
+from zope.interface import Interface
+from zope.schema import Bool
+from zope.schema import Password
+from zope.schema import TextLine
+from zope.schema import URI
 from zope.viewlet.interfaces import IViewletManager
 
 
@@ -7,6 +13,11 @@ class IConfig(interface.Interface):
     """
     Marker Interface for the Config adapter.
     See persistence.py
+    """
+
+
+class IOverriddenRealmRegistry(interface.Interface):
+    """Config utility registered when overriding the realms by ZCML.
     """
 
 
@@ -53,3 +64,22 @@ class IConfigletViewletManager(IViewletManager):
     configlet.
 
     """
+
+
+class IRealm(Interface):
+
+    active = Bool(
+        title=_(u'label_realm_active',
+                default=u'Active'))
+
+    url = URI(
+        title=_(u'label_realm_url',
+                u'URL to the Plone-Site'))
+
+    username = TextLine(
+        title=_(u'label_realm_username',
+                u'Username'))
+
+    password = Password(
+        title=_(u'label_realm_password',
+                u'Password'))

@@ -118,6 +118,32 @@ package and the
 See also the `wiki <https://github.com/4teamwork/ftw.publisher.sender/wiki>`_.
 
 
+Override realm configuration with ZCML
+--------------------------------------
+
+The realms are by default configured in the database through the control panel.
+When copying the database from a production environment to a staging environment
+the realm configuration is copied too, which could result in publishing from
+the staging editorial site to the production public site, which is very bad.
+
+For solving this issue it is possible to override the realm configuration with
+ZCML, so that it can be configured also using the ``zcml-additional`` option of
+the buildout.
+
+.. code:: xml
+
+    <configure xmlns:publisher="http://namespaces.zope.org/ftw.publisher">
+
+        <include package="ftw.publisher.sender" file="meta.zcml" />
+
+        <publisher:override-realm
+            url="http://localhost:9090/site"
+            username="publisher-user"
+            password="publisher-password" />
+
+    </configure>
+
+
 Links
 =====
 
