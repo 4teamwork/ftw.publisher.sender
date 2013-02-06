@@ -1,5 +1,6 @@
-from interfaces import IAfterPushEvent, IQueueExecutedEvent
-from interfaces import IBeforeQueueExecutionEvent
+from ftw.publisher.sender.interfaces import IAfterPushEvent
+from ftw.publisher.sender.interfaces import IBeforeQueueExecutionEvent
+from ftw.publisher.sender.interfaces import IQueueExecutedEvent
 from zope import interface
 from zope.component.interfaces import ObjectEvent
 

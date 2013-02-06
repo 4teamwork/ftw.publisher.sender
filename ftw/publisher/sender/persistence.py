@@ -6,7 +6,8 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.Transience.Transience import Increaser
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
-from interfaces import IConfig, IQueue
+from ftw.publisher.sender.interfaces import IConfig
+from ftw.publisher.sender.interfaces import IQueue
 from persistent import Persistent
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
