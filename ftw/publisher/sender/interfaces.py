@@ -16,6 +16,11 @@ class IConfig(interface.Interface):
     """
 
 
+class IOverriddenRealmRegistry(interface.Interface):
+    """Config utility registered when overriding the realms by ZCML.
+    """
+
+
 class IQueue(interface.Interface):
     """
     Marker Interface for the Queue adapter

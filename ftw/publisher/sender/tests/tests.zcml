@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope">
+
+    <include package="AccessControl" file="meta.zcml" />
+    <include package="Products.Five" file="meta.zcml" />
+    <include package="Products.Five.viewlet" file="meta.zcml" />
+    <include package="Products.GenericSetup" file="meta.zcml" />
+
+    <include package="AccessControl" file="permissions.zcml" />
+
+    <include package="zope.annotation" />
+
+    <include package="ftw.publisher.sender" file="meta.zcml" />
+    <include package="ftw.publisher.sender" />
+
+</configure>

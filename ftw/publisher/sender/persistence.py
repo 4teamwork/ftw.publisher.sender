@@ -7,6 +7,7 @@ from Products.Transience.Transience import Increaser
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from ftw.publisher.sender.interfaces import IConfig
+from ftw.publisher.sender.interfaces import IOverriddenRealmRegistry
 from ftw.publisher.sender.interfaces import IQueue
 from ftw.publisher.sender.interfaces import IRealm
 from persistent import Persistent
@@ -49,6 +50,10 @@ class Config(object):
         # get annotations for plone site
         self.annotations = IAnnotations(self.context)
 
+    security.declarePublic('is_update_realms_possible')
+    def is_update_realms_possible(self):
+        return self._get_realm_registry() is None
+
     security.declarePrivate('getRealms')
     def getRealms(self):
         """
@@ -56,7 +61,13 @@ class Config(object):
         @return:    Realm objects
         @rtype:     PersistentList
         """
-        return self.annotations.get('publisher-realms', PersistentList())
+
+        registry = self._get_realm_registry()
+        if registry:
+            return tuple(registry.realms)
+
+        else:
+            return self.annotations.get('publisher-realms', PersistentList())
 
     security.declarePrivate('_setRealms')
     def _setRealms(self, list):
@@ -66,6 +77,10 @@ class Config(object):
         @type list:     PersistentList
         @return:        None
         """
+        if not self.is_update_realms_possible():
+            raise AttributeError(
+                'The realm registry is overridden and not mutatable.')
+
         if not isinstance(list, PersistentList):
             raise TypeError('Excpected PersistentList')
         self.annotations['publisher-realms'] = list
@@ -79,7 +94,7 @@ class Config(object):
         @return:        None
         """
 
-        if not IRealm.providedB(realm):
+        if not IRealm.providedBy(realm):
             raise TypeError('Excpected Realm object')
 
         list = self.getRealms()
@@ -99,6 +114,10 @@ class Config(object):
         list = self.getRealms()
         list.remove(realm)
         self._setRealms(list)
+
+    security.declarePrivate('_get_realm_registry')
+    def _get_realm_registry(self):
+        return component.queryUtility(IOverriddenRealmRegistry)
 
     security.declarePrivate('getDataFolder')
     @instance.memoize

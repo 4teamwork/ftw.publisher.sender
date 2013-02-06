@@ -9,6 +9,7 @@ tests_require = [
     'Products.PloneFormGen',
     'plone.app.testing',
     'Products.PloneTestCase',
+    'ftw.testing',
     ]
 
 
