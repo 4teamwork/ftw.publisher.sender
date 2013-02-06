@@ -14,7 +14,8 @@
           Portal status message
         </div>
 
-        <h1 class="documentFirstHeading">Queue</h1>
+        <h1 class="documentFirstHeading"
+            i18n:translate="">Queue</h1>
 
         <a href=""
            class="link-parent"
@@ -57,7 +58,7 @@
               </tr>
               <tr>
                 <th i18n:translate="th_data_length">Data length</th>
-                <td><span tal:replace="job/getSize" /> bytes</td>
+                <td tal:content="string:${job/getSize} bytes" />
               </tr>
             </table>
           </fieldset>

@@ -143,33 +143,40 @@
         <br />
 
         <fieldset>
-          <legend i18n:translate="legend_disablelocking">Disable locking</legend>
-          <p>
-            Locking is currently
+            <legend i18n:translate="legend_disablelocking">Disable locking</legend>
             <tal:ENABLED tal:condition="view/config/locking_enabled">
-              <b i18n:translate="label_enable_locking">Enabled</b>
-              &raquo; <a href="./@@publisher-config?enable-locking=0"
-                         i18n:translate="action_disable_locking">Disable</a>
+                <p i18n:translate="">
+                    Locking is currently
+                    <b i18n:translate="label_enable_locking"
+                       i18n:name="status">Enabled</b>
+                    &raquo; <a href="./@@publisher-config?enable-locking=0"
+                    i18n:translate="action_disable_locking"
+                    i18n:name="change">Disable</a>
+                </p>
             </tal:ENABLED>
             <tal:DISABLED tal:condition="not:view/config/locking_enabled">
-              <b style="color:red;" i18n:translate="label_disable_locking">
-                  Disabled
-              </b>
-              &raquo; <a href="./@@publisher-config?enable-locking=1"
-                         i18n:translate="action_enable_locking">Enable</a>
+                <p i18n:translate="">
+                    Locking is currently
+                    <b style="color:red;" i18n:translate="label_disable_locking"
+                       i18n:name="status">
+                        Disabled
+                    </b>
+                    &raquo; <a href="./@@publisher-config?enable-locking=1"
+                    i18n:translate="action_enable_locking"
+                    i18n:name="change">Enable</a>
+                </p>
             </tal:DISABLED>
-          </p>
         </fieldset>
 
         <fieldset>
-          <legend i18n:translate="legend_information">Information</legend>
-          <table class="publisher_infos">
-            <tr>
-              <td><b i18n:translate="label_cache_directory">
-                  Job cache directory:</b></td>
-              <td tal:content="view/get_cache_folder_path" />
-            </tr>
-          </table>
+            <legend i18n:translate="legend_information">Information</legend>
+            <table class="publisher_infos">
+                <tr>
+                    <td><b i18n:translate="label_cache_directory">
+                    Job cache directory:</b></td>
+                    <td tal:content="view/get_cache_folder_path" />
+                </tr>
+            </table>
         </fieldset>
 
         <br />
@@ -205,7 +212,7 @@
                         </td>
                     </tr>
                 </table>
-                
+
                 <label for="add_ignore_id" i18n:translate="label_add_ignore">Add ignore</label>
                 <div>
                 <select name="add_ignore_id" id="add_ignore_id">

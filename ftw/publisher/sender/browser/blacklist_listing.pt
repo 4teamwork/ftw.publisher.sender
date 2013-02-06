@@ -19,7 +19,8 @@
 
         <a href=""
            class="link-parent"
-           tal:attributes="href string:$portal_url/@@publisher-config">
+           tal:attributes="href string:$portal_url/@@publisher-config"
+           i18n:translate="">
           Up to Publisher Control Panel
         </a>
 
