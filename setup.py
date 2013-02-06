@@ -11,6 +11,7 @@ tests_require = [
     'Products.PloneTestCase',
     ]
 
+
 setup(name='ftw.publisher.sender',
       version=version,
       description="Staging and publishing addon for Plone contents.",
@@ -42,11 +43,32 @@ setup(name='ftw.publisher.sender',
 
       install_requires=[
         'setuptools',
+
+        'AccessControl',
+        'Acquisition',
+        'zExceptions',
+        'transaction',
+        'zope.annotation',
+        'zope.component',
+        'zope.event',
+        'zope.i18nmessageid',
+        'zope.interface',
+        'zope.publisher',
+        'zope.schema',
+        'zope.viewlet',
+        'ZODB3',
+        'Zope2',
+
+        'plone.memoize',
+        'Products.ZCatalog',
+        'Products.statusmessages',
+        'Products.CMFCore',
+        'Products.CMFPlone',
+
         'ftw.publisher.core',
         'ftw.table',
-        'plone.z3cform',
-        'z3c.autoinclude',
         'z3c.form',
+        'plone.z3cform',
         ],
 
       extras_require={
