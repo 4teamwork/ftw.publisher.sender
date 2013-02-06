@@ -130,7 +130,7 @@ For solving this issue it is possible to override the realm configuration with
 ZCML, so that it can be configured also using the ``zcml-additional`` option of
 the buildout.
 
-.. code: xml
+.. code:: xml
 
     <configure xmlns:publisher="http://namespaces.zope.org/ftw.publisher">
 
