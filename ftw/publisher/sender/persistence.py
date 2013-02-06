@@ -8,6 +8,7 @@ from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.interfaces import IQueue
+from ftw.publisher.sender.interfaces import IRealm
 from persistent import Persistent
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
@@ -77,8 +78,10 @@ class Config(object):
         @type realm:    Realm
         @return:        None
         """
-        if not isinstance(realm, Realm):
+
+        if not IRealm.providedB(realm):
             raise TypeError('Excpected Realm object')
+
         list = self.getRealms()
         list.append(realm)
         self._setRealms(list)
@@ -608,7 +611,7 @@ class Realm(Persistent):
     URL+username should be unique!
     """
 
-    interface.implements(IAttributeAnnotatable)
+    interface.implements(IAttributeAnnotatable, IRealm)
     security = ClassSecurityInformation()
 
     active = 0
