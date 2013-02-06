@@ -6,10 +6,6 @@
       xmlns:zcml="http://namespaces.zope.org/zcml"
       i18n_domain="ftw.publisher.sender">
 
-    <!-- Include configuration for dependencies listed in setup.py -->
-    <include package="z3c.autoinclude" file="meta.zcml" />
-    <includeDependencies package="." />
-
     <!-- include ploneformgen, if installed -->
     <configure zcml:condition="installed Products.PloneFormGen">
         <include package="Products.PloneFormGen" />
