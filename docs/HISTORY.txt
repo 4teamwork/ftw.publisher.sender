@@ -5,6 +5,9 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- Implement an ``override-realm`` ZCML directive for overriding database settings with ZCML.
+  [jone]
+
 - Make ugprade step 1.1 -> 1.2 save: do not migrate when there is no data.
   [jone]
 
