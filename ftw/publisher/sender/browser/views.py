@@ -140,7 +140,6 @@ class DeleteObject(BrowserView):
     """
 
     def is_deleted(self):
-        import pdb; pdb.set_trace( )
 
         info = ILinkIntegrityInfo(self.request)
         enabled = info.integrityCheckingEnabled()
