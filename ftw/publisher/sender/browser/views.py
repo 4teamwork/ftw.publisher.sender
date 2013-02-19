@@ -140,6 +140,11 @@ class DeleteObject(BrowserView):
     """
 
     def is_deleted(self):
+        import pdb; pdb.set_trace( )
+
+        info = ILinkIntegrityInfo(self.request)
+        enabled = info.integrityCheckingEnabled()
+
         # Only on delete_confirmation
         url = self.request.get('ACTUAL_URL', '')
         if not url.endswith('delete_confirmation'):
@@ -153,9 +158,6 @@ class DeleteObject(BrowserView):
         # If the user is just on delete_confirmation form we do not create a
         # delete job.
 
-        info = ILinkIntegrityInfo(self.request)
-        enabled = info.integrityCheckingEnabled()
-
         # XXX: mle: imho this should do the job, but it doesn't
         # info.isConfirmedItem is always false
         # if enabled and not info.isConfirmedItem(self.context):
@@ -164,7 +166,7 @@ class DeleteObject(BrowserView):
         # The best solution so far is to check the request for the
         # confirmation button.
 
-        submitted = self.context.REQUEST.form.get('form.submitted', False)
+        submitted = self.context.REQUEST.get('form.submitted', False)
         return bool(enabled and submitted)
 
     def __call__(self, no_response=False, msg=None, *args, **kwargs):
