@@ -139,35 +139,6 @@ class DeleteObject(BrowserView):
     Add a object to the queue with the action "delete".
     """
 
-    def is_deleted(self):
-
-        info = ILinkIntegrityInfo(self.request)
-        enabled = info.integrityCheckingEnabled()
-
-        # Only on delete_confirmation
-        url = self.request.get('ACTUAL_URL', '')
-        if not url.endswith('delete_confirmation'):
-            return True
-
-        # If Link integrity check is enabled, the event will be fired 2 or 3
-        # times because linkintegrity check deletes the object and makes
-        # a rolleback.
-        # The isConfirmedItem Method "should " return True if the User clicks
-        # on confirm button of the confirmation_form
-        # If the user is just on delete_confirmation form we do not create a
-        # delete job.
-
-        # XXX: mle: imho this should do the job, but it doesn't
-        # info.isConfirmedItem is always false
-        # if enabled and not info.isConfirmedItem(self.context):
-        #     return False
-
-        # The best solution so far is to check the request for the
-        # confirmation button.
-
-        submitted = self.context.REQUEST.get('form.submitted', False)
-        return bool(enabled and submitted)
-
     def __call__(self, no_response=False, msg=None, *args, **kwargs):
         """
         Add the current context as delete-job to the queue, creates a status
@@ -194,8 +165,21 @@ class DeleteObject(BrowserView):
             raise Exception('Not allowed on PloneSiteRoot')
         # get username
 
-        if not self.is_deleted():
+        # XXX: i'm realy not sure what hell is going on.
+        # Sometimes it linkintegrity check gets called 2 times, but sometimes
+        # 3 times.
+        # Link integrity check
+        info = ILinkIntegrityInfo(self.request)
+        enabled = info.integrityCheckingEnabled()
+        marker = getattr(self.request, 'link_integrity_events_counter', None)
+
+        if enabled and marker != 2:
             return False
+
+        # XXX: mle: imho this should do the job, but it doesn't
+        # info.isConfirmedItem is always false
+        # if enabled and not info.isConfirmedItem(self.context):
+        #     return False
 
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
