@@ -16,6 +16,7 @@ from threading import RLock
 from urllib2 import URLError
 from zope import event
 from zope.publisher.interfaces import Retry
+from plone.app.linkintegrity.interfaces import ILinkIntegrityInfo
 import logging
 import sys
 import traceback
@@ -133,7 +134,6 @@ class MoveObject(BrowserView):
             return self.request.RESPONSE.redirect('./view')
 
 
-
 class DeleteObject(BrowserView):
     """
     Add a object to the queue with the action "delete".
@@ -164,6 +164,23 @@ class DeleteObject(BrowserView):
         if IPloneSiteRoot.providedBy(self.context):
             raise Exception('Not allowed on PloneSiteRoot')
         # get username
+
+        # XXX: i'm realy not sure what hell is going on.
+        # Sometimes it linkintegrity check gets called 2 times, but sometimes
+        # 3 times.
+        # Link integrity check
+        info = ILinkIntegrityInfo(self.request)
+        enabled = info.integrityCheckingEnabled()
+        marker = getattr(self.request, 'link_integrity_events_counter', None)
+
+        if enabled and marker != 2:
+            return False
+
+        # XXX: mle: imho this should do the job, but it doesn't
+        # info.isConfirmedItem is always false
+        # if enabled and not info.isConfirmedItem(self.context):
+        #     return False
+
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
         # create Job
