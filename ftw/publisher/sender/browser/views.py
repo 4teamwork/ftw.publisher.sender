@@ -16,6 +16,7 @@ from threading import RLock
 from urllib2 import URLError
 from zope import event
 from zope.publisher.interfaces import Retry
+from plone.app.linkintegrity.interfaces import ILinkIntegrityInfo
 import logging
 import sys
 import traceback
@@ -133,11 +134,38 @@ class MoveObject(BrowserView):
             return self.request.RESPONSE.redirect('./view')
 
 
-
 class DeleteObject(BrowserView):
     """
     Add a object to the queue with the action "delete".
     """
+
+    def is_deleted(self):
+        # Only on delete_confirmation
+        url = self.request.get('ACTUAL_URL', '')
+        if not url.endswith('delete_confirmation'):
+            return True
+
+        # If Link integrity check is enabled, the event will be fired 2 or 3
+        # times because linkintegrity check deletes the object and makes
+        # a rolleback.
+        # The isConfirmedItem Method "should " return True if the User clicks
+        # on confirm button of the confirmation_form
+        # If the user is just on delete_confirmation form we do not create a
+        # delete job.
+
+        info = ILinkIntegrityInfo(self.request)
+        enabled = info.integrityCheckingEnabled()
+
+        # XXX: mle: imho this should do the job, but it doesn't
+        # info.isConfirmedItem is always false
+        # if enabled and not info.isConfirmedItem(self.context):
+        #     return False
+
+        # The best solution so far is to check the request for the
+        # confirmation button.
+
+        submitted = self.context.REQUEST.form.get('form.submitted', False)
+        return bool(enabled and submitted)
 
     def __call__(self, no_response=False, msg=None, *args, **kwargs):
         """
@@ -164,6 +192,10 @@ class DeleteObject(BrowserView):
         if IPloneSiteRoot.providedBy(self.context):
             raise Exception('Not allowed on PloneSiteRoot')
         # get username
+
+        if not self.is_deleted():
+            return False
+
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
         # create Job

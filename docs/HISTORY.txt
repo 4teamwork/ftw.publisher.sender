@@ -5,6 +5,9 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- Try to fix problems with linkintegrity check.
+  [mathias.leimgruber]
+
 - Implement an ``override-realm`` ZCML directive for overriding database settings with ZCML.
   [jone]
 
