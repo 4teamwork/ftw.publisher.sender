@@ -11,6 +11,7 @@ from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.events import AfterPushEvent, QueueExecutedEvent
 from ftw.publisher.sender.events import BeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
+from ftw.publisher.sender.utils import add_transaction_aware_status_message
 from ftw.publisher.sender.utils import sendJsonToRealm
 from threading import RLock
 from urllib2 import URLError
@@ -71,6 +72,7 @@ class PublishObject(BrowserView):
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
                 ))
+
         # status message
         if msg is None:
             msg = _(u'This object has been added to the queue.')
@@ -175,13 +177,12 @@ class DeleteObject(BrowserView):
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
                 ))
+
         # status message
         if msg is None:
             msg = _(u'This object will be deleted at the remote sites.')
-        IStatusMessage(self.request).addStatusMessage(
-            msg,
-            type='info'
-            )
+        add_transaction_aware_status_message(self.request, msg, type='info')
+
         if not no_response:
             return self.request.RESPONSE.redirect('./view')
 

@@ -5,6 +5,9 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- Make status messages transaction aware, so that it works with integrity check rollbacks.
+  [jone]
+
 - Implement an ``override-realm`` ZCML directive for overriding database settings with ZCML.
   [jone]
 
