@@ -1,3 +1,4 @@
+from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.core import communication
 from ftw.publisher.core.states import ConnectionLost
 from ftw.publisher.sender.persistence import Realm
@@ -6,8 +7,41 @@ import base64
 import os.path
 import sys
 import traceback
+import transaction
 import urllib
 import urllib2
+
+
+def _get_savepoint_ids():
+    """Returns a list of ids of all currently active savepoints.
+    """
+    trans = transaction.get()
+    if not trans._savepoint2index:
+        return None
+    else:
+        return map(id, trans._savepoint2index)
+
+
+def add_transaction_aware_status_message(request, *args, **kwargs):
+    savepoint_ids = _get_savepoint_ids()
+
+    def _add_status_message_hook(success, request, *args, **kwargs):
+        if not success:
+            return
+
+        if savepoint_ids != _get_savepoint_ids():
+            # There were rollbacked savepoints.
+            # We assume that this was the integrity check which was rolled
+            # back so we do not set the status message.
+            # Since the integrity check works by deleting items and rolling
+            # back the savepoint and status messages are not transaction
+            # save we need to cancel adding the status message here.
+            return
+
+        IStatusMessage(request).addStatusMessage(*args, **kwargs)
+
+    transaction.get().addAfterCommitHook(
+        _add_status_message_hook, args=[request] + list(args), kws=kwargs)
 
 
 def sendJsonToRealm(json, realm, serverAction):
