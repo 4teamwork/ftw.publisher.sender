@@ -214,15 +214,14 @@ class ExecuteQueue(BrowserView):
         # add to executed list
         return self.queue.append_executed_job(job)
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, batchsize=None):
         """
         Handles logging purposes and calls execute() method.
-        @param args:    list of unnamed arguments
-        @type args:     list
-        @param kwargs:  dict of named keyword-arguments
-        @type kwargs:   dict
-        @return:        Redirect to object`s default view
         """
+        if batchsize is None:
+            batchsize = BATCH_SIZE
+        self.batchsize = batchsize
+
         # get config and queue
         self.config = IConfig(self.context)
         portal = self.context.portal_url.getPortalObject()
@@ -297,12 +296,12 @@ class ExecuteQueue(BrowserView):
         jobCounter = 0
         jobs = self.queue.countJobs()
         self.logger.info('Executing Queue: %i of %i objects to %i realms' % (
-                jobs>BATCH_SIZE and BATCH_SIZE or jobs,
+                jobs>self.batchsize and self.batchsize or jobs,
                 self.queue.countJobs(),
                 len(self.getActiveRealms()),
                 ))
-        while self.queue.countJobs()>0 and (BATCH_SIZE<1 or
-                                            jobCounter<BATCH_SIZE):
+        while self.queue.countJobs()>0 and (self.batchsize<1 or
+                                            jobCounter<self.batchsize):
             jobCounter += 1
             # get job from queue
             job = self.queue.popJob()

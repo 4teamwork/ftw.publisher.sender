@@ -5,6 +5,9 @@ Changelog
 2.0 (unreleased)
 ----------------
 
+- Execute queue view: add batch size argument.
+  [jone]
+
 - Make status messages transaction aware, so that it works with integrity check rollbacks.
   [jone]
 
