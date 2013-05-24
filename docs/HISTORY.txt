@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.0 (unreleased)
+2.0 (2013-05-24)
 ----------------
 
 - Make status messages transaction aware, so that it works with integrity check rollbacks.
