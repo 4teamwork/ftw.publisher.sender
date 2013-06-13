@@ -13,10 +13,12 @@
 
     <i18n:registerTranslations directory="locales" />
 
+    <include file="permissions.zcml" />
     <include package=".browser" />
     <include package=".viewlets" />
     <include file="profiles.zcml" />
     <include package=".upgrades" />
+    <include zcml:condition="installed ftw.lawgiver" file="lawgiver.zcml" />
 
     <adapter
           provides=".interfaces.IConfig"

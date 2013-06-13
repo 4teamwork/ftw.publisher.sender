@@ -1,0 +1,10 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="ftw.publisher.sender">
+
+    <permission
+        id="ftw.publisher.sender.ChangePublisherConfiguration"
+        title="ftw.publisher.sender: Change Publisher Configuration"
+        />
+
+</configure>

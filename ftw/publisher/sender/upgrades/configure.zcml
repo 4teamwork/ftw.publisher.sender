@@ -26,4 +26,25 @@
         handler="ftw.publisher.sender.upgrades.upgrade_executed_jobs_storage"
         />
 
+
+    <!-- 1.2 -> 2000 -->
+    <genericsetup:upgradeStep
+        title="Add new control panel permission for managing the publisher"
+        description=""
+        source="1.2"
+        destination="2000"
+        handler="ftw.publisher.sender.upgrades.to2000.InstallPermission"
+        profile="ftw.publisher.sender:default"
+        />
+
+    <genericsetup:registerProfile
+        name="2000"
+        title="ftw.publisher.sender.upgrades.2000"
+        description=""
+        directory="profiles/2000"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+
 </configure>
