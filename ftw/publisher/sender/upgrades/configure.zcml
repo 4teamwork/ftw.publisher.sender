@@ -1,0 +1,29 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="ftw.publisher.sender">
+
+    <!-- Remove annotations upgrade step -->
+    <genericsetup:upgradeStep
+        sortkey="1"
+        source="publisher"
+        destination="ftw.publisher"
+        title="Remove publisher annotations"
+        description="Remove publisher annotations"
+        profile="ftw.publisher.sender:default"
+        handler="ftw.publisher.sender.upgrades.RemoveAnnotations"
+        />
+
+    <!-- Migrate executed jobs storage  -->
+    <genericsetup:upgradeStep
+        sortkey="2"
+        source="1.1"
+        destination="1.2"
+        title="Migrate executed jobs storage to IOBTree"
+        description="Migrate from PersistentList to IOBTree"
+        profile="ftw.publisher.sender:default"
+        handler="ftw.publisher.sender.upgrades.upgrade_executed_jobs_storage"
+        />
+
+</configure>

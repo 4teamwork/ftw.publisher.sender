@@ -16,6 +16,7 @@
     <include package=".browser" />
     <include package=".viewlets" />
     <include file="profiles.zcml" />
+    <include package=".upgrades" />
 
     <adapter
           provides=".interfaces.IConfig"
