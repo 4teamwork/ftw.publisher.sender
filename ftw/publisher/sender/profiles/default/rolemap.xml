@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<rolemap>
+    <permissions>
+
+        <permission name="ftw.publisher.sender: Change Publisher Configuration"
+                    acquire="False">
+            <role name="Manager" />
+            <role name="Site Administrator" />
+        </permission>
+
+    </permissions>
+</rolemap>

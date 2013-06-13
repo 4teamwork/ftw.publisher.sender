@@ -35,21 +35,21 @@
       name="publisher.executeQueue"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".views.ExecuteQueue"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
       name="publisher.execute.job"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.ExecuteJob"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
       name="publisher.remove.job"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.RemoveJob"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
@@ -57,7 +57,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.ConfigView"
       template="publisherConfig.pt"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
@@ -65,7 +65,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.ListJobs"
       template="listJobs.pt"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
@@ -73,7 +73,7 @@
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".configlet.ListExecutedJobs"
     template="list_executed_jobs.pt"
-    permission="cmf.ManagePortal"
+    permission="ftw.publisher.sender.ChangePublisherConfiguration"
     />
 
   <browser:page
@@ -81,14 +81,14 @@
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".configlet.ExecutedJobDetails"
     template="executed_job_details.pt"
-    permission="cmf.ManagePortal"
+    permission="ftw.publisher.sender.ChangePublisherConfiguration"
     />
-  
+
   <browser:page
       name="publisher-config-cleanJobs"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.CleanJobs"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
@@ -96,7 +96,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.ExecuteJobs"
       template="executeJobs.pt"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
@@ -104,7 +104,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.AddRealm"
       template="addRealm.pt"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
@@ -112,21 +112,21 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.EditRealm"
       template="editRealm.pt"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
       name="publisher-config-deleteRealm"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.DeleteRealm"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <browser:page
       name="publisher-config-testRealm"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.TestRealm"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
   <!-- special publisher view for PloneFormGen -->
@@ -144,7 +144,7 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".blacklist.PathBlacklistView"
       template="blacklist_listing.pt"
-      permission="cmf.ManagePortal"
+      permission="ftw.publisher.sender.ChangePublisherConfiguration"
       />
 
 </configure>

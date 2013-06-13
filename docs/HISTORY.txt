@@ -5,7 +5,11 @@ Changelog
 2.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add separate permission for accessing the publisher settings in the
+  control panel.
+  By default, the permission is granted to Manager and Site Administrator.
+  The permission is "ftw.publisher.sender: Change Publisher Configuration"
+  [jone]
 
 
 2.0.1 (2013-05-24)
