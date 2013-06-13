@@ -68,6 +68,7 @@ setup(name='ftw.publisher.sender',
 
         'ftw.publisher.core',
         'ftw.table',
+        'ftw.upgrade',
         'z3c.form',
         'plone.z3cform',
         ],

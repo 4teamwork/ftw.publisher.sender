@@ -1,0 +1,12 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:lawgiver="http://namespaces.zope.org/lawgiver"
+    i18n_domain="my.package">
+
+    <include package="ftw.lawgiver" file="meta.zcml" />
+
+    <lawgiver:ignore
+        permissions="ftw.publisher.sender: Change Publisher Configuration"
+        />
+
+</configure>
