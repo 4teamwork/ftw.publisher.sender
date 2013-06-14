@@ -47,4 +47,24 @@
         />
 
 
+    <!-- 2000 -> 2001 -->
+    <genericsetup:upgradeStep
+        title="Use publisher permission for protecting control panel action."
+        description=""
+        source="2000"
+        destination="2001"
+        handler="ftw.publisher.sender.upgrades.to2001.UpdateControlPanelAction"
+        profile="ftw.publisher.sender:default"
+        />
+
+    <genericsetup:registerProfile
+        name="2001"
+        title="ftw.publisher.sender.upgrades.2001"
+        description=""
+        directory="profiles/2001"
+        for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
+
 </configure>
