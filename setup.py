@@ -11,6 +11,7 @@ tests_require = [
     'Products.PloneTestCase',
     'ftw.testing',
     'ftw.lawgiver',
+    'ftw.builder',
     ]
 
 

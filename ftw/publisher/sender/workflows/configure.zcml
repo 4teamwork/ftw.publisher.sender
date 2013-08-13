@@ -1,0 +1,11 @@
+<configure
+      xmlns="http://namespaces.zope.org/zope"
+      i18n_domain="ftw.publisher.sender">
+
+    <adapter factory=".example.ExampleWorkflowConfiguration"
+             name="publisher-example-workflow" />
+
+    <utility factory=".config.PublisherConfigs" />
+    <adapter factory=".contextstate.PublisherContextState" />
+
+</configure>
