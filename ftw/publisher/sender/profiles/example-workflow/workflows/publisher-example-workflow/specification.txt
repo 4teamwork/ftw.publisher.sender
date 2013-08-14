@@ -83,4 +83,4 @@ Status Revision:
 
 
 # Settings
-transition-url = %%(content_url)s/publisher-modify-status/%(transition)s
+transition-url = %%(content_url)s/publisher-modify-status?transition=%(transition)s

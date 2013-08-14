@@ -79,7 +79,8 @@ class TestExampleWorkflowConfig(TestCase):
         invalid_transitions = []
         for transition_id, transition in workflow.transitions.items():
             url = transition.actbox_url
-            expected_url = '%%(content_url)s/publisher-modify-status/%s' % (
+            expected_url = '%(content_url)s/publisher-modify-status' +\
+                '?transition=%s' % (
                 transition_id)
 
             if url != expected_url:

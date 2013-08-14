@@ -1700,7 +1700,7 @@
     </permission-map>
   </state>
   <transition new_state="publisher-example-workflow--STATUS--published" title="publish" transition_id="publisher-example-workflow--TRANSITION--publish--internal_published" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--publish--internal_published">publish</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--publish--internal_published">publish</action>
     <guard>
       <guard-role>Manager</guard-role>
       <guard-role>Reviewer</guard-role>
@@ -1708,7 +1708,7 @@
     </guard>
   </transition>
   <transition new_state="publisher-example-workflow--STATUS--published" title="publish" transition_id="publisher-example-workflow--TRANSITION--publish--pending_published" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--publish--pending_published">publish</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--publish--pending_published">publish</action>
     <guard>
       <guard-role>Manager</guard-role>
       <guard-role>Reviewer</guard-role>
@@ -1716,7 +1716,7 @@
     </guard>
   </transition>
   <transition new_state="publisher-example-workflow--STATUS--published" title="publish" transition_id="publisher-example-workflow--TRANSITION--publish--revision_published" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--publish--revision_published">publish</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--publish--revision_published">publish</action>
     <guard>
       <guard-role>Editor</guard-role>
       <guard-role>Manager</guard-role>
@@ -1725,7 +1725,7 @@
     </guard>
   </transition>
   <transition new_state="publisher-example-workflow--STATUS--internal" title="reject" transition_id="publisher-example-workflow--TRANSITION--reject--pending_internal" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--reject--pending_internal">reject</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--reject--pending_internal">reject</action>
     <guard>
       <guard-role>Manager</guard-role>
       <guard-role>Reviewer</guard-role>
@@ -1733,13 +1733,13 @@
     </guard>
   </transition>
   <transition new_state="publisher-example-workflow--STATUS--internal" title="retract" transition_id="publisher-example-workflow--TRANSITION--retract--published_internal" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--retract--published_internal">retract</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--retract--published_internal">retract</action>
     <guard>
       <guard-expression>python: False</guard-expression>
     </guard>
   </transition>
   <transition new_state="publisher-example-workflow--STATUS--revision" title="revise" transition_id="publisher-example-workflow--TRANSITION--revise--published_revision" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--revise--published_revision">revise</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--revise--published_revision">revise</action>
     <guard>
       <guard-role>Editor</guard-role>
       <guard-role>Manager</guard-role>
@@ -1748,7 +1748,7 @@
     </guard>
   </transition>
   <transition new_state="publisher-example-workflow--STATUS--pending" title="submit" transition_id="publisher-example-workflow--TRANSITION--submit--internal_pending" after_script="" before_script="" trigger="USER">
-    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status/publisher-example-workflow--TRANSITION--submit--internal_pending">submit</action>
+    <action category="workflow" icon="" url="%(content_url)s/publisher-modify-status?transition=publisher-example-workflow--TRANSITION--submit--internal_pending">submit</action>
     <guard>
       <guard-role>Manager</guard-role>
       <guard-role>Owner</guard-role>
