@@ -115,3 +115,22 @@ class IPublisherContextState(Interface):
         """Return all objects which are referenced from the current context
         and are currently published.
         """
+
+class IConstraintDefinition(Interface):
+    """Publisher constraint definition adapter.
+    """
+
+    def __init__(context, request):
+        """Adapts context and request.
+        """
+
+    def is_action_allowed(action, silent=False):
+        """Checks whether the action is allowed on the context.
+        Adds warnings and errors unless ``silent=True`` is passed.
+        """
+
+    def check_action(action):
+        """Checks whether the passed action is allowed and returns a dict
+        of results with keys 'errors' and 'warnings', each containing
+        a list of ``zope.i18n.Message``-objects of occured errors / warnings.
+        """
