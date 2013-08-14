@@ -27,7 +27,8 @@ class TestExtractor(PloneTestCase):
                              u'properties_data_adapter',
                              u'backreferences_adapter',
                              u'interface_data_adapter',
-                             u'portlet_data_adapter']
+                             u'portlet_data_adapter',
+                             u'geo_data_adapter']
         list_adapters = []
         for name, adapter in adapters:
             list_adapters.append(name)
@@ -40,7 +41,8 @@ class TestExtractor(PloneTestCase):
                              u'backreferences_adapter',
                              u'topic_critera_adapter',
                              u'interface_data_adapter',
-                             u'portlet_data_adapter']
+                             u'portlet_data_adapter',
+                             u'geo_data_adapter']
         list_adapters = []
         for name, adapter in adapters:
             list_adapters.append(name)

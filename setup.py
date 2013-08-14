@@ -12,6 +12,7 @@ tests_require = [
     'ftw.testing [splinter]',
     'ftw.lawgiver',
     'ftw.builder',
+    'ftw.contentpage',
     ]
 
 

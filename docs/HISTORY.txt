@@ -5,6 +5,10 @@ Changelog
 2.1.1 (unreleased)
 ------------------
 
+- Add simplelayout support: publish blocks within simplelayout containers
+  automatically when they have no workflow.
+  [jone]
+
 - Use publisher permission for protecting publisher control panel action.
   Required permission: "ftw.publisher.sender: Change Publisher Configuration"
   [jone]
