@@ -2,6 +2,7 @@ from ftw.builder.testing import BUILDER_LAYER
 from ftw.builder.testing import functional_session_factory
 from ftw.builder.testing import set_builder_session_factory
 from ftw.testing import ComponentRegistryLayer
+from ftw.testing import FunctionalSplinterTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
@@ -42,6 +43,10 @@ class PublisherSenderLayer(PloneSandboxLayer):
 
 PUBLISHER_SENDER_FIXTURE = PublisherSenderLayer()
 PUBLISHER_SENDER_INTEGRATION_TESTING = IntegrationTesting(
+    bases=(PUBLISHER_SENDER_FIXTURE,),
+    name="ftw.publisher.sender:integration")
+
+PUBLISHER_SENDER_FUNCTIONAL_TESTING = FunctionalSplinterTesting(
     bases=(PUBLISHER_SENDER_FIXTURE,
            set_builder_session_factory(functional_session_factory)),
-    name="ftw.publisher.sender:integration")
+    name="ftw.publisher.sender:functional")

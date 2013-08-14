@@ -1,14 +1,30 @@
 from Products.CMFCore.utils import getToolByName
+from ftw.builder import Builder
+from ftw.builder import create
 from ftw.publisher.sender.testing import PUBLISHER_SENDER_INTEGRATION_TESTING
 from ftw.publisher.sender.workflows import interfaces
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import login
+from plone.app.testing import setRoles
 from unittest2 import TestCase
 from zope.component import getAdapter
+from zope.component import getMultiAdapter
+
 
 
 class TestExampleWorkflowConfig(TestCase):
 
     layer = PUBLISHER_SENDER_INTEGRATION_TESTING
     workflow_id = 'publisher-example-workflow'
+
+    def setUp(self):
+        portal = self.layer['portal']
+        setRoles(portal, TEST_USER_ID, ['Manager'])
+        login(portal, TEST_USER_NAME)
+
+        wftool = getToolByName(portal, 'portal_workflow')
+        wftool.setChainForPortalTypes(['Document'], self.workflow_id)
 
     def test_all_states_are_in_workflow(self):
         config = self.get_config()
@@ -93,6 +109,13 @@ class TestExampleWorkflowConfig(TestCase):
             'Some transitions have invalid actions. Publisher workflows'
             ' should be configured to always call "publisher-modify-status"'
             ' for every transition, regardless wether they publish or not.')
+
+    def test_workflow_has_constraint_definition(self):
+        page = create(Builder('page'))
+        constraints = getMultiAdapter((page, page.REQUEST),
+                                      interfaces.IConstraintDefinition,
+                                      name=self.workflow_id)
+        self.assertTrue(constraints)
 
     def get_config(self):
         return getAdapter(self.layer['request'],

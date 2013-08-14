@@ -11,13 +11,12 @@ from unittest2 import TestCase
 from zope.interface.verify import verifyObject
 
 
-T_PREFIX = 'izug_workflow--TRANSITION--'
-
 EXAMPLE_WF_ID = 'publisher-example-workflow'
 EXAMPLE_WF_PUBLISH = '%s--TRANSITION--publish--internal_published' % (
     EXAMPLE_WF_ID)
 EXAMPLE_WF_RETRACT = '%s--TRANSITION--retract--published_internal' % (
     EXAMPLE_WF_ID)
+EXAMPLE_WF_PUBLISHED = 'publisher-example-workflow--STATUS--published'
 
 
 class TestModifyStatusView(TestCase):
@@ -56,6 +55,7 @@ class TestModifyStatusView(TestCase):
                 page.absolute_url(), EXAMPLE_WF_PUBLISH))
 
     def test_is_transaction_allowed(self):
-        page = create(Builder('page'))
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_PUBLISHED))
+        page = create(Builder('page').within(folder))
         view = page.unrestrictedTraverse('publisher-modify-status')
-        self.assertFalse(view.is_transition_allowed(EXAMPLE_WF_PUBLISH))
+        self.assertTrue(view.is_transition_allowed(EXAMPLE_WF_PUBLISH))

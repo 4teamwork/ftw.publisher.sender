@@ -1,6 +1,8 @@
 from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.sender.workflows.interfaces import IConstraintDefinition
+from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from zope.component import adapts
+from zope.component import getMultiAdapter
 from zope.i18n import translate
 from zope.interface import Interface
 from zope.interface import implements
@@ -34,6 +36,14 @@ class ConstraintDefinition(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        self._state = None
+
+    def state(self):
+        if self._state is None:
+            self._state = getMultiAdapter(
+                (self.context, self.request),
+                IPublisherContextState)
+        return self._state
 
     def is_action_allowed(self, action, silent=False):
         result = self.check_action(action)

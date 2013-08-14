@@ -5,6 +5,8 @@
 
     <adapter factory=".example.ExampleWorkflowConfiguration"
              name="publisher-example-workflow" />
+    <adapter factory=".example.ExampleWorkflowConstraintDefinition"
+             name="publisher-example-workflow" />
 
     <utility factory=".config.PublisherConfigs" />
     <adapter factory=".contextstate.PublisherContextState" />

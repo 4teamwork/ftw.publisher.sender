@@ -1,6 +1,7 @@
 from Acquisition import aq_parent, aq_inner
 from Products.Archetypes.interfaces.referenceable import IReferenceable
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IWorkflowConfigs
 from zope.component import adapts
@@ -36,6 +37,9 @@ class PublisherContextState(object):
         return wftool.getInfoFor(self.context, 'review_state', None)
 
     def is_published(self):
+        if IPloneSiteRoot.providedBy(self.context):
+            return True
+
         configs = getUtility(IWorkflowConfigs)
         return configs.is_published(self.context)
 
