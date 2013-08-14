@@ -14,6 +14,36 @@ REVISION = 'revision state'
 VALID_STATES = (PUBLISHED, REVISION, None)
 
 
+class IModifyStatus(Interface):
+    """View for executing workflow transitions if they are allowed in this
+    state. It applies the publisher transition checks and shows warnings
+    and errors to the users.
+    """
+
+    def __init__(context, request):
+        """Adapts a context and a request.
+        """
+
+    def __call__():
+        """Executes a workflow transition or cancels if there are errors.
+        It expects the transition to be passed in as request parameter
+        ``transition``.
+
+        Redirects to the referrer and adds status messages.
+        """
+
+    def get_transition_action(transition):
+        """Returns the action URL for executing the `transition`
+        on the current context.
+        """
+
+    def is_transition_allowed(transition, silent=False):
+        """Checks whether a transition is currently allowed.
+        This will automatically add warning / error messages unless
+        ``silent=True`` is passed.
+        """
+
+
 class IWorkflowConfigs(Interface):
     """A utility providing information for the publisher integration
     of the workflow.

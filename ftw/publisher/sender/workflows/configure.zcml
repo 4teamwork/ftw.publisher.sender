@@ -1,5 +1,6 @@
 <configure
       xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
       i18n_domain="ftw.publisher.sender">
 
     <adapter factory=".example.ExampleWorkflowConfiguration"
@@ -7,5 +8,13 @@
 
     <utility factory=".config.PublisherConfigs" />
     <adapter factory=".contextstate.PublisherContextState" />
+
+    <browser:page
+        name="publisher-modify-status"
+        for="*"
+        class=".modifystatus.ModifyStatusView"
+        permission="zope2.View"
+        allowed_attributes="is_transition_allowed"
+        />
 
 </configure>
