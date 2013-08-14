@@ -19,4 +19,10 @@
         allowed_attributes="is_transition_allowed"
         />
 
+    <subscriber
+        for="*
+             Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+        handler=".subscribers.publish_after_transition"
+        />
+
 </configure>

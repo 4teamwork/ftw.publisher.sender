@@ -1,3 +1,6 @@
+from Acquisition import aq_base
+from Acquisition import aq_inner
+from Acquisition import aq_parent
 from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.core import communication
 from ftw.publisher.core.states import ConnectionLost
@@ -96,3 +99,24 @@ def sendRequestToRealm(data, realm, serverAction):
     request = urllib2.Request(url, urllib.urlencode(data), headers)
     response = urllib2.urlopen(request)
     return response.read()
+
+
+def is_temporary(obj, checkId=True):
+    """Checks, whether an object is a temporary object (means it's in the
+    `portal_factory`) or has no acquisition chain set up.
+    Source: http://svn.plone.org/svn/collective/collective.indexing/trunk/collective/indexing/subscribers.py
+    """
+    parent = aq_parent(aq_inner(obj))
+    if parent is None:
+        return True
+    if checkId and getattr(obj, 'getId', None):
+        if getattr(aq_base(parent), obj.getId(), None) is None:
+            return True
+    isTemporary = getattr(obj, 'isTemporary', None)
+    if isTemporary is not None:
+        try:
+            if obj.isTemporary():
+                return True
+        except TypeError:
+            return True # `isTemporary` on the `FactoryTool` expects 2 args
+    return False
