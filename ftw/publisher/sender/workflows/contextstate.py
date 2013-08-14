@@ -22,6 +22,10 @@ class PublisherContextState(object):
     def has_workflow(self):
         return self.get_workflow() is not None
 
+    def has_publisher_config(self):
+        config = getUtility(IWorkflowConfigs).get_config_for(self.context)
+        return config is not None
+
     def get_workflow(self):
         wftool = getToolByName(self.context, 'portal_workflow')
         workflows = wftool.getWorkflowsFor(self.context)

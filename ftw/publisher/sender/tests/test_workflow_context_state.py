@@ -58,6 +58,13 @@ class TestPublisherContextState(TestCase):
         page = create(Builder('page'))
         self.assertTrue(get_state(page).has_workflow())
 
+    def test_page_has_publisher_config(self):
+        page = create(Builder('page'))
+        self.assertTrue(get_state(page).has_publisher_config())
+
+    def test_portal_has_no_publisher_config(self):
+        self.assertFalse(get_state(self.portal).has_publisher_config())
+
     def test_portal_has_no_workflow(self):
         self.assertFalse(get_state(self.portal).has_workflow())
 

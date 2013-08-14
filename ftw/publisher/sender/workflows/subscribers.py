@@ -1,7 +1,12 @@
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Products.CMFPlone.interfaces import IPloneSiteRoot
 from ftw.publisher.sender.utils import is_temporary
 from ftw.publisher.sender.workflows.interfaces import DELETE_ACTIONS
+from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IWorkflowConfigs
 from ftw.publisher.sender.workflows.interfaces import PUSH_ACTIONS
+from zope.component import getMultiAdapter
 from zope.component import getUtility
 
 
@@ -46,3 +51,36 @@ def publish_after_transition(context, event):
         context.restrictedTraverse('@@publisher.publish')()
     elif action in DELETE_ACTIONS:
         context.restrictedTraverse('@@publisher.delete')()
+
+
+
+def handle_remove_event(context, event):
+    """
+    Before a object is remvoed the event handler crates a remove job.
+    """
+
+    # the event is notified for every subobject, but we only want to check
+    # the top object which the users tries to delete
+    if context is not event.object:
+        return
+
+    # Find the workflow object by walking up. We may be deleting a file
+    # within a file-block within a page, where file and file-block have no
+    # workflow and we check the page workflow.
+    obj = context
+    state = None
+
+    while not IPloneSiteRoot.providedBy(obj):
+        state = getMultiAdapter((obj, context.REQUEST),
+                                IPublisherContextState)
+        if state.has_workflow():
+            break
+        else:
+            obj = aq_parent(aq_inner(obj))
+
+    if not state.has_workflow() or not state.has_publisher_config():
+        # plone site reached without finding a workflow, therefore
+        # the object was never published.
+        return
+
+    context.restrictedTraverse('@@publisher.delete')(no_response=True)

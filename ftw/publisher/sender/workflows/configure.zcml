@@ -1,7 +1,8 @@
 <configure
-      xmlns="http://namespaces.zope.org/zope"
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser"
-      i18n_domain="ftw.publisher.sender">
+    i18n_domain="ftw.publisher.sender">
 
     <adapter factory=".example.ExampleWorkflowConfiguration"
              name="publisher-example-workflow" />
@@ -23,6 +24,19 @@
         for="*
              Products.DCWorkflow.interfaces.IAfterTransitionEvent"
         handler=".subscribers.publish_after_transition"
+        />
+
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseContent
+             zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.handle_remove_event"
+        />
+
+    <subscriber
+        zcml:condition="installed plone.dexterity"
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.handle_remove_event"
         />
 
 </configure>
