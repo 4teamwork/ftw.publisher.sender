@@ -72,3 +72,46 @@ class IWorkflowConfiguration(Interface):
         DELETE : this transition removes the content entirely from the other
         installation - this should usually not be used since it is recursive.
         """
+
+
+class IPublisherContextState(Interface):
+    """An adapter for answering questions about the state of context
+    for deciding whether certain workflow transitions are allowed.
+    """
+
+    def __init__(context, request):
+        """Adapts a context and a request.
+        """
+
+    def has_workflow():
+        """Checks whether the current context has a workflow configured.
+        """
+
+    def get_workflow():
+        """Returns the workflow object of the current context.
+        Returns ``None`` if there is no workflow configured.
+        Multiple workflows are not supported.
+        """
+
+    def get_review_state():
+        """Returns the review state of the current context.
+        """
+
+    def is_published():
+        """Checks whether the current context is currently published.
+        """
+
+    def is_parent_published():
+        """Checks whether the parent object of the current context is
+        published.
+        """
+
+    def get_unpublished_references():
+        """Return all objects which are referenced from the current context
+        but are not yet published.
+        """
+
+    def get_published_references():
+        """Return all objects which are referenced from the current context
+        and are currently published.
+        """
