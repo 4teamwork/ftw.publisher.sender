@@ -13,4 +13,12 @@
           provides="Products.GenericSetup.interfaces.EXTENSION"
           />
 
+    <genericsetup:registerProfile
+        name="example-workflow"
+        title="ftw.publisher.sender: publisher example workflow"
+        directory="profiles/example-workflow"
+        description=""
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
 </configure>

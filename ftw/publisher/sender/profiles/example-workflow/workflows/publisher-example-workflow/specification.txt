@@ -1,0 +1,86 @@
+[Publisher Example Workflow]
+Initial Status: Internal
+
+
+
+Role mapping:
+    Visitor => Anonymous
+    Creator => Owner
+    Reader => Reader
+    Contributor => Contributor
+    Editor => Editor
+    Publisher => Reviewer
+    Webmaster => Site Administrator
+    System Administrator => Manager
+
+
+Transitions:
+    submit (Internal => Pending)
+    publish (Internal => Published)
+    reject (Pending => Internal)
+    publish (Pending => Published)
+    retract (Published => Internal)
+    revise (Published => Revision)
+    publish (Revision => Published)
+
+
+General:
+    A contributor can always add new content.
+
+    A webmaster can always perform the same actions as a creator.
+    A webmaster can always perform the same actions as a contributor.
+    A webmaster can always perform the same actions as an editor.
+    A webmaster can always perform the same actions as a publisher.
+    A webmaster can view any content.
+    A webmaster can always manage security.
+    A webmaster can always manage portlets.
+    A webmaster can always manage content settings.
+
+    A system administrator can always perform the same actions as a webmaster.
+    A system administrator can always manage.
+
+
+Status Internal:
+    A creator can view this content.
+    A creator can view inactive objects.
+    A creator can edit this content.
+    A creator can delete this content.
+    A creator can submit.
+    A reader can view this content.
+    A publisher can publish.
+
+
+Status Pending:
+    A creator can view this content.
+    A creator can view inactive objects.
+    A publisher can view inactive objects.
+    A publisher can view this content.
+    A publisher can edit this content.
+    A publisher can delete this content.
+    A publisher can reject.
+    A publisher can publish.
+
+
+Status Published:
+    A visitor can view this content.
+    An editor can view inactive objects.
+    An editor can revise.
+    A publisher can view inactive objects.
+    A publisher can revise.
+
+
+Status Revision:
+    A visitor can view this content.
+    An editor can view inactive objects.
+    An editor can edit this content.
+    An editor can publish.
+    A publisher can view inactive objects.
+    A publisher can edit this content.
+    A publisher can delete this content.
+    A publisher can publish.
+    A publisher can retract.
+
+
+
+# Settings
+transition-url = %%(content_url)s/publisher-modify-status?transition=%(transition)s

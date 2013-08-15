@@ -17,6 +17,30 @@
       permission="zope2.View"
       />
 
+  <configure zcml:condition="installed simplelayout.base">
+      <browser:page
+          name="publisher.publish"
+          for="simplelayout.base.interfaces.ISimpleLayoutCapable"
+          class=".sl.PublishSimplelayoutContainer"
+          permission="zope2.View"
+          />
+
+      <browser:page
+          zcml:condition="installed ftw.subsite"
+          name="publisher.publish"
+          for="ftw.subsite.interfaces.ISubsite"
+          class=".sl.PublishSimplelayoutContainer"
+          permission="zope2.View"
+          />
+
+      <browser:page
+          name="publisher.publish"
+          for="simplelayout.base.interfaces.ISimpleLayoutBlock"
+          class=".sl.PublishFolderishSimplelayoutBlocks"
+          permission="zope2.View"
+          />
+  </configure>
+
   <browser:page
       name="publisher.move"
       for="*"
