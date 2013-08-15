@@ -1,0 +1,42 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="ftw.publisher.sender">
+
+    <adapter factory=".example.ExampleWorkflowConfiguration"
+             name="publisher-example-workflow" />
+    <adapter factory=".example.ExampleWorkflowConstraintDefinition"
+             name="publisher-example-workflow" />
+
+    <utility factory=".config.PublisherConfigs" />
+    <adapter factory=".contextstate.PublisherContextState" />
+
+    <browser:page
+        name="publisher-modify-status"
+        for="*"
+        class=".modifystatus.ModifyStatusView"
+        permission="zope2.View"
+        allowed_attributes="is_transition_allowed"
+        />
+
+    <subscriber
+        for="*
+             Products.DCWorkflow.interfaces.IAfterTransitionEvent"
+        handler=".subscribers.publish_after_transition"
+        />
+
+    <subscriber
+        for="Products.Archetypes.interfaces.IBaseContent
+             zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.handle_remove_event"
+        />
+
+    <subscriber
+        zcml:condition="installed plone.dexterity"
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectRemovedEvent"
+        handler=".subscribers.handle_remove_event"
+        />
+
+</configure>

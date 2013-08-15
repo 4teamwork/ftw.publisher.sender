@@ -9,7 +9,10 @@ tests_require = [
     'Products.PloneFormGen',
     'plone.app.testing',
     'Products.PloneTestCase',
-    'ftw.testing',
+    'ftw.testing [splinter]',
+    'ftw.lawgiver',
+    'ftw.builder',
+    'ftw.contentpage',
     ]
 
 
@@ -76,6 +79,7 @@ setup(name='ftw.publisher.sender',
       extras_require={
         'tests': tests_require,
         'PloneFormGen': ['Products.PloneFormGen'],
+        'development': ['ftw.lawgiver'],
         },
 
       tests_require=tests_require,
