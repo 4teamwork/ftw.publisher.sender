@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-02-06 14:42+0000\n"
+"POT-Creation-Date: 2013-08-15 08:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,11 +30,11 @@ msgstr ""
 msgid "Execute"
 msgstr ""
 
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:152
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:157
 msgid "Locking is currently ${status} &raquo; ${change}"
 msgstr ""
 
-#: ./ftw/publisher/sender/browser/views.py:127
+#: ./ftw/publisher/sender/browser/views.py:129
 msgid "Object move/rename action has been added to the queue."
 msgstr ""
 
@@ -50,12 +50,28 @@ msgstr ""
 msgid "Realm:"
 msgstr ""
 
+#: ./ftw/publisher/sender/workflows/example.py:40
+msgid "The child object ${item} is still published."
+msgstr ""
+
+#: ./ftw/publisher/sender/workflows/example.py:34
+msgid "The parent object needs to be published first."
+msgstr ""
+
+#: ./ftw/publisher/sender/workflows/example.py:45
+msgid "The referenced object ${item} is not yet published."
+msgstr ""
+
+#: ./ftw/publisher/sender/workflows/example.py:50
+msgid "The referenced object ${item} is still published."
+msgstr ""
+
 #: ./ftw/publisher/sender/browser/publishformgen.py:43
-#: ./ftw/publisher/sender/browser/views.py:76
+#: ./ftw/publisher/sender/browser/views.py:78
 msgid "This object has been added to the queue."
 msgstr ""
 
-#: ./ftw/publisher/sender/browser/views.py:180
+#: ./ftw/publisher/sender/browser/views.py:183
 msgid "This object will be deleted at the remote sites."
 msgstr ""
 
@@ -75,22 +91,22 @@ msgid "action_delete"
 msgstr ""
 
 #. Default: "Disable"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:152
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:157
 msgid "action_disable_locking"
 msgstr ""
 
 #. Default: "Disable"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:133
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:138
 msgid "action_disable_publishing"
 msgstr ""
 
 #. Default: "Enable"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:164
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:169
 msgid "action_enable_locking"
 msgstr ""
 
 #. Default: "Enable"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:136
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:141
 msgid "action_enable_publishing"
 msgstr ""
 
@@ -115,7 +131,7 @@ msgid "button_save_realm"
 msgstr ""
 
 #. Default: "Are you sure to delete all jobs in the queue?"
-#: ./ftw/publisher/sender/browser/configlet.py:283
+#: ./ftw/publisher/sender/browser/configlet.py:285
 msgid "confirm_clear_queue"
 msgstr ""
 
@@ -125,17 +141,17 @@ msgid "delete_job"
 msgstr ""
 
 #. Default: "The data file of the job is missing."
-#: ./ftw/publisher/sender/browser/configlet.py:454
+#: ./ftw/publisher/sender/browser/configlet.py:456
 msgid "error_job_data_file_missing"
 msgstr ""
 
 #. Default: "Connection to realm failed: ${msg}"
-#: ./ftw/publisher/sender/browser/configlet.py:626
+#: ./ftw/publisher/sender/browser/configlet.py:632
 msgid "error_realm_connection_failed"
 msgstr ""
 
 #. Default: "Could not find realm"
-#: ./ftw/publisher/sender/browser/configlet.py:616
+#: ./ftw/publisher/sender/browser/configlet.py:622
 msgid "error_realm_not_found"
 msgstr ""
 
@@ -180,17 +196,17 @@ msgid "help_add_path"
 msgstr ""
 
 #. Default: "You can add fields for a portal-type which should be ignored by publisher.<br /> To ignore a field just select the portal-type and add the field you like the publisher to ignore (one per line). Be sure the field exists (case sensitiv), otherwise it will be ignored.<br /> Please be careful with changes."
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:186
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:191
 msgid "help_ignored_fields"
 msgstr ""
 
 #. Default: "The job has been deleted."
-#: ./ftw/publisher/sender/browser/configlet.py:463
+#: ./ftw/publisher/sender/browser/configlet.py:465
 msgid "info_job_deleted"
 msgstr ""
 
 #. Default: "The job has been executed."
-#: ./ftw/publisher/sender/browser/configlet.py:475
+#: ./ftw/publisher/sender/browser/configlet.py:477
 msgid "info_job_executed"
 msgstr ""
 
@@ -205,27 +221,27 @@ msgid "info_path_removed"
 msgstr ""
 
 #. Default: "Connection okay"
-#: ./ftw/publisher/sender/browser/configlet.py:622
+#: ./ftw/publisher/sender/browser/configlet.py:628
 msgid "info_realm_connection_okay"
 msgstr ""
 
 #. Default: "The job has been moved to the queue."
-#: ./ftw/publisher/sender/browser/configlet.py:448
+#: ./ftw/publisher/sender/browser/configlet.py:450
 msgid "info_requeued_job"
 msgstr ""
 
 #. Default: "Add ignore"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:216
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:221
 msgid "label_add_ignore"
 msgstr ""
 
 #. Default: "Job cache directory:"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:175
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:180
 msgid "label_cache_directory"
 msgstr ""
 
 #. Default: "Disabled"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:160
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:165
 msgid "label_disable_locking"
 msgstr ""
 
@@ -235,7 +251,7 @@ msgid "label_edit_realm"
 msgstr ""
 
 #. Default: "Enabled"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:150
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:155
 msgid "label_enable_locking"
 msgstr ""
 
@@ -245,37 +261,38 @@ msgid "label_infos"
 msgstr ""
 
 #. Default: "You have nothing ignored yet."
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:210
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:215
 msgid "label_nothing_ignored"
 msgstr ""
 
 #. Default: "Path"
-#: ./ftw/publisher/sender/browser/interfaces.py:38
+#: ./ftw/publisher/sender/browser/interfaces.py:25
 msgid "label_path"
 msgstr ""
 
 #. Default: "Portal Type"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:195
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:200
 msgid "label_portaltype"
 msgstr ""
 
 #. Default: "Active"
-#: ./ftw/publisher/sender/browser/interfaces.py:8
+#: ./ftw/publisher/sender/interfaces.py:72
 msgid "label_realm_active"
 msgstr ""
 
 #. Default: "Password"
-#: ./ftw/publisher/sender/browser/interfaces.py:20
+#: ./ftw/publisher/sender/browser/interfaces.py:17
+#: ./ftw/publisher/sender/interfaces.py:84
 msgid "label_realm_password"
 msgstr ""
 
 #. Default: "URL to the Plone-Site"
-#: ./ftw/publisher/sender/browser/interfaces.py:12
+#: ./ftw/publisher/sender/interfaces.py:76
 msgid "label_realm_url"
 msgstr ""
 
 #. Default: "Username"
-#: ./ftw/publisher/sender/browser/interfaces.py:16
+#: ./ftw/publisher/sender/interfaces.py:80
 msgid "label_realm_username"
 msgstr ""
 
@@ -285,7 +302,7 @@ msgid "label_runs"
 msgstr ""
 
 #. Default: "Please select portal type"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:219
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:224
 msgid "label_select"
 msgstr ""
 
@@ -300,22 +317,22 @@ msgid "legend_blacklst_add_path"
 msgstr ""
 
 #. Default: "Disable publishing"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:119
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:124
 msgid "legend_disable_publishing"
 msgstr ""
 
 #. Default: "Disable locking"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:146
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:151
 msgid "legend_disablelocking"
 msgstr ""
 
 #. Default: "Ignored Fields"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:185
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:190
 msgid "legend_ignored_fields"
 msgstr ""
 
 #. Default: "Information"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:172
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:177
 msgid "legend_information"
 msgstr ""
 
@@ -340,12 +357,12 @@ msgid "link_create_realm"
 msgstr ""
 
 #. Default: "Delete"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:98
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:102
 msgid "link_delete_realm"
 msgstr ""
 
 #. Default: "Edit"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:93
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:96
 msgid "link_edit_realm"
 msgstr ""
 
@@ -355,7 +372,7 @@ msgid "link_execute_queue"
 msgstr ""
 
 #. Default: "Details"
-#: ./ftw/publisher/sender/browser/configlet.py:353
+#: ./ftw/publisher/sender/browser/configlet.py:355
 msgid "link_job_details"
 msgstr ""
 
@@ -375,27 +392,27 @@ msgid "link_path_blacklist"
 msgstr ""
 
 #. Default: "Requeue"
-#: ./ftw/publisher/sender/browser/configlet.py:356
+#: ./ftw/publisher/sender/browser/configlet.py:358
 msgid "link_requeue_job"
 msgstr ""
 
 #. Default: "Test"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:104
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:109
 msgid "link_test_realm"
 msgstr ""
 
 #. Default: "Are you shure to delete all executed jobs?"
-#: ./ftw/publisher/sender/browser/configlet.py:430
+#: ./ftw/publisher/sender/browser/configlet.py:432
 msgid "prompt_cleanup"
 msgstr ""
 
 #. Default: "Disabled"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:127
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:132
 msgid "state_disabled"
 msgstr ""
 
 #. Default: "Enabled"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:125
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:130
 msgid "state_enabled"
 msgstr ""
 
@@ -410,19 +427,19 @@ msgid "text_delete_old_jobs"
 msgstr ""
 
 #. Default: "Publishing is currently ${state} &raquo; ${change-action}"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:132
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:137
 msgid "text_publishing_activated"
 msgstr ""
 
 #. Default: "Action"
-#: ./ftw/publisher/sender/browser/configlet.py:301
+#: ./ftw/publisher/sender/browser/configlet.py:303
 #: ./ftw/publisher/sender/browser/executed_job_details.pt:52
 #: ./ftw/publisher/sender/browser/listJobs.pt:33
 msgid "th_action"
 msgstr ""
 
 #. Default: "Active"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:80
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:83
 msgid "th_active"
 msgstr ""
 
@@ -433,7 +450,7 @@ msgid "th_data_length"
 msgstr ""
 
 #. Default: "Date"
-#: ./ftw/publisher/sender/browser/configlet.py:299
+#: ./ftw/publisher/sender/browser/configlet.py:301
 msgid "th_date"
 msgstr ""
 
@@ -448,23 +465,23 @@ msgid "th_path"
 msgstr ""
 
 #. Default: "State"
-#: ./ftw/publisher/sender/browser/configlet.py:302
+#: ./ftw/publisher/sender/browser/configlet.py:304
 msgid "th_state"
 msgstr ""
 
 #. Default: "Title"
-#: ./ftw/publisher/sender/browser/configlet.py:300
+#: ./ftw/publisher/sender/browser/configlet.py:302
 #: ./ftw/publisher/sender/browser/executed_job_details.pt:43
 msgid "th_title"
 msgstr ""
 
 #. Default: "URL"
-#: ./ftw/publisher/sender/browser/publisherConfig.pt:81
+#: ./ftw/publisher/sender/browser/publisherConfig.pt:84
 msgid "th_url"
 msgstr ""
 
 #. Default: "Username"
-#: ./ftw/publisher/sender/browser/configlet.py:303
+#: ./ftw/publisher/sender/browser/configlet.py:305
 #: ./ftw/publisher/sender/browser/executed_job_details.pt:56
 #: ./ftw/publisher/sender/browser/listJobs.pt:34
 msgid "th_username"
