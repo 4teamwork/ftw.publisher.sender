@@ -26,6 +26,11 @@ class TestWorkflowConfig(TestCase):
         wftool = getToolByName(portal, 'portal_workflow')
         wftool.setChainForPortalTypes(['Document'], self.workflow_id)
 
+        # Some setups, which subclass this test, are disallowing
+        # "Document" globally.
+        typestool = getToolByName(portal, 'portal_types')
+        typestool['Document'].global_allow = True
+
     def test_all_states_are_in_workflow(self):
         config = self.get_config()
         self.assertEquals(
@@ -81,6 +86,14 @@ class TestWorkflowConfig(TestCase):
             if transition.new_state_id not in published_states:
                 continue
 
+            origin_kinds = self.get_transition_origin_kinds(transition_id)
+            has_not_published_origins = (
+                origin_kinds - set(interfaces.PUBLISHED_STATES))
+            if not has_not_published_origins:
+                # The transition goes from a public state to a public state,
+                # therefore it is allowed to not publish this transition.
+                continue
+
             if kind != interfaces.PUBLISH:
                 invalid_transitions.append((transition, kind,
                                             transition.new_state_id))
@@ -123,9 +136,22 @@ class TestWorkflowConfig(TestCase):
                           name=self.workflow_id)
 
     def get_workflow(self):
-        portal = self.layer['portal']
-        wftool = getToolByName(portal, 'portal_workflow')
-        workflow = wftool.get(self.workflow_id)
-        self.assertTrue(workflow, 'Could not find workflow "%s"' % (
-                self.workflow_id))
-        return workflow
+        if getattr(self, '_workflow', None) is None:
+            portal = self.layer['portal']
+            wftool = getToolByName(portal, 'portal_workflow')
+            workflow = wftool.get(self.workflow_id)
+            self.assertTrue(workflow, 'Could not find workflow "%s"' % (
+                    self.workflow_id))
+            self._workflow = workflow
+        return self._workflow
+
+    def get_transition_origin_kinds(self, transition_id):
+        workflow = self.get_workflow()
+        config = self.get_config()
+
+        state_kinds = set([])
+        for state in workflow.states.values():
+            if transition_id in state.transitions:
+                state_kinds.add(config.states()[state.id])
+
+        return state_kinds
