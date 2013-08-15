@@ -48,7 +48,7 @@ class TestExampleWFConstraintDefinition(TestCase):
             'warning', 'The parent object needs to be published first.')
         Workflow().assert_status('Pending')
 
-    def test_error_on_submit_when_parent_is_not_published(self):
+    def test_error_on_publish_when_parent_is_not_published(self):
         folder = create(Builder('folder')
                         .in_state(EXAMPLE_WF_INTERNAL))
         page = create(Builder('page')
