@@ -35,8 +35,8 @@ class LawgiverWorkflowConfiguration(object):
             raise ValueError(
                 'Transition line has an invalid format: "%s"' % transition)
 
-        return '%s--TRANSITION--%s--%s_%s' % (
-            (self.workflow_id,) + match.groups())
+        return '%s--TRANSITION--%s--%s_%s' % tuple(
+            [self.workflow_id,] + map(self._normalize, match.groups()))
 
     def _status_id(self, status_title):
         return '%s--STATUS--%s' % (
