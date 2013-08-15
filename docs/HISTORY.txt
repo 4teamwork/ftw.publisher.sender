@@ -9,6 +9,9 @@ Changelog
   automatically when they have no workflow.
   [jone]
 
+- Provide workflow integration with an example publisher workflow.
+  [jone]
+
 - Use publisher permission for protecting publisher control panel action.
   Required permission: "ftw.publisher.sender: Change Publisher Configuration"
   [jone]

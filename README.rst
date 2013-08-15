@@ -144,6 +144,148 @@ the buildout.
     </configure>
 
 
+Configure workflows to publish
+==============================
+
+The `ftw.publisher` can be used with workflows. For using it with workflows
+you need to configure your workflow to use publisher actions and you need
+to provide a configuration for your workflow, telling the publisher what each
+state and transition means.
+
+Defining a publisher configuration
+----------------------------------
+
+A publisher configuration is a simple `IWorkflowConfiguration` adapter, which
+could look like this:
+
+.. code:: python
+
+    from ftw.publisher.sender.workflows import interfaces
+    from zope.component import adapts
+    from zope.interface import Interface
+    from zope.interface import implements
+
+
+    class MyWorkflowConfiguration(object):
+        implements(interfaces.IWorkflowConfiguration)
+        adapts(Interface)
+
+        def __init__(self, request):
+            self.request = request
+
+        def states(self):
+            return {
+                'private': None,
+                'pending': None,
+                'published': interfaces.PUBLISHED,
+                'revision': interfaces.REVISION}
+
+        def transitions(self):
+            return {
+                'submit': interfaces.SUBMIT,
+                'publish': interfaces.PUBLISH,
+                'reject': interfaces.RETRACT,
+                'retract': interfaces.RETRACT,
+                'revise': None}
+
+The *named*-adapter is then registered with some ZCML, where the name
+of the adapter is the ID of the workflow in portal_workflow.
+
+.. code:: xml
+
+    <adapter factory=".config.MyWorkflowConfiguration"
+             name="my-workflow" />
+
+**Lawgiver-Workflows**
+
+`ftw.lawgiver <https://github.com/4teamwork/ftw.lawgiver>`_ is a tool for
+writing workflows. If you are using the lawgiver, you can use
+`LawgiverWorkflowConfiguration` as a base class, which allows you to define
+the states and transitions by name / statement instead of ID:
+
+.. code:: python
+
+    from ftw.publisher.sender.workflows import config
+    from ftw.publisher.sender.workflows import interfaces
+
+
+    class ExampleWorkflowConfiguration(config.LawgiverWorkflowConfiguration):
+        workflow_id = 'publisher-example-workflow'
+
+        def lawgiver_states(self):
+            return {
+                'Internal': None,
+                'Pending': None,
+                'Published': interfaces.PUBLISHED,
+                'Revision': interfaces.REVISION}
+
+        def lawgiver_transitions(self):
+            return {
+                'submit (Internal => Pending)': interfaces.SUBMIT,
+                'publish (Internal => Published)': interfaces.PUBLISH,
+                'reject (Pending => Internal)': None,
+                'publish (Pending => Published)': interfaces.PUBLISH,
+                'retract (Published => Internal)': interfaces.RETRACT,
+                'revise (Published => Revision)': None,
+                'publish (Revision => Published)': interfaces.PUBLISH,
+                }
+
+
+Transition validation (constraints)
+-----------------------------------
+
+When a user publishes a content and its container is not yet published it
+will fail on the remote system, because the container is missing.
+
+The publisher provides workflow constraints for prohibiting bad transitions
+and for warning when something should be done (e.g. references should also
+be published).
+
+You should enable those constraints for your workflow by changing the
+transition action URL ("Display in actions box" -> "URL (formatted)") to
+the format ``%(content_url)s/publisher-modify-status?transition=TRANSITION``
+(replace ``TRANSITION``) with the transition ID.
+The default Plone URL is
+``%(content_url)s/content_status_modify?workflow_action=TRANSITION``.
+
+The constraints are adapters registered for each workflows. This allows
+to change the constraints per workflow easily. Take a look at the
+`publisher example workflow constraints <https://github.com/4teamwork/ftw.publisher.sender/blob/master/ftw/publisher/sender/workflows/example.py>`_.
+
+You might either subclass the example workflow constraint and extend it,
+write your own constraint definitions from scratch or directly use the
+example workflow constraints for your workflow.
+
+Reusing the example workflow constraints is as simple as registering a
+named adapter (your workflow ID in portal_workflow is the name of the
+adapter):
+
+.. code:: xml
+
+    <adapter factory="ftw.publisher.sender.workflows.example.ExampleWorkflowConstraintDefinition"
+             name="my-workflow" />
+
+
+Testing workflows
+-----------------
+
+For automatically testing whether your worlfow configuration is correct
+you can reuse the publisher
+`example workflow configuration tests <https://github.com/4teamwork/ftw.publisher.sender/blob/master/ftw/publisher/sender/tests/test_example_workflow_config.py>`:
+
+.. code:: python
+
+    from ftw.publisher.sender.tests import test_example_workflow_config
+    from my.package.testing import MY_INTEGRATION_TESTING
+
+    class TestMyWorkflowConfig(test_example_workflow_config.TestExampleWorkflowConfig):
+        layer = MY_INTEGRATION_TESTING
+        workflow_id = 'my-workflow'
+
+If you write custom constraints you should also take at the
+`example constraints tests <https://github.com/4teamwork/ftw.publisher.sender/blob/master/ftw/publisher/sender/tests/test_example_workflow_constraint_definition.py>`_.
+
+
 Links
 =====
 
