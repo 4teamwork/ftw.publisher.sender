@@ -12,6 +12,10 @@
     <utility factory=".config.PublisherConfigs" />
     <adapter factory=".contextstate.PublisherContextState" />
 
+    <configure zcml:condition="installed simplelayout.base">
+        <adapter factory=".sl.SimplelayoutContainerContextState" />
+    </configure>
+
     <browser:page
         name="publisher-modify-status"
         for="*"
