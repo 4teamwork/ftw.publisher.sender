@@ -13,7 +13,7 @@ from zope.component import getMultiAdapter
 
 
 
-class TestExampleWorkflowConfig(TestCase):
+class TestWorkflowConfig(TestCase):
 
     layer = PUBLISHER_SENDER_INTEGRATION_TESTING
     workflow_id = 'publisher-example-workflow'

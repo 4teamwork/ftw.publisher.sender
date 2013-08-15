@@ -278,7 +278,7 @@ you can reuse the publisher
     from ftw.publisher.sender.tests import test_example_workflow_config
     from my.package.testing import MY_INTEGRATION_TESTING
 
-    class TestMyWorkflowConfig(test_example_workflow_config.TestExampleWorkflowConfig):
+    class TestMyWorkflowConfig(test_example_workflow_config.TestWorkflowConfig):
         layer = MY_INTEGRATION_TESTING
         workflow_id = 'my-workflow'
 
