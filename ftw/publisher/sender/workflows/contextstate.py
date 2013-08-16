@@ -62,15 +62,7 @@ class PublisherContextState(object):
         return parent_state.is_published()
 
     def get_unpublished_references(self):
-        try:
-            referenceable = IReferenceable(self.context)
-        except TypeError:
-            # could not adapt
-            # this means we have a dexterity object without
-            # plone.app.referenceablebehavior activated.
-            return
-
-        for obj in referenceable.getReferences():
+        for obj in self.get_references():
             obj_state = getMultiAdapter((obj, self.request),
                                         IPublisherContextState)
 
@@ -78,7 +70,7 @@ class PublisherContextState(object):
                 yield obj
 
     def get_published_references(self):
-        for obj in self.context.getReferences():
+        for obj in self.get_references():
             obj_state = getMultiAdapter((obj, self.request),
                                         IPublisherContextState)
 
@@ -96,3 +88,19 @@ class PublisherContextState(object):
     def get_workflow_config(self):
         configs = getUtility(IWorkflowConfigs)
         return configs.get_config_for(self.context)
+
+    def get_references(self):
+        """Returns the references of the current context.
+        """
+        return self._get_references_for(self.context)
+
+    def _get_references_for(self, context):
+        try:
+            referenceable = IReferenceable(context)
+        except TypeError:
+            # could not adapt
+            # this means we have a dexterity object without
+            # plone.app.referenceablebehavior activated.
+            return []
+        else:
+            return referenceable.getReferences()

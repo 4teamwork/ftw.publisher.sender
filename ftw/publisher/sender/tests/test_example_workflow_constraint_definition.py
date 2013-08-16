@@ -8,6 +8,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
+from plone.uuid.interfaces import IUUID
 from unittest2 import TestCase
 import transaction
 
@@ -30,7 +31,8 @@ class TestExampleWFConstraintDefinition(TestCase):
         login(self.portal, TEST_USER_NAME)
 
         wftool = getToolByName(self.portal, 'portal_workflow')
-        wftool.setChainForPortalTypes(['Document', 'Folder'], EXAMPLE_WF_ID)
+        wftool.setChainForPortalTypes(['Document', 'Folder', 'ContentPage'],
+                                      EXAMPLE_WF_ID)
 
         transaction.commit()
 
@@ -94,6 +96,21 @@ class TestExampleWFConstraintDefinition(TestCase):
             'warning', 'The referenced object <a href="http://nohost/plone'
             '/the-other-page">The Other Page</a> is not yet published.')
 
+    def test_warning_on_publish_when_sl_block_has_unpublished_references(self):
+        page = create(Builder('content page'))
+        other_page = create(Builder('content page').titled('Other Page'))
+        other_page_uuid = IUUID(other_page)
+        create(Builder('text block')
+               .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
+               .within(page))
+
+        Plone().login().visit(page)
+        Workflow().do_transition('publish')
+
+        Workflow().assert_portal_message(
+            'warning', 'The referenced object <a href="http://nohost/plone'
+            '/other-page">Other Page</a> is not yet published.')
+
     def test_warning_on_retract_when_references_are_still_published(self):
         page = create(Builder('page')
                       .titled('The Page')
@@ -110,3 +127,21 @@ class TestExampleWFConstraintDefinition(TestCase):
         Workflow().assert_portal_message(
             'warning', 'The referenced object <a href="http://nohost/plone'
             '/the-other-page">The Other Page</a> is still published.')
+
+    def test_warning_on_retract_when_sl_block_has_published_references(self):
+        page = create(Builder('content page'))
+        other_page = create(Builder('content page')
+                            .titled('Other Page')
+                            .in_state(EXAMPLE_WF_PUBLISHED))
+        other_page_uuid = IUUID(other_page)
+        create(Builder('text block')
+               .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
+               .within(page))
+
+        Plone().login().visit(page)
+        Workflow().do_transition('publish')  # cannot add text block when published
+        Workflow().do_transition('retract')
+
+        Workflow().assert_portal_message(
+            'warning', 'The referenced object <a href="http://nohost/plone'
+            '/other-page">Other Page</a> is still published.')
