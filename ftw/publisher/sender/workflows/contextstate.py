@@ -45,7 +45,7 @@ class PublisherContextState(object):
             return True
 
         configs = getUtility(IWorkflowConfigs)
-        return configs.is_published(self.context)
+        return configs.is_published(self.context) or self.is_in_revision()
 
     def is_in_revision(self):
         configs = getUtility(IWorkflowConfigs)

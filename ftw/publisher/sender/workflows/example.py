@@ -36,6 +36,7 @@ class ExampleWorkflowConstraintDefinition(constraints.ConstraintDefinition):
     @warning_on(interfaces.SUBMIT)
     def parent_needs_to_be_published(self):
         return self.state().is_parent_published()
+    # return self.state().is_parent_published() or self.state().is_in_revision()
 
     @message(_('The child object ${item} is still published.'))
     @warning_on(interfaces.RETRACT)

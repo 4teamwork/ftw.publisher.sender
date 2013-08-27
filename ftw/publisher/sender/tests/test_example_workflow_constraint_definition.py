@@ -64,6 +64,17 @@ class TestExampleWFConstraintDefinition(TestCase):
             'error', 'The parent object needs to be published first.')
         Workflow().assert_status('Internal')
 
+    def test_no_error_when_parent_is_in_revision(self):
+        folder = create(Builder('folder')
+                        .in_state(EXAMPLE_WF_REVISION))
+        page = create(Builder('page')
+                      .within(folder)
+                      .in_state(EXAMPLE_WF_REVISION))
+
+        Plone().login().visit(page)
+        Workflow().do_transition('publish')
+        Workflow().assert_status('Published')
+
     def test_warning_on_retract_when_children_published(self):
         folder = create(Builder('folder')
                         .in_state(EXAMPLE_WF_PUBLISHED))
@@ -80,6 +91,23 @@ class TestExampleWFConstraintDefinition(TestCase):
         Workflow().assert_status('Internal')
 
         Workflow().visit(page).assert_status('Published')
+
+    def test_warning_when_child_is_in_revision(self):
+        folder = create(Builder('folder')
+                        .in_state(EXAMPLE_WF_PUBLISHED))
+        page = create(Builder('page')
+                      .within(folder)
+                      .in_state(EXAMPLE_WF_REVISION))
+
+        Plone().login().visit(folder)
+        Workflow().do_transition('retract')
+
+        Workflow().assert_portal_message(
+            'warning', 'The child object <a href="http://nohost/plone'
+            '/folder/document"></a> is still published.')
+        Workflow().assert_status('Internal')
+
+        Workflow().visit(page).assert_status('Revision')
 
     def test_warning_on_publish_when_references_are_not_published(self):
         page = create(Builder('page')
