@@ -140,6 +140,16 @@ class TestPublisherContextState(TestCase):
         self.assertEquals(
             [], list(get_state(bar).get_published_references()))
 
+    def test_do_not_fail_getting_published_references_if_ref_is_none(self):
+        foo = create(Builder('page').titled('Foo')
+                     .in_state(EXAMPLE_WF_PUBLISHED))
+        bar = create(Builder('page').titled('Bar'))
+        bar.setRelatedItems(foo)
+        self.portal._delObject(foo.getId(), suppress_events=True)
+
+        self.assertEquals(
+            [], list(get_state(bar).get_published_references()))
+
     def _set_state_of(self, obj, state):
         self.wftool.setStatusOf('publisher-example-workflow', obj,
                                 {'review_state': state})

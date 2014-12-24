@@ -124,10 +124,26 @@ class TestExampleWFConstraintDefinition(TestCase):
             'warning', 'The referenced object <a href="http://nohost/plone'
             '/the-other-page">The Other Page</a> is not yet published.')
 
+    def test_do_not_fail_if_reference_is_none(self):
+        page = create(Builder('page')
+                      .titled('The Page'))
+        other_page = create(Builder('page')
+                            .titled('The Other Page'))
+        page.setRelatedItems(other_page)
+
+        self.portal._delObject(other_page.getId(), suppress_events=True)
+        transaction.commit()
+
+        Plone().login().visit(page)
+        Workflow().do_transition('publish')
+        self.assertFalse(len(Workflow().portal_messages()['warning']),
+                         'No waring expected, since the ref does not exists '
+                         'anymore.')
+
     def test_warning_on_publish_when_sl_block_has_unpublished_references(self):
-        page = create(Builder('content page'))
-        other_page = create(Builder('content page').titled('Other Page'))
-        other_page_uuid = IUUID(other_page)
+        page=create(Builder('content page'))
+        other_page=create(Builder('content page').titled('Other Page'))
+        other_page_uuid=IUUID(other_page)
         create(Builder('text block')
                .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
                .within(page))
@@ -140,10 +156,10 @@ class TestExampleWFConstraintDefinition(TestCase):
             '/other-page">Other Page</a> is not yet published.')
 
     def test_warning_on_retract_when_references_are_still_published(self):
-        page = create(Builder('page')
+        page=create(Builder('page')
                       .titled('The Page')
                       .in_state(EXAMPLE_WF_PUBLISHED))
-        other_page = create(Builder('page')
+        other_page=create(Builder('page')
                             .titled('The Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
         page.setRelatedItems(other_page)
@@ -157,17 +173,18 @@ class TestExampleWFConstraintDefinition(TestCase):
             '/the-other-page">The Other Page</a> is still published.')
 
     def test_warning_on_retract_when_sl_block_has_published_references(self):
-        page = create(Builder('content page'))
-        other_page = create(Builder('content page')
+        page=create(Builder('content page'))
+        other_page=create(Builder('content page')
                             .titled('Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
-        other_page_uuid = IUUID(other_page)
+        other_page_uuid=IUUID(other_page)
         create(Builder('text block')
                .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
                .within(page))
 
         Plone().login().visit(page)
-        Workflow().do_transition('publish')  # cannot add text block when published
+        # cannot add text block when published
+        Workflow().do_transition('publish')
         Workflow().do_transition('retract')
 
         Workflow().assert_portal_message(

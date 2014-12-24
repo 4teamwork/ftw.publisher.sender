@@ -5,7 +5,8 @@ Changelog
 2.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Get unpublished and published references in a save way - the may be removed.
+  [mathias.leimgruber]
 
 
 2.2.0 (2013-09-02)
