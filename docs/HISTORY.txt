@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.2.1 (unreleased)
+2.2.1 (2014-12-31)
 ------------------
 
 - Get unpublished and published references in a save way - the may be removed.
