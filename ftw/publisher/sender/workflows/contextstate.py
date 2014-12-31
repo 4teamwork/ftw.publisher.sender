@@ -63,6 +63,9 @@ class PublisherContextState(object):
 
     def get_unpublished_references(self):
         for obj in self.get_references():
+            if obj is None:
+                continue
+
             obj_state = getMultiAdapter((obj, self.request),
                                         IPublisherContextState)
 
@@ -71,6 +74,9 @@ class PublisherContextState(object):
 
     def get_published_references(self):
         for obj in self.get_references():
+            if obj is None:
+                continue
+
             obj_state = getMultiAdapter((obj, self.request),
                                         IPublisherContextState)
 
