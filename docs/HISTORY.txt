@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.2.2 (unreleased)
+2.2.2 (2015-03-19)
 ------------------
 
 - Sort data collectors so that we have an expected order.
