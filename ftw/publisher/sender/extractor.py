@@ -34,7 +34,7 @@ class Extractor(object):
         data = {}
 
         if action not in ['delete', 'move']:
-            adapters = getAdapters((self.object, ), IDataCollector)
+            adapters = sorted(getAdapters((self.object, ), IDataCollector))
             for name, adapter in adapters:
                 data[name] = adapter.getData()
         # gets the metadata, we dont use an adapter in this case,

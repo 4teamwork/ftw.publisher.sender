@@ -5,7 +5,9 @@ Changelog
 2.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Sort data collectors so that we have an expected order.
+  This allows to affect the order with data collector names.
+  [jone]
 
 
 2.2.1 (2014-12-31)
