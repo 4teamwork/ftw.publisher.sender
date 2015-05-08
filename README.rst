@@ -295,8 +295,8 @@ packages it will not work.
 Here are some additional links:
 
 - Publisher packages on pypi: http://pypi.python.org/pypi?%3Aaction=search&term=ftw.publisher&submit=search
-- Main github project repository: https://github.com/4teamwork/ftw.publisher.sender
-- Issue tracker: https://github.com/4teamwork/ftw.publisher.sender/issues
+- Github: https://github.com/4teamwork/ftw.publisher.sender
+- Issues: https://github.com/4teamwork/ftw.publisher.sender/issues
 - Wiki: https://github.com/4teamwork/ftw.publisher.sender/wiki
 - Continuous integration: https://jenkins.4teamwork.ch/search?q=ftw.publisher.sender
 
