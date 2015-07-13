@@ -13,6 +13,7 @@ tests_require = [
     'ftw.lawgiver',
     'ftw.builder',
     'ftw.contentpage',
+    'ftw.simplelayout [contenttypes]',
     ]
 
 

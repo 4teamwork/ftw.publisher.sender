@@ -1,5 +1,6 @@
 from ftw.builder import builder_registry
 from ftw.builder.archetypes import ArchetypesBuilder
+import ftw.simplelayout.tests.builders
 
 
 class ContentPageBuilder(ArchetypesBuilder):

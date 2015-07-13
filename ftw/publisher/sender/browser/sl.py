@@ -1,7 +1,33 @@
 from ftw.publisher.sender.browser.views import PublishObject
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
-from simplelayout.base.interfaces import ISimpleLayoutBlock
 from zope.component import getMultiAdapter
+import pkg_resources
+
+SL_BLOCK_INTERFACES = []
+
+try:
+    pkg_resources.get_distribution('simplelayout.base')
+except pkg_resources.DistributionNotFound:
+    pass
+else:
+    from simplelayout.base.interfaces import ISimpleLayoutBlock
+    SL_BLOCK_INTERFACES.append(ISimpleLayoutBlock)
+
+
+try:
+    pkg_resources.get_distribution('ftw.simplelayout')
+except pkg_resources.DistributionNotFound:
+    pass
+else:
+    from ftw.simplelayout.interfaces import ISimplelayoutBlock
+    SL_BLOCK_INTERFACES.append(ISimplelayoutBlock)
+
+
+def is_simplelayout_block(context):
+    for iface in SL_BLOCK_INTERFACES:
+        if iface.providedBy(context):
+            return True
+    return False
 
 
 class PublishSimplelayoutContainer(PublishObject):
@@ -11,7 +37,7 @@ class PublishSimplelayoutContainer(PublishObject):
             *args, **kwargs)
 
         for obj in self.context.objectValues():
-            if not ISimpleLayoutBlock.providedBy(obj):
+            if not is_simplelayout_block(obj):
                 continue
 
             state = getMultiAdapter((obj, self.request),

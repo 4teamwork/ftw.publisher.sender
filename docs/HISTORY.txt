@@ -5,7 +5,8 @@ Changelog
 2.2.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add ftw.simplelayout support.
+  [jone]
 
 
 2.2.2 (2015-03-19)
