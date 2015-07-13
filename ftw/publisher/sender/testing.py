@@ -40,7 +40,6 @@ class PublisherSenderLayer(PloneSandboxLayer):
 
         z2.installProduct(app, 'ftw.contentpage')
         z2.installProduct(app, 'simplelayout.base')
-        z2.installProduct(app, 'simplelayout.types.common')
         z2.installProduct(app, 'simplelayout.ui.base')
         z2.installProduct(app, 'simplelayout.ui.dragndrop')
 
@@ -48,10 +47,6 @@ class PublisherSenderLayer(PloneSandboxLayer):
         applyProfile(portal, 'ftw.contentpage:default')
         applyProfile(portal, 'ftw.publisher.sender:default')
         applyProfile(portal, 'ftw.publisher.sender:example-workflow')
-
-        # simplelayout.types.common changes the Document FTI - very evil.
-        # https://github.com/4teamwork/simplelayout.types.common/issues/9
-        portal.portal_types['Document'].global_allow = True
 
 
 PUBLISHER_SENDER_FIXTURE = PublisherSenderLayer()
