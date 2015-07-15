@@ -42,9 +42,11 @@ class PublisherSenderLayer(PloneSandboxLayer):
         z2.installProduct(app, 'simplelayout.base')
         z2.installProduct(app, 'simplelayout.ui.base')
         z2.installProduct(app, 'simplelayout.ui.dragndrop')
+        z2.installProduct(app, 'ftw.simplelayout')
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.contentpage:default')
+        applyProfile(portal, 'ftw.simplelayout:default')
         applyProfile(portal, 'ftw.publisher.sender:default')
         applyProfile(portal, 'ftw.publisher.sender:example-workflow')
 

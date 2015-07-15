@@ -16,6 +16,11 @@ class TestPublishingSimplelayoutTypes(TestCase):
 
     layer = PUBLISHER_SENDER_FUNCTIONAL_TESTING
 
+    portal_type = 'ContentPage'
+    page_builder = 'content page'
+    textblock_builder = 'text block'
+    listingblock_builder = 'listing block'
+
     def setUp(self):
         super(TestPublishingSimplelayoutTypes, self).setUp()
 
@@ -24,12 +29,12 @@ class TestPublishingSimplelayoutTypes(TestCase):
         login(self.portal, TEST_USER_NAME)
 
         wftool = getToolByName(self.portal, 'portal_workflow')
-        wftool.setChainForPortalTypes(['ContentPage'],
+        wftool.setChainForPortalTypes([self.portal_type],
                                       'publisher-example-workflow')
 
     def test_blocks_are_published_with_contentpage(self):
-        page = create(Builder('content page'))
-        create(Builder('text block').within(page))
+        page = create(Builder(self.page_builder))
+        create(Builder(self.textblock_builder).within(page))
 
         Plone().login().visit(page)
         Workflow().do_transition('publish')
@@ -40,8 +45,8 @@ class TestPublishingSimplelayoutTypes(TestCase):
             'Expected the page and the text block to be in the queue.')
 
     def test_sl_listing_block_publishes_its_children(self):
-        page = create(Builder('content page'))
-        listing_block = create(Builder('listing block').within(page))
+        page = create(Builder(self.page_builder))
+        listing_block = create(Builder(self.listingblock_builder).within(page))
         create(Builder('file').within(listing_block))
 
         Plone().login().visit(page)
@@ -52,3 +57,11 @@ class TestPublishingSimplelayoutTypes(TestCase):
             3, queue.countJobs(),
             'Expected the page, the listing block and the file to be'
             ' in the queue.')
+
+
+class TestPublishingNEWSimplelayoutTypes(TestPublishingSimplelayoutTypes):
+
+    portal_type = 'ftw.simplelayout.ContentPage'
+    page_builder = 'sl content page'
+    textblock_builder = 'sl textblock'
+    listingblock_builder = 'sl listingblock'
