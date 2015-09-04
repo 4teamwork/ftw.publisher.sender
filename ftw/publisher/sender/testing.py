@@ -46,7 +46,7 @@ class PublisherSenderLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.contentpage:default')
-        applyProfile(portal, 'ftw.simplelayout:default')
+        applyProfile(portal, 'ftw.simplelayout.contenttypes:default')
         applyProfile(portal, 'ftw.publisher.sender:default')
         applyProfile(portal, 'ftw.publisher.sender:example-workflow')
 
