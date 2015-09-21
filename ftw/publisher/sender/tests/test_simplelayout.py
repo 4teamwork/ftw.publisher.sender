@@ -1,14 +1,17 @@
-from Products.CMFCore.utils import getToolByName
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.publisher.sender.interfaces import IQueue
 from ftw.publisher.sender.testing import PUBLISHER_SENDER_FUNCTIONAL_TESTING
 from ftw.publisher.sender.tests.pages import Workflow
+from ftw.simplelayout.configuration import flattened_block_uids
+from ftw.simplelayout.interfaces import IPageConfiguration
+from ftw.testing import staticuid
 from ftw.testing.pages import Plone
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
 
 
@@ -86,3 +89,13 @@ class TestPublishingNEWSimplelayoutTypes(TestPublishingSimplelayoutTypes):
         self.assertEquals(1, IQueue(self.portal).countJobs(),
                           'Deleteing an ftw.simplelayout page'
                           ' should still add a delete job.')
+
+    @staticuid('staticuid')
+    def test_syncs_pagestate_before_publishing(self):
+        page = create(Builder('sl content page'))
+        create(Builder('sl textblock').within(page))
+        self.assertEquals([], flattened_block_uids(IPageConfiguration(page).load()))
+
+        page.restrictedTraverse('@@publisher.publish')()
+        self.assertEquals(['staticuid00000000000000000000002'],
+                          flattened_block_uids(IPageConfiguration(page).load()))
