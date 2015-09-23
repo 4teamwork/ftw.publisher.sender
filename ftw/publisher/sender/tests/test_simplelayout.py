@@ -65,3 +65,24 @@ class TestPublishingNEWSimplelayoutTypes(TestPublishingSimplelayoutTypes):
     page_builder = 'sl content page'
     textblock_builder = 'sl textblock'
     listingblock_builder = 'sl listingblock'
+
+    def test_no_delete_jobs_for_blocks(self):
+        """When a block is deleted, we do not want to instantly delete
+        the block on the receiver side.
+        Instead the block is deleted automatically when the page is published
+        because it is no longer listed in the page state.
+        """
+
+        page = create(Builder(self.page_builder))
+        textblock = create(Builder(self.textblock_builder).within(page))
+
+        self.assertEquals(0, IQueue(self.portal).countJobs())
+        page.manage_delObjects([textblock.getId()])
+        self.assertEquals(0, IQueue(self.portal).countJobs(),
+                          'Deleting an ftw.simplelayout block'
+                          ' should not publish a delete job.')
+
+        self.portal.manage_delObjects([page.getId()])
+        self.assertEquals(1, IQueue(self.portal).countJobs(),
+                          'Deleteing an ftw.simplelayout page'
+                          ' should still add a delete job.')

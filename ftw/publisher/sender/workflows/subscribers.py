@@ -1,13 +1,23 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
-from Products.CMFPlone.interfaces import IPloneSiteRoot
 from ftw.publisher.sender.utils import is_temporary
 from ftw.publisher.sender.workflows.interfaces import DELETE_ACTIONS
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IWorkflowConfigs
 from ftw.publisher.sender.workflows.interfaces import PUSH_ACTIONS
+from Products.CMFPlone.interfaces import IPloneSiteRoot
 from zope.component import getMultiAdapter
 from zope.component import getUtility
+import pkg_resources
+
+
+try:
+    pkg_resources.get_distribution('ftw.simplelayout')
+except pkg_resources.DistributionNotFound:
+    FTW_SIMPLELAYOUT_AVAILABLE = False
+else:
+    FTW_SIMPLELAYOUT_AVAILABLE = True
+    from ftw.simplelayout.interfaces import ISimplelayoutBlock
 
 
 _marker = '_publisher_event_already_handled'
@@ -58,6 +68,12 @@ def handle_remove_event(context, event):
     """
     Before a object is remvoed the event handler crates a remove job.
     """
+
+    if FTW_SIMPLELAYOUT_AVAILABLE and ISimplelayoutBlock.providedBy(context):
+        # ftw.simplalyout blocks should not be deleted with a delete job
+        # but are deleted by the receiver when the page is published
+        # and the block is no longer in the pagestate.
+        return
 
     # the event is notified for every subobject, but we only want to check
     # the top object which the users tries to delete
