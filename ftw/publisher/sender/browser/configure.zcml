@@ -45,7 +45,7 @@
       <browser:page
           name="publisher.publish"
           for="ftw.simplelayout.interfaces.ISimplelayout"
-          class=".sl.PublishSimplelayoutContainer"
+          class=".sl.PublishFtwSimplelayoutContainer"
           permission="zope2.View"
           />
 
