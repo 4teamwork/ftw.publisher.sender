@@ -11,13 +11,16 @@ from zope.component import getUtility
 import pkg_resources
 
 
+NO_DELETE_JOBS_FOR_INTERFACES = []
+
+
 try:
     pkg_resources.get_distribution('ftw.simplelayout')
 except pkg_resources.DistributionNotFound:
-    FTW_SIMPLELAYOUT_AVAILABLE = False
+    pass
 else:
-    FTW_SIMPLELAYOUT_AVAILABLE = True
     from ftw.simplelayout.interfaces import ISimplelayoutBlock
+    NO_DELETE_JOBS_FOR_INTERFACES.append(ISimplelayoutBlock)
 
 
 _marker = '_publisher_event_already_handled'
@@ -69,11 +72,14 @@ def handle_remove_event(context, event):
     Before a object is remvoed the event handler crates a remove job.
     """
 
-    if FTW_SIMPLELAYOUT_AVAILABLE and ISimplelayoutBlock.providedBy(context):
-        # ftw.simplalyout blocks should not be deleted with a delete job
-        # but are deleted by the receiver when the page is published
-        # and the block is no longer in the pagestate.
-        return
+    # We need to disable automatic publishing of delete-jobs for certain
+    # objects.
+    # For example ftw.simplelayout blocks are not deleted directly,
+    # since we consider the blocks as content and they should be
+    # deleted when publishing the page / container and not before.
+    for iface in NO_DELETE_JOBS_FOR_INTERFACES:
+        if iface.providedBy(context):
+            return
 
     # the event is notified for every subobject, but we only want to check
     # the top object which the users tries to delete
