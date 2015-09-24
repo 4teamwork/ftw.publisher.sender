@@ -17,7 +17,7 @@ except pkg_resources.DistributionNotFound:
     FTW_SIMPLELAYOUT_AVAILABLE = False
 else:
     FTW_SIMPLELAYOUT_AVAILABLE = True
-    from ftw.simplelayout.interfaces import ISimplelayoutBlock
+    from ftw.publisher.core.adapters.ftw_simplelayout import is_sl_contentish
 
 
 _marker = '_publisher_event_already_handled'
@@ -69,15 +69,14 @@ def handle_remove_event(context, event):
     Before a object is remvoed the event handler crates a remove job.
     """
 
-    if FTW_SIMPLELAYOUT_AVAILABLE and ISimplelayoutBlock.providedBy(context):
-        # ftw.simplalyout blocks should not be deleted with a delete job
-        # but are deleted by the receiver when the page is published
-        # and the block is no longer in the pagestate.
-        return
-
     # the event is notified for every subobject, but we only want to check
     # the top object which the users tries to delete
     if context is not event.object:
+        return
+
+    if FTW_SIMPLELAYOUT_AVAILABLE and is_sl_contentish(context):
+        # Do not delete sl contentish objects, they are deleted when the
+        # associated sl container is published.
         return
 
     # Find the workflow object by walking up. We may be deleting a file
