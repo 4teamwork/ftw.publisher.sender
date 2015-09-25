@@ -45,26 +45,16 @@
       <browser:page
           name="publisher.publish"
           for="ftw.simplelayout.interfaces.ISimplelayout"
-          class=".sl.PublishFtwSimplelayoutContainer"
+          class=".ftw_simplelayout.PublishSLContainer"
           permission="zope2.View"
           />
 
       <browser:page
           name="publisher.publish"
           for="ftw.simplelayout.interfaces.ISimplelayoutBlock"
-          class=".sl.PublishFolderishSimplelayoutBlocks"
+          class=".ftw_simplelayout.PublishSLObject"
           permission="zope2.View"
           />
-
-      <configure zcml:condition="not-installed simplelayout.base">
-          <browser:page
-              zcml:condition="installed ftw.subsite"
-              name="publisher.publish"
-              for="ftw.subsite.interfaces.ISubsite"
-              class=".sl.PublishSimplelayoutContainer"
-              permission="zope2.View"
-              />
-      </configure>
   </configure>
 
   <browser:page
