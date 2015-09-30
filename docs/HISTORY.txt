@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.2.3 (unreleased)
+2.3.0 (2015-09-30)
 ------------------
 
 - Drop Plone 4.2 support.
