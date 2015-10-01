@@ -64,6 +64,7 @@ setup(name='ftw.publisher.sender',
         'ZODB3',
         'Zope2',
 
+        'Plone',
         'plone.memoize',
         'Products.ZCatalog',
         'Products.statusmessages',
