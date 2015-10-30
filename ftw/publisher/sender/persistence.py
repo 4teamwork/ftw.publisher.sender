@@ -497,7 +497,8 @@ class Job(Persistent):
         self.objectPath = '/'.join(object.getPhysicalPath())
         # store the path as uid if we are on a plone root
         self.objectUID = self.is_root and self.objectPath or object.UID()
-        self.objectTitle = object.pretty_title_or_id()
+        putils = getToolByName(object, 'plone_utils')
+        self.objectTitle = putils.pretty_title_or_id(object)
         self._extractData(object)
 
     security.declarePrivate('_extractData')
