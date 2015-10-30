@@ -67,4 +67,11 @@
           handler=".eventhandlers.add_move_job"
           />
 
+    <subscriber
+        zcml:condition="installed plone.dexterity"
+        for="plone.dexterity.interfaces.IDexterityContent
+             zope.lifecycleevent.interfaces.IObjectMovedEvent"
+        handler=".eventhandlers.add_move_job"
+        />
+
 </configure>
