@@ -5,7 +5,11 @@ Changelog
 2.3.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Blocks of ftw.contentpage will no longer published directly
+  after deleting.
+  Backport for ftw.contentpage of functionality provided for ftw.simplelayout:
+  https://github.com/4teamwork/ftw.publisher.sender/pull/20
+  [elioschmutz]
 
 
 2.3.0 (2015-09-30)
