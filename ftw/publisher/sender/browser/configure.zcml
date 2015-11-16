@@ -21,7 +21,7 @@
       <browser:page
           name="publisher.publish"
           for="simplelayout.base.interfaces.ISimpleLayoutCapable"
-          class=".sl.PublishSimplelayoutContainer"
+          class=".simplelayout_utils.PublishSLObject"
           permission="zope2.View"
           />
 
@@ -29,14 +29,14 @@
           zcml:condition="installed ftw.subsite"
           name="publisher.publish"
           for="ftw.subsite.interfaces.ISubsite"
-          class=".sl.PublishSimplelayoutContainer"
+          class=".simplelayout_utils.PublishSLObject"
           permission="zope2.View"
           />
 
       <browser:page
           name="publisher.publish"
           for="simplelayout.base.interfaces.ISimpleLayoutBlock"
-          class=".sl.PublishFolderishSimplelayoutBlocks"
+          class=".simplelayout_utils.PublishSLObject"
           permission="zope2.View"
           />
   </configure>
@@ -52,7 +52,7 @@
       <browser:page
           name="publisher.publish"
           for="ftw.simplelayout.interfaces.ISimplelayoutBlock"
-          class=".ftw_simplelayout.PublishSLObject"
+          class=".simplelayout_utils.PublishSLObject"
           permission="zope2.View"
           />
   </configure>
