@@ -5,6 +5,13 @@ Changelog
 2.3.1 (unreleased)
 ------------------
 
+- Use base class WorkflowConfigTest for TestWorkflowConfig test.
+  If we don't, we'll get builder registrations conflict errors after
+  importing the test class into another project. There are also problems
+  while imoprting the test class directly on a project without ftw.simplelayout
+  but ftw.contentpage.
+  [elioschmutz]
+
 - Blocks of ftw.contentpage will no longer published directly
   after deleting.
   Backport for ftw.contentpage of functionality provided for ftw.simplelayout:
