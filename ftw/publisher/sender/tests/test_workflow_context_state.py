@@ -115,6 +115,22 @@ class TestPublisherContextState(TestCase):
         self.assertFalse(get_state(page).is_parent_published(),
                         'Expected parent folder not to be published')
 
+    def test_is_parent_published__positive__when_parent_has_no_workflow(self):
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_PUBLISHED))
+        page = create(Builder('content page').within(folder))  # no wf
+        subpage = create(Builder('content page').within(page))  # no wf
+
+        self.assertTrue(get_state(subpage).is_parent_published(),
+                        'Expected parent folder not to be published')
+
+    def test_is_parent_published__negeative__when_parent_has_no_workflow(self):
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_INTERNAL))
+        page = create(Builder('content page').within(folder))  # no wf
+        subpage = create(Builder('content page').within(page))  # no wf
+
+        self.assertFalse(get_state(subpage).is_parent_published(),
+                         'Expected parent folder not to be published')
+
     def test_getting_unpublished_references(self):
         foo = create(Builder('page').titled('Foo'))
         bar = create(Builder('page').titled('Bar'))

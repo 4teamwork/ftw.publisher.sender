@@ -51,8 +51,23 @@ class PublisherContextState(object):
         configs = getUtility(IWorkflowConfigs)
         return configs.is_in_revision(self.context)
 
-    def get_parent_state(self):
+    def get_closest_parent_having_workflow(self):
+        """Visits the parents of an object by walking up. If the parent
+        has a workflow then that object (the parent) is returned.
+        When the plone site is reached then that object (the plone site)
+        is returned.
+        """
+        workflow_tool = getToolByName(self.context, 'portal_workflow')
         parent = aq_parent(aq_inner(self.context))
+
+        while True:
+            chain = workflow_tool.getChainFor(parent)
+            if chain or IPloneSiteRoot.providedBy(parent):
+                return parent
+            parent = aq_parent(aq_inner(parent))
+
+    def get_parent_state(self):
+        parent = self.get_closest_parent_having_workflow()
         parent_state = getMultiAdapter((parent, self.request),
                                        IPublisherContextState)
         return parent_state
