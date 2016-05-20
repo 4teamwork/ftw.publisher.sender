@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.3.2 (unreleased)
+2.4.0 (2016-05-20)
 ------------------
 
 - Workflow context state: skip parents without workflow when looking for
