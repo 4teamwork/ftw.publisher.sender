@@ -286,6 +286,17 @@ If you write custom constraints you should also take at the
 `example constraints tests <https://github.com/4teamwork/ftw.publisher.sender/blob/master/ftw/publisher/sender/tests/test_example_workflow_constraint_definition.py>`_.
 
 
+Disable creating publisher jobs
+-------------------------------
+
+.. code:: python
+
+    from ftw.publisher.sender.nojobs import publisher_jobs_disabled
+
+    with publisher_jobs_disabled():
+        pass  # no publisher jobs created here.
+
+
 Links
 =====
 

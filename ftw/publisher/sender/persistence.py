@@ -1,19 +1,20 @@
 from AccessControl.SecurityInfo import ClassSecurityInformation
 from Acquisition import aq_inner
 from BTrees.IOBTree import IOBTree
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.Transience.Transience import Increaser
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.interfaces import IOverriddenRealmRegistry
 from ftw.publisher.sender.interfaces import IQueue
 from ftw.publisher.sender.interfaces import IRealm
+from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
 from persistent import Persistent
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
 from plone.memoize import instance
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.Transience.Transience import Increaser
 from zope import interface, component
 from zope.annotation.interfaces import IAnnotations
 from zope.annotation.interfaces import IAttributeAnnotatable
@@ -281,6 +282,9 @@ class Queue(object):
         @type:          Job
         @return:        None
         """
+        if publisher_jobs_are_disabled():
+            return None
+
         if not isinstance(job, Job):
             raise TypeError('Excpected Job object')
         list = self.getJobs()
@@ -296,6 +300,9 @@ class Queue(object):
         @return:    Job object
         @rtype:     Job
         """
+        if publisher_jobs_are_disabled():
+            return None
+
         job = Job(*args, **kwargs)
         self.appendJob(job)
         return job
