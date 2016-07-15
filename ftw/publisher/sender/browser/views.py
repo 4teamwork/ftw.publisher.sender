@@ -1,9 +1,3 @@
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.interfaces import IPloneSiteRoot
-from Products.Five import BrowserView
-from Products.statusmessages.interfaces import IStatusMessage
-from StringIO import StringIO
-from ZODB.POSException import ConflictError
 from datetime import datetime
 from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
@@ -11,10 +5,17 @@ from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.events import AfterPushEvent, QueueExecutedEvent
 from ftw.publisher.sender.events import BeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
+from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
 from ftw.publisher.sender.utils import add_transaction_aware_status_message
 from ftw.publisher.sender.utils import sendJsonToRealm
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.Five import BrowserView
+from Products.statusmessages.interfaces import IStatusMessage
+from StringIO import StringIO
 from threading import RLock
 from urllib2 import URLError
+from ZODB.POSException import ConflictError
 from zope import event
 from zope.publisher.interfaces import Retry
 import logging
@@ -45,6 +46,10 @@ class PublishObject(BrowserView):
         @type kwargs:   dict
         @return:        Redirect to object`s default view
         """
+
+        if publisher_jobs_are_disabled():
+            return 'disabled'
+
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
@@ -98,6 +103,10 @@ class MoveObject(BrowserView):
         @type kwargs:   dict
         @return:        Redirect to object`s default view
         """
+
+        if publisher_jobs_are_disabled():
+            return 'disabled'
+
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
@@ -151,6 +160,10 @@ class DeleteObject(BrowserView):
         @type kwargs:   dict
         @return:        Redirect to object`s default view
         """
+
+        if publisher_jobs_are_disabled():
+            return 'disabled'
+
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
