@@ -4,14 +4,17 @@ from ftw.builder import create
 from ftw.publisher.sender.testing import PUBLISHER_SENDER_INTEGRATION_TESTING
 from ftw.publisher.sender.workflows.contextstate import PublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
+from plone.app.relationfield.behavior import IRelatedItems
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
 from unittest2 import TestCase
+from z3c.relationfield.event import _setRelation
 from zope.component import getMultiAdapter
 from zope.component import queryMultiAdapter
 from zope.interface.verify import verifyClass
+from z3c.relationfield.relation import create_relation
 
 
 def get_state(context):
@@ -165,6 +168,38 @@ class TestPublisherContextState(TestCase):
 
         self.assertEquals(
             [], list(get_state(bar).get_published_references()))
+
+    def test_references_dx_to_dx(self):
+        foo = create(Builder('example dx type').titled(u'Foo'))
+        bar = create(Builder('example dx type').titled(u'Bar'))
+
+        foo_relation = create_relation('/'.join(foo.getPhysicalPath()))
+        IRelatedItems(bar).relatedItems = [foo_relation]
+        _setRelation(bar, 'relatedItems', foo_relation)
+        self.assertEquals(
+            [foo],
+            list(get_state(bar).get_references())
+        )
+
+    def test_references_at_to_dx(self):
+        dx = create(Builder('example dx type').titled(u'DX'))
+        at = create(Builder('page').titled('AT'))
+        at.setRelatedItems(dx)
+        self.assertEquals(
+            [dx],
+            list(get_state(at).get_references())
+        )
+
+    def test_references_dx_to_at(self):
+        at = create(Builder('page').titled('AT'))
+        dx = create(Builder('example dx type').titled(u'DX'))
+        at_relation = create_relation('/'.join(at.getPhysicalPath()))
+        IRelatedItems(dx).relatedItems = [at_relation]
+        _setRelation(dx, 'relatedItems', at_relation)
+        self.assertEquals(
+            [at],
+            list(get_state(dx).get_references())
+        )
 
     def _set_state_of(self, obj, state):
         self.wftool.setStatusOf('publisher-example-workflow', obj,

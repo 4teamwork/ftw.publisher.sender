@@ -44,11 +44,22 @@ class PublisherSenderLayer(PloneSandboxLayer):
         z2.installProduct(app, 'simplelayout.ui.dragndrop')
         z2.installProduct(app, 'ftw.simplelayout')
 
+        import plone.app.dexterity
+        xmlconfig.file('configure.zcml', plone.app.dexterity,
+                       context=configurationContext)
+
+        import ftw.publisher.sender.tests
+        xmlconfig.file('profiles/dexterity.zcml', ftw.publisher.sender.tests,
+                       context=configurationContext)
+
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'ftw.contentpage:default')
         applyProfile(portal, 'ftw.simplelayout.contenttypes:default')
         applyProfile(portal, 'ftw.publisher.sender:default')
         applyProfile(portal, 'ftw.publisher.sender:example-workflow')
+        applyProfile(portal, 'plone.app.relationfield:default')
+        applyProfile(portal, 'plone.app.referenceablebehavior:default')
+        applyProfile(portal, 'ftw.publisher.sender.tests:dexterity')
 
 
 PUBLISHER_SENDER_FIXTURE = PublisherSenderLayer()

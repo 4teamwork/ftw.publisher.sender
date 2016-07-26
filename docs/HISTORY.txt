@@ -5,6 +5,8 @@ Changelog
 2.4.1 (unreleased)
 ------------------
 
+- Support dexterity relations. [mbaechtold]
+
 - Add context manager for disabling job creation. [jone]
 
 
