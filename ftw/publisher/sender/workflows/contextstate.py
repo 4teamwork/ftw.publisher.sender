@@ -4,11 +4,22 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IWorkflowConfigs
+from operator import attrgetter
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.component import getUtility
-from zope.interface import Interface
 from zope.interface import implements
+from zope.interface import Interface
+import pkg_resources
+
+try:
+    pkg_resources.get_distribution('zc.relation')
+except pkg_resources.DistributionNotFound:
+    HAS_ZC_CATALOG = False
+else:
+    HAS_ZC_CATALOG = True
+    from zope.intid.interfaces import IIntIds
+    from zc.relation.interfaces import ICatalog
 
 
 class PublisherContextState(object):
@@ -122,6 +133,15 @@ class PublisherContextState(object):
             # could not adapt
             # this means we have a dexterity object without
             # plone.app.referenceablebehavior activated.
-            return []
+            objs = []
         else:
-            return referenceable.getReferences()
+            objs = referenceable.getReferences()
+
+        if HAS_ZC_CATALOG:
+            relation_catalog = getUtility(ICatalog)
+            obj_intid = getUtility(IIntIds).getId(context)
+            relation_catalog.findRelations({'from_id': obj_intid})
+            relations = tuple(relation_catalog.findRelations({'from_id': obj_intid}))
+            objs += map(attrgetter('to_object'), relations)
+
+        return list(set(objs))

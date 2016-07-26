@@ -7,6 +7,8 @@ maintainer = 'Jonas Baumann'
 tests_require = [
     'collective.testcaselayer',
     'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
+    'plone.app.referenceablebehavior',
+    'plone.app.relationfield',
     'plone.app.testing',
     'Products.PloneTestCase',
     'ftw.testing [splinter]',
@@ -14,6 +16,7 @@ tests_require = [
     'ftw.builder',
     'ftw.contentpage',
     'ftw.simplelayout [contenttypes]',
+    'zc.relation',
     ]
 
 
