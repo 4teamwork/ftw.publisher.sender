@@ -2,7 +2,10 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:upgrade-step="http://namespaces.zope.org/ftw.upgrade"
     i18n_domain="ftw.publisher.sender">
+
+    <include package="ftw.upgrade" file="meta.zcml" />
 
     <!-- Remove annotations upgrade step -->
     <genericsetup:upgradeStep
@@ -66,5 +69,9 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <upgrade-step:directory
+        profile="ftw.publisher.sender:default"
+        directory="."
+        />
 
 </configure>

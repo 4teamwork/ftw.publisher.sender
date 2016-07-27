@@ -505,7 +505,7 @@ class ExecutedJobDetails(PublisherConfigletView):
 class CleanJobs(PublisherConfigletView):
 
     def __call__(self, *args, **kwargs):
-        self.queue._setJobs(PersistentList())
+        self.queue.clearJobs()
         self.statusMessage('Removed all jobs from queue')
         return self.request.RESPONSE.redirect('./@@publisher-config')
 
