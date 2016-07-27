@@ -5,6 +5,8 @@ Changelog
 2.4.1 (unreleased)
 ------------------
 
+- Deferred extraction using collective.taskqueue. [jone]
+
 - Migrate queue storage to zc.queue. [jone]
 
 - Speedup enqueuing by logging less. [jone]

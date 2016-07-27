@@ -19,6 +19,7 @@ from ZODB.POSException import ConflictError
 from zope import event
 from zope.publisher.interfaces import Retry
 import logging
+import os.path
 import sys
 import traceback
 import transaction
@@ -315,6 +316,17 @@ class ExecuteQueue(BrowserView):
                 ))
         while self.queue.countJobs()>0 and (self.batchsize<1 or
                                             jobCounter<self.batchsize):
+
+            try:
+                if os.path.getsize(self.queue.nextJob().dataFile) == 0:
+                    # ABORT
+                    self.logger.warning(
+                        'Aborting job execution because data file is'
+                        ' empty and async extractor may not be finished.')
+                    return
+            except OSError:
+                pass
+
             jobCounter += 1
             # get job from queue
             job = self.queue.popJob()

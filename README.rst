@@ -144,6 +144,26 @@ the buildout.
     </configure>
 
 
+Use asynchronous task queue for extraction
+------------------------------------------
+
+When creating a lot of publishing jobs in one single request,
+the extracting of the content (JSON serializing) may take a lot of time.
+In order to reduce the feedback time the user has an optional taskqueue
+based on collective.taskqueue may be configured.
+By default the extraction is done blocking.
+
+Example buildout configuration:
+
+    zope-conf-additional +=
+        %import collective.taskqueue
+        <taskqueue />
+        <taskqueue-server />
+
+    environment-vars +=
+        PUBLISHER_TASKQUEUE true
+
+
 Configure workflows to publish
 ==============================
 
