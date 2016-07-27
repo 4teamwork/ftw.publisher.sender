@@ -72,7 +72,7 @@ class PublishObject(BrowserView):
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
         queue.createJob('push', self.context, username)
-        self.logger.info('Created "%s" Job for "%s" at %s' % (
+        self.logger.debug('Created "%s" Job for "%s" at %s' % (
                 'push',
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
@@ -128,7 +128,7 @@ class MoveObject(BrowserView):
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
         queue.createJob('move', self.context, username, )
-        self.logger.info('Created "%s" Job for "%s" at %s' % (
+        self.logger.debug('Created "%s" Job for "%s" at %s' % (
                 'move',
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
@@ -185,7 +185,7 @@ class DeleteObject(BrowserView):
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
         queue.createJob('delete', self.context, username)
-        self.logger.info('Created "%s" Job for "%s" at %s' % (
+        self.logger.debug('Created "%s" Job for "%s" at %s' % (
                 'delete',
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
@@ -255,7 +255,7 @@ class ExecuteQueue(BrowserView):
 
         # lock - check for locking flag
         if self.config.locking_enabled() and not self.get_lock_object().acquire(0):
-            self.logger.info('Already publishing')
+            self.logger.warning('Already publishing')
             return 'Already publishing'
 
         # register our own logging handler for returning logs afterwards
