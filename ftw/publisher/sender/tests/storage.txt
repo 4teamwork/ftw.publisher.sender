@@ -31,7 +31,7 @@ Add a job for the folder
     <ftw.publisher.sender.persistence.Job object at ...>
     >>> queue.countJobs()
     1
-    >>> queue.getJobs()
+    >>> list(queue.getJobs())
     [<ftw.publisher.sender.persistence.Job object at ...>]
 
 Act as we just published the job

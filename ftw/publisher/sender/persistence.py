@@ -20,6 +20,7 @@ from zope.annotation.interfaces import IAnnotations
 from zope.annotation.interfaces import IAttributeAnnotatable
 import os
 import time
+import zc.queue
 
 
 _marker = object()
@@ -253,23 +254,28 @@ class Queue(object):
         self.context = aq_inner(context.portal_url.getPortalObject())
         self.annotations = IAnnotations(self.context)
 
+    security.declarePrivate('_get_jobs_queue')
+    def _get_jobs_queue(self):
+        if 'publisher-queue' not in self.annotations:
+            self.annotations['publisher-queue'] = zc.queue.Queue()
+        return self.annotations['publisher-queue']
+
     security.declarePrivate('getJobs')
     def getJobs(self):
         """
-        Returns a PersistentList of Job objects
+        Returns a list of Job objects
         @return:        job-objects
-        @rtype:         PersistentList
+        @rtype:         list
         """
-        if 'publisher-queue' not in self.annotations:
-            self.clearJobs()
-        return self.annotations['publisher-queue']
+        return self._get_jobs_queue()
 
     security.declarePrivate('clearJobs')
     def clearJobs(self):
         """
         Remove all jobs from the queue.
         """
-        self.annotations['publisher-queue'] = PersistentList()
+        queue = self._get_jobs_queue()
+        map(queue.pull, len(queue) * [0])
 
     security.declarePrivate('appendJob')
     def appendJob(self, job):
@@ -284,8 +290,8 @@ class Queue(object):
 
         if not isinstance(job, Job):
             raise TypeError('Excpected Job object')
-        list = self.getJobs()
-        list.append(job)
+
+        self._get_jobs_queue().put(job)
 
     security.declarePrivate('createJob')
     def createJob(self, *args, **kwargs):
@@ -313,8 +319,9 @@ class Queue(object):
         """
         if not isinstance(job, Job):
             raise TypeError('Excpected Job object')
-        list = self.getJobs()
-        list.remove(job)
+
+        queue = self._get_jobs_queue()
+        queue.pull(tuple(queue).index(job))
 
     security.declarePrivate('countJobs')
     def countJobs(self):
@@ -324,7 +331,7 @@ class Queue(object):
         @return:        Amount of jobs in the queue
         @rtype:         int
         """
-        return len(self.getJobs())
+        return len(self._get_jobs_queue())
 
     security.declarePrivate('popJob')
     def popJob(self):
@@ -334,7 +341,8 @@ class Queue(object):
         @return:        Oldest Job object
         @rtype:         Job
         """
-        return self.getJobs().pop(0)
+
+        return self._get_jobs_queue().pull()
 
     security.declarePrivate('_get_executed_jobs_storage')
     def _get_executed_jobs_storage(self):
