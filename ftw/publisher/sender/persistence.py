@@ -260,19 +260,16 @@ class Queue(object):
         @return:        job-objects
         @rtype:         PersistentList
         """
-        return self.annotations.get('publisher-queue', PersistentList())
+        if 'publisher-queue' not in self.annotations:
+            self.clearJobs()
+        return self.annotations['publisher-queue']
 
-    security.declarePrivate('_setJobs')
-    def _setJobs(self, list):
+    security.declarePrivate('clearJobs')
+    def clearJobs(self):
         """
-        Stores a PersistentList of Job objects
-        @param list:    list of jobs
-        @type list:     PersistentList
-        @return:        None
+        Remove all jobs from the queue.
         """
-        if not isinstance(list, PersistentList):
-            raise TypeError('Excpected PersistentList')
-        self.annotations['publisher-queue'] = list
+        self.annotations['publisher-queue'] = PersistentList()
 
     security.declarePrivate('appendJob')
     def appendJob(self, job):
@@ -289,7 +286,6 @@ class Queue(object):
             raise TypeError('Excpected Job object')
         list = self.getJobs()
         list.append(job)
-        self._setJobs(list)
 
     security.declarePrivate('createJob')
     def createJob(self, *args, **kwargs):
@@ -319,7 +315,6 @@ class Queue(object):
             raise TypeError('Excpected Job object')
         list = self.getJobs()
         list.remove(job)
-        self._setJobs(list)
 
     security.declarePrivate('countJobs')
     def countJobs(self):
