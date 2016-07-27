@@ -333,6 +333,18 @@ class Queue(object):
         """
         return len(self._get_jobs_queue())
 
+    security.declarePrivate('nextJob')
+    def nextJob(self):
+        """
+        Returns the next job to be executed but does not pop it.
+        This should only be used when the job is NOT executed but
+        when we need to make checks first in order to decide whether
+        to execute it or not.
+        @return:        Oldest Job object
+        @rtype:         Job
+        """
+        return self._get_jobs_queue()[0]
+
     security.declarePrivate('popJob')
     def popJob(self):
         """
@@ -341,7 +353,6 @@ class Queue(object):
         @return:        Oldest Job object
         @rtype:         Job
         """
-
         return self._get_jobs_queue().pull()
 
     security.declarePrivate('_get_executed_jobs_storage')
@@ -534,12 +545,20 @@ class Job(Persistent):
             file = os.path.join(dir, filename)
             if os.path.exists(file):
                 file = None
-        f = open(file, 'w')
-        # extract data
-        data = extractor.Extractor()(object, self.action)
-        # write data
-        f.write(data)
-        f.close()
+
+        if os.environ.get('PUBLISHER_TASKQUEUE'):
+            open(file, 'w').close()  # touch
+            from ftw.publisher.sender.taskqueue import queue
+            queue.enqueue_deferred_extraction(object, self.action, file)
+
+        else:
+            f = open(file, 'w')
+            # extract data
+            data = extractor.Extractor()(object, self.action)
+            # write data
+            f.write(data)
+            f.close()
+
         self.dataFile = file
 
     security.declarePrivate('getSize')

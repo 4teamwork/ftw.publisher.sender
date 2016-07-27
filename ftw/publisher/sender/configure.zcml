@@ -1,10 +1,14 @@
 <configure
       xmlns="http://namespaces.zope.org/zope"
+      xmlns:autofeature="http://namespaces.zope.org/autofeature"
       xmlns:five="http://namespaces.zope.org/five"
       xmlns:i18n="http://namespaces.zope.org/i18n"
       xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
       xmlns:zcml="http://namespaces.zope.org/zcml"
       i18n_domain="ftw.publisher.sender">
+
+    <include package="ftw.autofeature" file="meta.zcml" />
+    <autofeature:extras />
 
     <!-- include ploneformgen, if installed -->
     <configure zcml:condition="installed Products.PloneFormGen">
@@ -20,6 +24,7 @@
     <include file="profiles.zcml" />
     <include package=".upgrades" />
     <include zcml:condition="installed ftw.lawgiver" file="lawgiver.zcml" />
+    <include zcml:condition="have ftw.publisher.sender:taskqueue" package=".taskqueue" />
 
     <adapter
           provides=".interfaces.IConfig"
