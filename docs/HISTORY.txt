@@ -5,7 +5,9 @@ Changelog
 2.5.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not add delete jobs to the task queue. It's quite certain that object will no longer exists if the
+  extractor tries to get some data of the delete obj.
+  [mathias.leimgruber]
 
 
 2.5.0 (2016-07-27)

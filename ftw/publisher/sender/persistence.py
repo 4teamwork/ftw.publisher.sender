@@ -546,18 +546,25 @@ class Job(Persistent):
             if os.path.exists(file):
                 file = None
 
-        if os.environ.get('PUBLISHER_TASKQUEUE'):
-            open(file, 'w').close()  # touch
-            from ftw.publisher.sender.taskqueue import queue
-            queue.enqueue_deferred_extraction(object, self.action, file)
-
-        else:
-            f = open(file, 'w')
+        def direct_extract(filepath, obj, action):
+            f = open(filepath, 'w')
             # extract data
-            data = extractor.Extractor()(object, self.action)
+            data = extractor.Extractor()(obj, action)
             # write data
             f.write(data)
             f.close()
+
+        if os.environ.get('PUBLISHER_TASKQUEUE'):
+            open(file, 'w').close()  # touch
+            from ftw.publisher.sender.taskqueue import queue
+
+            if self.action != 'delete':
+                queue.enqueue_deferred_extraction(object, self.action, file)
+            else:
+                direct_extract(file, object, self.action)
+
+        else:
+            direct_extract(file, object, self.action)
 
         self.dataFile = file
 
