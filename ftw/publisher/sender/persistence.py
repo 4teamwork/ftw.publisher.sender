@@ -3,6 +3,7 @@ from Acquisition import aq_inner
 from BTrees.IOBTree import IOBTree
 from ftw.publisher.core import states
 from ftw.publisher.sender import extractor
+from ftw.publisher.sender import getLogger
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.interfaces import IOverriddenRealmRegistry
 from ftw.publisher.sender.interfaces import IQueue
@@ -20,8 +21,8 @@ from zope.annotation.interfaces import IAnnotations
 from zope.annotation.interfaces import IAttributeAnnotatable
 import os
 import time
+import transaction
 import zc.queue
-
 
 _marker = object()
 
@@ -253,12 +254,47 @@ class Queue(object):
         """
         self.context = aq_inner(context.portal_url.getPortalObject())
         self.annotations = IAnnotations(self.context)
+        self.logger = getLogger()
 
     security.declarePrivate('_get_jobs_queue')
     def _get_jobs_queue(self):
         if 'publisher-queue' not in self.annotations:
             self.annotations['publisher-queue'] = zc.queue.Queue()
         return self.annotations['publisher-queue']
+
+    security.declarePrivate('_get_worker_queue')
+    def _get_worker_queue(self):
+        if 'worker-queue' not in self.annotations:
+            self.annotations['worker-queue'] = zc.queue.Queue()
+        return self.annotations['worker-queue']
+
+    security.declarePrivate('get_worker_queue')
+    def get_worker_queue(self):
+        return self._get_worker_queue()
+
+    security.declarePrivate('move_to_worker_queue')
+    def move_to_worker_queue(self):
+        job_queue = self._get_jobs_queue()
+
+        if not len(job_queue):
+            return
+
+        while len(job_queue) > 0:
+
+            try:
+                if os.path.getsize(self.nextJob().dataFile) == 0:
+                    # ABORT
+                    self.logger.warning(
+                        'Aborting move job to worker queue because data file'
+                        ' is empty and async extractor may not be finished.')
+                    return
+            except OSError:
+                pass
+
+            # get job from job queue
+            job = self._get_jobs_queue().pull()
+            self._get_worker_queue().put(job)
+        transaction.commit()
 
     security.declarePrivate('getJobs')
     def getJobs(self):
@@ -267,15 +303,19 @@ class Queue(object):
         @return:        job-objects
         @rtype:         list
         """
-        return self._get_jobs_queue()
+
+        # zc.queue.Queue does not support + operator
+        return tuple(self._get_worker_queue()) + tuple(self._get_jobs_queue())
 
     security.declarePrivate('clearJobs')
     def clearJobs(self):
         """
         Remove all jobs from the queue.
         """
-        queue = self._get_jobs_queue()
-        map(queue.pull, len(queue) * [0])
+        jobs_queue = self._get_jobs_queue()
+        worker_queue  = self._get_worker_queue()
+        map(worker_queue.pull, len(worker_queue) * [0])
+        map(jobs_queue.pull, len(jobs_queue) * [0])
 
     security.declarePrivate('appendJob')
     def appendJob(self, job):
@@ -320,8 +360,13 @@ class Queue(object):
         if not isinstance(job, Job):
             raise TypeError('Excpected Job object')
 
-        queue = self._get_jobs_queue()
-        queue.pull(tuple(queue).index(job))
+        job_queue = self._get_jobs_queue()
+        worker_queue = self._get_worker_queue()
+
+        if job in job_queue:
+            job_queue.pull(tuple(job_queue).index(job))
+
+        worker_queue.pull(tuple(worker_queue).index(job))
 
     security.declarePrivate('countJobs')
     def countJobs(self):
@@ -331,7 +376,7 @@ class Queue(object):
         @return:        Amount of jobs in the queue
         @rtype:         int
         """
-        return len(self._get_jobs_queue())
+        return len(self.getJobs())
 
     security.declarePrivate('nextJob')
     def nextJob(self):
@@ -353,7 +398,7 @@ class Queue(object):
         @return:        Oldest Job object
         @rtype:         Job
         """
-        return self._get_jobs_queue().pull()
+        return self.get_worker_queue().pull()
 
     security.declarePrivate('_get_executed_jobs_storage')
     def _get_executed_jobs_storage(self):
