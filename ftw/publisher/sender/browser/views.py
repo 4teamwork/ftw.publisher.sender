@@ -19,17 +19,9 @@ from ZODB.POSException import ConflictError
 from zope import event
 from zope.publisher.interfaces import Retry
 import logging
-import os.path
 import sys
 import traceback
 import transaction
-
-
-"""
-@var BATCH_SIZE:        Maximum amount of Jobs to be performed at one
-ExecuteQueue call
-"""
-BATCH_SIZE = 0
 
 
 class PublishObject(BrowserView):
@@ -201,9 +193,8 @@ class DeleteObject(BrowserView):
             return self.request.RESPONSE.redirect('./view')
 
 
-
 class ExecuteQueue(BrowserView):
-    """Executes the Queue and sends BATCH_SIZE amount of Jobs to the target
+    """Executes the Queue and sends all Jobs to the target
     realms.
 
     """
@@ -228,13 +219,10 @@ class ExecuteQueue(BrowserView):
         # add to executed list
         return self.queue.append_executed_job(job)
 
-    def __call__(self, batchsize=None):
+    def __call__(self):
         """
         Handles logging purposes and calls execute() method.
         """
-        if batchsize is None:
-            batchsize = BATCH_SIZE
-        self.batchsize = batchsize
 
         # get config and queue
         self.config = IConfig(self.context)
@@ -302,34 +290,23 @@ class ExecuteQueue(BrowserView):
 
     def execute(self):
         """
-        Executes the jobs from the queue. Maximum amount of performed jobs can
-        be set with the BATCH_SIZE global.
+        Executes the jobs from the queue.
         @return: None
         """
-        # jobCounter counts the amount of executed jobs
-        jobCounter = 0
+
         jobs = self.queue.countJobs()
+
+        self.queue.move_to_worker_queue()
+
         self.logger.info('Executing Queue: %i of %i objects to %i realms' % (
-                jobs>self.batchsize and self.batchsize or jobs,
-                self.queue.countJobs(),
-                len(self.getActiveRealms()),
-                ))
-        while self.queue.countJobs()>0 and (self.batchsize<1 or
-                                            jobCounter<self.batchsize):
+            jobs,
+            self.queue.countJobs(),
+            len(self.getActiveRealms()),
+            ))
 
-            try:
-                if os.path.getsize(self.queue.nextJob().dataFile) == 0:
-                    # ABORT
-                    self.logger.warning(
-                        'Aborting job execution because data file is'
-                        ' empty and async extractor may not be finished.')
-                    return
-            except OSError:
-                pass
-
-            jobCounter += 1
-            # get job from queue
+        while len(self.queue.get_worker_queue()):
             job = self.queue.popJob()
+
             if not job.json_file_exists():
                 continue
             try:

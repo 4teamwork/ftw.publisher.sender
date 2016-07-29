@@ -35,6 +35,7 @@ Add a job for the folder
     [<ftw.publisher.sender.persistence.Job object at ...>]
 
 Act as we just published the job
+    >>> queue.move_to_worker_queue()
     >>> job = queue.popJob()
     >>> job
     <ftw.publisher.sender.persistence.Job object at ...>
