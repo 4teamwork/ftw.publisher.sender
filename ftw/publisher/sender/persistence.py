@@ -365,8 +365,8 @@ class Queue(object):
 
         if job in job_queue:
             job_queue.pull(tuple(job_queue).index(job))
-
-        worker_queue.pull(tuple(worker_queue).index(job))
+        else:
+            worker_queue.pull(tuple(worker_queue).index(job))
 
     security.declarePrivate('countJobs')
     def countJobs(self):

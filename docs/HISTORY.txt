@@ -5,7 +5,8 @@ Changelog
 2.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix removeJob method, which always tried to remove the job from the worker queue.
+  [mathias.leimgruber]
 
 
 2.6.0 (2016-07-29)
