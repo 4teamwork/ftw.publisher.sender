@@ -26,6 +26,8 @@
     <include zcml:condition="installed ftw.lawgiver" file="lawgiver.zcml" />
     <include zcml:condition="have ftw.publisher.sender:taskqueue" package=".taskqueue" />
 
+    <interface interface=".interfaces.IPreventPublishing" />
+
     <adapter
           provides=".interfaces.IConfig"
           for="Products.CMFPlone.interfaces.IPloneSiteRoot"

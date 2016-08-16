@@ -5,6 +5,8 @@ Changelog
 2.6.1 (unreleased)
 ------------------
 
+- Add IPreventPublishing marker interface. [jone]
+
 - Fix removeJob method, which always tried to remove the job from the worker queue.
   [mathias.leimgruber]
 
