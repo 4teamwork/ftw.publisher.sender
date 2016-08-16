@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.6.1 (unreleased)
+2.7.0 (2016-08-16)
 ------------------
 
 - Add IPreventPublishing marker interface. [jone]
