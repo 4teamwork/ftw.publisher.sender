@@ -5,6 +5,7 @@ from ftw.publisher.sender import message_factory as _
 from ftw.publisher.sender.events import AfterPushEvent, QueueExecutedEvent
 from ftw.publisher.sender.events import BeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
+from ftw.publisher.sender.interfaces import IPreventPublishing
 from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
 from ftw.publisher.sender.utils import add_transaction_aware_status_message
 from ftw.publisher.sender.utils import sendJsonToRealm
@@ -39,6 +40,9 @@ class PublishObject(BrowserView):
         @type kwargs:   dict
         @return:        Redirect to object`s default view
         """
+
+        if IPreventPublishing.providedBy(self.context):
+            return 'prevented'
 
         if publisher_jobs_are_disabled():
             return 'disabled'
@@ -97,6 +101,9 @@ class MoveObject(BrowserView):
         @return:        Redirect to object`s default view
         """
 
+        if IPreventPublishing.providedBy(self.context):
+            return 'prevented'
+
         if publisher_jobs_are_disabled():
             return 'disabled'
 
@@ -153,6 +160,9 @@ class DeleteObject(BrowserView):
         @type kwargs:   dict
         @return:        Redirect to object`s default view
         """
+
+        if IPreventPublishing.providedBy(self.context):
+            return 'prevented'
 
         if publisher_jobs_are_disabled():
             return 'disabled'

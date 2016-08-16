@@ -83,3 +83,9 @@ class IRealm(Interface):
     password = Password(
         title=_(u'label_realm_password',
                 u'Password'))
+
+
+class IPreventPublishing(Interface):
+    """Marker interface, which causes the publisher to
+    silently abort and never publish this object.
+    """
