@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.1 (unreleased)
+2.7.1 (2016-08-30)
 ------------------
 
 - Fix edge-case, if the published object is removed before the async worker collects the data from the object.
