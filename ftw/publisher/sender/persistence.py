@@ -275,25 +275,38 @@ class Queue(object):
     security.declarePrivate('move_to_worker_queue')
     def move_to_worker_queue(self):
         job_queue = self._get_jobs_queue()
+        worker_queue = self._get_worker_queue()
+
+        # The worker queue threshold should be small
+        # because we want the move-loop to terminate fast
+        # but it should be enough big to use one cronjob
+        # iteration, which is usually 1-2 minutes.
+        worker_queue_threshold = 1000
+
+        if len(worker_queue) > worker_queue_threshold:
+            return
 
         if not len(job_queue):
             return
 
-        while len(job_queue) > 0:
-
+        while len(job_queue) > 0 and len(worker_queue) < worker_queue_threshold:
             try:
                 if os.path.getsize(self.nextJob().dataFile) == 0:
                     # ABORT
                     self.logger.warning(
                         'Aborting move job to worker queue because data file'
                         ' is empty and async extractor may not be finished.')
+                    self.logger.info(
+                        'Worker queue: {} / {}'.format(len(worker_queue), len(job_queue)))
+                    transaction.commit()
                     return
             except OSError:
                 pass
 
-            # get job from job queue
-            job = self._get_jobs_queue().pull()
-            self._get_worker_queue().put(job)
+            worker_queue.put(job_queue.pull())
+
+        self.logger.info(
+            'Worker queue: {} / {}'.format(len(worker_queue), len(job_queue)))
         transaction.commit()
 
     security.declarePrivate('getJobs')
