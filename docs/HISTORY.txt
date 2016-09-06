@@ -5,7 +5,7 @@ Changelog
 2.7.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Make moving to worker queue more robust. [jone]
 
 
 2.7.1 (2016-08-30)
