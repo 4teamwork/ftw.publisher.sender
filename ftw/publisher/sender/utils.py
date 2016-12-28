@@ -98,7 +98,10 @@ def sendRequestToRealm(data, realm, serverAction):
         }
     request = urllib2.Request(url, urllib.urlencode(data), headers)
     response = urllib2.urlopen(request)
-    return response.read()
+    try:
+        return response.read()
+    finally:
+        response.close()
 
 
 def is_temporary(obj, checkId=True):

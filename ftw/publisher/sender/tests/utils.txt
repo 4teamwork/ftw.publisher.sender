@@ -13,6 +13,8 @@ Mock the request:
     ...         self.headers = headers
     ...     def read(self):
     ...         return self
+    ...     def close(self):
+    ...         return self
     ...     def get_username_password(self):
     ...         cookies = dict([c.strip().split('=', 1) for c in
     ...                         self.headers.get('Cookie').split(
