@@ -5,6 +5,8 @@ Changelog
 2.7.3 (unreleased)
 ------------------
 
+- Fix a bug where an old version was published. [jone]
+
 - Close connection after publishing. [jone]
 
 
