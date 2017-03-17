@@ -8,7 +8,7 @@
         name="taskqueue_publisher_extract_object"
         for="*"
         layer="collective.taskqueue.interfaces.ITaskQueueLayer"
-        class=".worker.PublisherExtractObject"
+        class=".queue.PublisherExtractObjectWorker"
         permission="zope2.View"
         />
 
