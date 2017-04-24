@@ -5,7 +5,7 @@ Changelog
 2.7.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- No longer move simplelayout blocks instantly. [jone]
 
 
 2.7.3 (2017-03-20)

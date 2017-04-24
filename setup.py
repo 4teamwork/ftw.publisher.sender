@@ -75,7 +75,7 @@ setup(name='ftw.publisher.sender',
         'Products.CMFPlone',
 
         'ftw.autofeature',
-        'ftw.publisher.core',
+        'ftw.publisher.core >= 2.6.0',
         'ftw.table',
         'ftw.upgrade',
         'z3c.form',
