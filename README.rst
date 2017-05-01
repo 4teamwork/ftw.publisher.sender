@@ -317,6 +317,10 @@ Disable creating publisher jobs
         pass  # no publisher jobs created here.
 
 
+FormGen integration
+===================
+The FormGen integration allows it to download the data entered on a published site. If the content is published it will get the data from from the public site. If it isn't published it will use the local data. The reason for this distinction is that we support internal forms, which are never published at all. In this case the internally collected data should be downloaded.
+
 Links
 =====
 

@@ -5,7 +5,8 @@ Changelog
 2.7.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Get the FormGen data from public site if Form Folder is published.
+  [tschanzt]
 
 
 2.7.4 (2017-04-27)

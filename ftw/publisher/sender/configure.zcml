@@ -5,6 +5,7 @@
       xmlns:i18n="http://namespaces.zope.org/i18n"
       xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
       xmlns:zcml="http://namespaces.zope.org/zcml"
+      xmlns:profilehook="http://namespaces.zope.org/profilehook"
       i18n_domain="ftw.publisher.sender">
 
     <include package="ftw.autofeature" file="meta.zcml" />
@@ -23,6 +24,8 @@
     <include package=".workflows" />
     <include file="profiles.zcml" />
     <include package=".upgrades" />
+    <include package=".FormGen" zcml:condition="installed Products.PloneFormGen" />
+
     <include zcml:condition="installed ftw.lawgiver" file="lawgiver.zcml" />
     <include zcml:condition="have ftw.publisher.sender:taskqueue" package=".taskqueue" />
 
@@ -80,5 +83,12 @@
              zope.lifecycleevent.interfaces.IObjectMovedEvent"
         handler=".eventhandlers.add_move_job"
         />
+
+  <include package="ftw.profilehook" />
+
+  <profilehook:hook
+      profile="ftw.publisher.sender:default"
+      handler=".hooks.add_saved_input_to_ignored_fields"
+      />
 
 </configure>

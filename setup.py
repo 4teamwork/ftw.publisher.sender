@@ -76,6 +76,7 @@ setup(name='ftw.publisher.sender',
 
         'ftw.autofeature',
         'ftw.publisher.core >= 2.6.0',
+        'ftw.profilehook',
         'ftw.table',
         'ftw.upgrade',
         'z3c.form',

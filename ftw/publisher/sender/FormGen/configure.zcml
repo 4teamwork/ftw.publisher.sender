@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="ftw.file">
+
+    <include package="collective.monkeypatcher" />
+
+    <monkey:patch
+        description="This is a fix to get the data from a public site when on the editorial site."
+        class="Products.PloneFormGen.content.saveDataAdapter.FormSaveDataAdapter"
+        original="download"
+        replacement=".saveDataAdapter.download"
+        />
+
+</configure>
