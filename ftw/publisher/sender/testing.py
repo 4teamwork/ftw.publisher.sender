@@ -43,7 +43,7 @@ class PublisherSenderLayer(PloneSandboxLayer):
         z2.installProduct(app, 'simplelayout.ui.base')
         z2.installProduct(app, 'simplelayout.ui.dragndrop')
         z2.installProduct(app, 'ftw.simplelayout')
-
+        z2.installProduct(app, 'Products.PloneFormGen')
         import plone.app.dexterity
         xmlconfig.file('configure.zcml', plone.app.dexterity,
                        context=configurationContext)
@@ -60,7 +60,7 @@ class PublisherSenderLayer(PloneSandboxLayer):
         applyProfile(portal, 'plone.app.relationfield:default')
         applyProfile(portal, 'plone.app.referenceablebehavior:default')
         applyProfile(portal, 'ftw.publisher.sender.tests:dexterity')
-
+        applyProfile(portal, 'Products.PloneFormGen:default')
 
 PUBLISHER_SENDER_FIXTURE = PublisherSenderLayer()
 PUBLISHER_SENDER_INTEGRATION_TESTING = IntegrationTesting(
