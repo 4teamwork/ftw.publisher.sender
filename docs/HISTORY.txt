@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.5 (unreleased)
+2.7.5 (2017-05-16)
 ------------------
 
 - Get the FormGen data from public site if Form Folder is published.
