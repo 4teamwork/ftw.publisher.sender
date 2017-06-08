@@ -12,6 +12,7 @@ tests_require = [
     'plone.app.testing',
     'Products.PloneTestCase',
     'ftw.testing [splinter]',
+    'ftw.testbrowser',
     'ftw.lawgiver',
     'ftw.builder',
     'ftw.contentpage',
