@@ -5,7 +5,7 @@ Changelog
 2.7.6 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix extraction token access error on first publishing. [jone]
 
 
 2.7.5 (2017-05-16)
