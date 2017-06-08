@@ -40,7 +40,7 @@ class PublisherExtractObjectWorker(BrowserView):
         obj = api.portal.get().unrestrictedTraverse(path, None)
 
         require_token = self.request.form['token']
-        current_token = IAnnotations(obj)[TOKEN_ANNOTATION_KEY]
+        current_token = IAnnotations(obj).get(TOKEN_ANNOTATION_KEY, None)
         if current_token != require_token:
             # The current version of the object is not the version we have
             # planned to extract.
@@ -56,11 +56,10 @@ class PublisherExtractObjectWorker(BrowserView):
 
             else:
                 raise Exception(
-                    'Unexpected version object version' +
+                    'Unexpected object version' +
                     ' after {!r} attempts.'.format(attempt) +
                     ' Required token: {!r},'.format(require_token) +
                     ' got token: {!r}'.format(current_token))
-
 
         if obj is None:
             os.remove(filepath)
