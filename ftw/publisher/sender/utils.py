@@ -1,11 +1,13 @@
 from Acquisition import aq_base
+from Acquisition import aq_chain
 from Acquisition import aq_inner
 from Acquisition import aq_parent
-from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.core import communication
 from ftw.publisher.core.states import ConnectionLost
 from ftw.publisher.sender.persistence import Realm
 from httplib import BadStatusLine
+from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.statusmessages.interfaces import IStatusMessage
 import base64
 import os.path
 import sys
@@ -123,3 +125,19 @@ def is_temporary(obj, checkId=True):
         except TypeError:
             return True # `isTemporary` on the `FactoryTool` expects 2 args
     return False
+
+
+def get_site_relative_path(obj):
+    portals = filter(IPloneSiteRoot.providedBy, aq_chain(obj))
+    assert len(portals) == 1, \
+        '{!r} must be in exactly one IPloneSiteRoot, got {!r}'.format(obj, portals)
+
+    portal, = portals
+    obj_path = '/'.join(obj.getPhysicalPath())
+    portal_path = '/'.join(portal.getPhysicalPath())
+
+    assert obj_path.startswith(portal_path + '/'), \
+        'Object with path {!r} must be within portal {!r}'.format(
+            obj_path, portal_path)
+
+    return obj_path[len(portal_path):]

@@ -559,7 +559,7 @@ class Job(Persistent):
 
     security = ClassSecurityInformation()
 
-    def __init__(self, action, object, username):
+    def __init__(self, action, object, username, additional_data=None):
         """
         Constructor: sets the given arguments.
         @param action:      action type [push|delete]
@@ -578,6 +578,7 @@ class Job(Persistent):
         self.objectUID = self.is_root and self.objectPath or object.UID()
         putils = getToolByName(object, 'plone_utils')
         self.objectTitle = putils.pretty_title_or_id(object)
+        self.additional_data = PersistentDict(additional_data or {})
         self._extractData(object)
 
     security.declarePrivate('_extractData')
@@ -607,7 +608,7 @@ class Job(Persistent):
         def direct_extract(filepath, obj, action):
             f = open(filepath, 'w')
             # extract data
-            data = extractor.Extractor()(obj, action)
+            data = extractor.Extractor()(obj, action, self.additional_data)
             # write data
             f.write(data)
             f.close()
@@ -617,7 +618,8 @@ class Job(Persistent):
             from ftw.publisher.sender.taskqueue import queue
 
             if self.action != 'delete':
-                queue.enqueue_deferred_extraction(object, self.action, file)
+                queue.enqueue_deferred_extraction(object, self.action, file,
+                                                  self.additional_data)
             else:
                 direct_extract(file, object, self.action)
 

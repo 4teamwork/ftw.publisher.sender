@@ -19,7 +19,7 @@ class TestExtractor(PloneTestCase):
             id='topic1', title='topic 1')
         self.topic1 = getattr(self.folder, topicid, None)
         self.extractor = Extractor()
-        self.extractor(self.testdoc1, 'delete')
+        self.extractor(self.testdoc1, 'delete', {})
 
     def test_extractor_object(self):
         adapters = getAdapters((self.testdoc1, ), IDataCollector)
@@ -71,7 +71,7 @@ class TestExtractor(PloneTestCase):
 
     def test_ignoreFields(self):
         # first all fields are in data
-        jsondata = self.extractor(self.testdoc1, 'push')
+        jsondata = self.extractor(self.testdoc1, 'push', {})
         # decode from json
         data = json.loads(jsondata)
         data = encode_after_json(data)
@@ -84,7 +84,7 @@ class TestExtractor(PloneTestCase):
         config.set_ignored_fields({'Document': ['description',
                                                 'excludeFromNav']})
 
-        jsondata = self.extractor(self.testdoc1, 'push')
+        jsondata = self.extractor(self.testdoc1, 'push', {})
         # decode from json
         data = json.loads(jsondata)
         data = encode_after_json(data)

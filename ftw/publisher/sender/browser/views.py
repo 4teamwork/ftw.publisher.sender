@@ -8,6 +8,7 @@ from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.interfaces import IPreventPublishing
 from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
 from ftw.publisher.sender.utils import add_transaction_aware_status_message
+from ftw.publisher.sender.utils import get_site_relative_path
 from ftw.publisher.sender.utils import sendJsonToRealm
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
@@ -91,7 +92,7 @@ class MoveObject(BrowserView):
     publishing queue for renaming.
 
     """
-    def __call__(self, no_response=False, msg=None, *args, **kwargs):
+    def __call__(self, event, no_response=False, msg=None, *args, **kwargs):
         """
         Creates a "rename" job for the current item(s)
         @param args:    list of unnamed arguments
@@ -127,19 +128,30 @@ class MoveObject(BrowserView):
         # create Job
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
-        queue.createJob('move', self.context, username, )
+
+        additional_data = {'move_data': {
+            'newName': event.newName,
+            'newParent': get_site_relative_path(event.newParent),
+            'newTitle': event.object.Title().decode('utf-8'),
+            'oldName': event.oldName,
+            'oldParent': get_site_relative_path(event.oldParent),
+        }}
+
+        queue.createJob('move', self.context, username,
+                        additional_data=additional_data)
         self.logger.debug('Created "%s" Job for "%s" at %s' % (
-                'move',
-                self.context.Title(),
-                '/'.join(self.context.getPhysicalPath()),
-                ))
+            'move',
+            self.context.Title(),
+            '/'.join(self.context.getPhysicalPath()),
+        ))
         # status message
         if msg is None:
             msg = _(u'Object move/rename action has been added to the queue.')
+
         IStatusMessage(self.request).addStatusMessage(
             msg,
             type='info'
-            )
+        )
         if not no_response:
             return self.request.RESPONSE.redirect('./view')
 

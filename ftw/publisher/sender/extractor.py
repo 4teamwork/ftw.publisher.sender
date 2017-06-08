@@ -19,13 +19,15 @@ class Extractor(object):
     security = ClassSecurityInformation()
 
     security.declarePrivate('__call__')
-    def __call__(self, object, action):
+    def __call__(self, object, action, additional_data):
         """
         Extracts the required data (action dependent) from a object for
         creating a Job.
         @param object:      Plone Object to export data from
         @param action:      Action to perform [push|delete]
         @type action:       string
+        @param additional_data: Additional infos.
+        @type additional_data: dict
         @return:            data (json "encoded")
         @rtype:             string
         """
@@ -53,25 +55,7 @@ class Extractor(object):
                         del data['field_data_adapter'][field]
 
         if action == 'move':
-            #read out data from event_information attr
-            move_data = getattr(self.object, 'event_information', None)
-            #make data convertable and shrink amount of data
-            #(replace objects by path)
-            del move_data['object']
-            portal_path = '/'.join(
-                self.object.portal_url.getPortalObject().getPhysicalPath())
-            new_parent_path = '/'.join(
-                move_data['newParent'].getPhysicalPath())
-            new_parent_rpath = new_parent_path[len(portal_path):]
-            move_data['newParent'] = new_parent_rpath
-            old_parent_path = '/'.join(
-                move_data['oldParent'].getPhysicalPath())
-            old_parent_rpath = old_parent_path[len(portal_path):]
-            move_data['oldParent'] = old_parent_rpath
-            move_data['newTitle'] = self.object.Title().decode('utf-8')
-            data['move'] = move_data
-            # finally remove event_information from object
-            delattr(self.object, 'event_information')
+            data['move'] = additional_data['move_data']
 
         # convert to json
         jsondata = self.convertToJson(data)

@@ -22,9 +22,8 @@ def add_move_job(obj, event):
         return
 
     if obj == event.object:
-        data = event.__dict__.copy()
         # do nohting, if we are in portal_factory or the item is just created
-        if not data['oldName']:
+        if not event.oldName:
             return
         url_endswith = event.object.REQUEST.get('ACTUAL_URL') \
             .split('/')[-1:][0]
@@ -35,8 +34,7 @@ def add_move_job(obj, event):
                                 'object_paste']:
             return
         #set event info on
-        setattr(obj, 'event_information', data)
         move_view = queryMultiAdapter(
             (obj, obj.REQUEST),
             name="publisher.move")
-        move_view(no_response=True)
+        move_view(event, no_response=True)
