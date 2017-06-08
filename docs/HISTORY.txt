@@ -11,6 +11,8 @@ Changelog
 2.7.6 (2017-06-08)
 ------------------
 
+- Add sanity checks for move job. [tschanzt]
+
 - Fix extraction token access error on first publishing. [jone]
 
 
