@@ -1,5 +1,4 @@
 from AccessControl.SecurityInfo import ClassSecurityInformation
-from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from ZODB.POSException import ConflictError
 from ftw.publisher.core.interfaces import IDataCollector
@@ -58,37 +57,22 @@ class Extractor(object):
             move_data = getattr(self.object, 'event_information', None)
             #make data convertable and shrink amount of data
             #(replace objects by path)
-
-            url_tool = getToolByName(self.object, 'portal_url')
-            phys_root_path = url_tool.getPortalObject().getPhysicalPath()
-            portal_path = '/'.join(phys_root_path)
-
-            phys_new_parent_path = move_data['newParent'].getPhysicalPath()
-            new_parent_path = '/'.join(phys_new_parent_path)
-            new_parent_rpath = new_parent_path.replace(portal_path, '', 1)
-
-            phys_old_parent_path = move_data['oldParent'].getPhysicalPath()
-            old_parent_path = '/'.join(phys_old_parent_path)
-            old_parent_rpath = old_parent_path.replace(portal_path, '', 1)
-
-            self.checkPhysPaths(move_data,
-                                phys_root_path,
-                                phys_new_parent_path,
-                                phys_old_parent_path)
-
-            self.checkPaths(move_data, portal_path, new_parent_rpath,
-                            old_parent_rpath, new_parent_path, old_parent_path)
-
-            self.checkTraverse(move_data, new_parent_rpath)
-
-            move_data['newParent'] = new_parent_rpath
-            move_data['oldParent'] = old_parent_rpath
             del move_data['object']
-
+            portal_path = '/'.join(
+                self.object.portal_url.getPortalObject().getPhysicalPath())
+            new_parent_path = '/'.join(
+                move_data['newParent'].getPhysicalPath())
+            new_parent_rpath = new_parent_path[len(portal_path):]
+            move_data['newParent'] = new_parent_rpath
+            old_parent_path = '/'.join(
+                move_data['oldParent'].getPhysicalPath())
+            old_parent_rpath = old_parent_path[len(portal_path):]
+            move_data['oldParent'] = old_parent_rpath
             move_data['newTitle'] = self.object.Title().decode('utf-8')
             data['move'] = move_data
             # finally remove event_information from object
             delattr(self.object, 'event_information')
+
         # convert to json
         jsondata = self.convertToJson(data)
         return jsondata
@@ -179,47 +163,3 @@ class Extractor(object):
         data = decode_for_json(data)
 
         return json.dumps(data, sort_keys=True)
-
-    security.declarePrivate('checkPhysPaths')
-    def checkPhysPaths(self, payload, root_path, new_path, old_path):
-        min_depth = len(root_path)
-
-        if len(new_path) < min_depth:
-            raise ValueError("Physical path of "
-                             "new parent to short: {0} \n"
-                             "payload: {1}".format(
-                                 '/'.join(new_path), payload))
-
-        if len(old_path) < min_depth:
-            raise ValueError("Physical path of "
-                             "new parent to short: {0} \n"
-                             "payload: {1}".format(
-                                 '/'.join(old_path), payload))
-
-    security.declarePrivate('checkPaths')
-    def checkPaths(self, payload, root_path, new_rpath,
-                   old_rpath, new_path, old_path):
-        if not new_rpath.startswith('/'):
-            raise ValueError("either the Root Path or the new parent path "
-                             "are invalid \n root path: {0} \n "
-                             "new Parent path {1} \n"
-                             "payload: {2}".format(root_path,
-                                                   new_path,
-                                                   payload))
-
-        if not old_rpath.startswith('/'):
-            raise ValueError("Either the Root Path or the old parent path "
-                             "are invalid \n root path: {0} \n "
-                             "old Parent path {1} \n"
-                             "payload: {2}".format(root_path,
-                                                   old_path,
-                                                   payload))
-
-    security.declarePrivate('checkTraverse')
-    def checkTraverse(self, payload, new_rpath):
-        if payload['newParent'] != self.object.restrictedTraverse(
-                new_rpath.lstrip('/')):
-            raise ValueError("Couldn't get new Parent over "
-                             "restricted traverse. Path: {0} \n"
-                             "payload: {1}".format(
-                                 new_rpath, payload))
