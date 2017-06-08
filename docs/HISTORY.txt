@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.6 (unreleased)
+2.7.6 (2017-06-08)
 ------------------
 
 - Fix extraction token access error on first publishing. [jone]
