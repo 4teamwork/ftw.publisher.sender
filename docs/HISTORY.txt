@@ -5,7 +5,7 @@ Changelog
 2.7.6 (unreleased)
 ------------------
 
-- Add sanity checks for move job. [tschanzt]
+- Nothing changed yet.
 
 
 2.7.5 (2017-05-16)
