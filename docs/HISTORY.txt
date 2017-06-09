@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.7 (unreleased)
+2.7.7 (2017-06-09)
 ------------------
 
 - Fix extraction bug on move when redis is active. [jone]
