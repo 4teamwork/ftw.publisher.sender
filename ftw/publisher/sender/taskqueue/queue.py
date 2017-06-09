@@ -4,6 +4,7 @@ from ftw.publisher.sender.extractor import Extractor
 from plone import api
 from Products.Five.browser import BrowserView
 from zope.annotation import IAnnotations
+import json
 import os
 import uuid
 
@@ -11,7 +12,8 @@ import uuid
 TOKEN_ANNOTATION_KEY = 'ftw.publisher.sender:deferred-extraction-token'
 
 
-def enqueue_deferred_extraction(obj, action, filepath, attempt=1, token=None):
+def enqueue_deferred_extraction(obj, action, filepath, additional_data,
+                                attempt=1, token=None):
     callback_path = '/'.join(api.portal.get().getPhysicalPath() +
                              ('taskqueue_publisher_extract_object',))
 
@@ -22,11 +24,13 @@ def enqueue_deferred_extraction(obj, action, filepath, attempt=1, token=None):
         IAnnotations(obj)[TOKEN_ANNOTATION_KEY] = token
 
     path = '/'.join(obj.getPhysicalPath())
-    taskqueue.add(callback_path, params={'action': action,
-                                         'filepath': filepath,
-                                         'path': path,
-                                         'attempt:int': attempt,
-                                         'token': token})
+    taskqueue.add(callback_path, params={
+        'action': action,
+        'filepath': filepath,
+        'path': path,
+        'attempt:int': attempt,
+        'token': token,
+        'additional_data': json.dumps(dict(additional_data))})
 
 
 class PublisherExtractObjectWorker(BrowserView):
@@ -37,6 +41,8 @@ class PublisherExtractObjectWorker(BrowserView):
         action = self.request.form['action']
         filepath = self.request.form['filepath']
         path = self.request.form['path']
+        additional_data = json.loads(self.request.form['additional_data'])
+
         obj = api.portal.get().unrestrictedTraverse(path, None)
 
         require_token = self.request.form['token']
@@ -69,7 +75,7 @@ class PublisherExtractObjectWorker(BrowserView):
             return 'JSON File "{0}" removed'.format(filepath)
 
         extractor = Extractor()
-        data = extractor(obj, action)
+        data = extractor(obj, action, additional_data)
 
         with open(filepath, 'w') as target:
             target.write(data)
