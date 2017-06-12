@@ -56,7 +56,7 @@ class PublisherExtractObjectWorker(BrowserView):
                 # early and the transaction which triggered the action was not
                 # yet commited to the database.
                 return enqueue_deferred_extraction(
-                    obj, action, filepath,
+                    obj, action, filepath, additional_data,
                     attempt=attempt + 1,
                     token=require_token)
 
