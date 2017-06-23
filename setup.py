@@ -11,7 +11,7 @@ tests_require = [
     'plone.app.relationfield',
     'plone.app.testing',
     'Products.PloneTestCase',
-    'ftw.testing [splinter]',
+    'ftw.testing',
     'ftw.testbrowser',
     'ftw.lawgiver',
     'ftw.builder',
