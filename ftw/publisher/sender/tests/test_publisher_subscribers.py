@@ -1,16 +1,10 @@
 from Products.CMFCore.utils import getToolByName
 from ftw.builder import Builder
 from ftw.builder import create
+from ftw.testbrowser import browsing
 from ftw.publisher.sender.interfaces import IQueue
-from ftw.publisher.sender.testing import PUBLISHER_SENDER_FUNCTIONAL_TESTING
+from ftw.publisher.sender.tests import FunctionalTestCase
 from ftw.publisher.sender.tests.pages import Workflow
-from ftw.testing import browser
-from ftw.testing.pages import Plone
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import TEST_USER_NAME
-from plone.app.testing import login
-from plone.app.testing import setRoles
-from unittest2 import TestCase
 import transaction
 
 
@@ -18,22 +12,20 @@ EXAMPLE_WF_ID = 'publisher-example-workflow'
 EXAMPLE_WF_PUBLISHED = '%s--STATUS--published' % EXAMPLE_WF_ID
 
 
-class TestPublisherTransitionEventHandler(TestCase):
-
-    layer = PUBLISHER_SENDER_FUNCTIONAL_TESTING
+class TestPublisherTransitionEventHandler(FunctionalTestCase):
 
     def setUp(self):
-        self.portal = self.layer['portal']
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
-        login(self.portal, TEST_USER_NAME)
+        super(TestPublisherTransitionEventHandler, self).setUp()
+        self.grant('Manager')
 
         wftool = getToolByName(self.portal, 'portal_workflow')
         wftool.setChainForPortalTypes(['Document'], EXAMPLE_WF_ID)
         transaction.commit()
 
-    def test_push_job_in_publisher_queue_after_publishing(self):
+    @browsing
+    def test_push_job_in_publisher_queue_after_publishing(self, browser):
         page = create(Builder('page'))
-        Plone().login().visit(page)
+        browser.login().visit(page)
         Workflow().do_transition('publish')
 
         queue = IQueue(self.portal)
@@ -43,17 +35,19 @@ class TestPublisherTransitionEventHandler(TestCase):
         self.assertEquals('push', job.action)
         self.assertEquals(page, job.getObject(self.portal))
 
-    def test_no_job_on_submit(self):
+    @browsing
+    def test_no_job_on_submit(self, browser):
         page = create(Builder('page'))
-        Plone().login().visit(page)
+        browser.login().visit(page)
         Workflow().do_transition('submit')
 
         queue = IQueue(self.portal)
         self.assertEquals(0, queue.countJobs())
 
-    def test_no_job_on_revise(self):
+    @browsing
+    def test_no_job_on_revise(self, browser):
         page = create(Builder('page').in_state(EXAMPLE_WF_PUBLISHED))
-        Plone().login().visit(page)
+        browser.login().visit(page)
         Workflow().do_transition('revise')
 
         queue = IQueue(self.portal)
@@ -61,53 +55,49 @@ class TestPublisherTransitionEventHandler(TestCase):
 
 
 
-class TestDeleteEventHanlder(TestCase):
-
-    layer = PUBLISHER_SENDER_FUNCTIONAL_TESTING
+class TestDeleteEventHandler(FunctionalTestCase):
 
     def setUp(self):
-        self.portal = self.layer['portal']
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
-        login(self.portal, TEST_USER_NAME)
+        super(TestDeleteEventHandler, self).setUp()
+        self.grant('Manager')
 
         wftool = getToolByName(self.portal, 'portal_workflow')
         wftool.setChainForPortalTypes(['Folder'], EXAMPLE_WF_ID)
         transaction.commit()
 
-    def test_no_job_when_object_has_no_publisher_workflow(self):
+    @browsing
+    def test_no_job_when_object_has_no_publisher_workflow(self, browser):
         queue = IQueue(self.portal)
         page = create(Builder('page'))
-        Plone().login().visit(page, 'delete_confirmation')
+        browser.login().visit(page, view='delete_confirmation')
         self.assertEquals(0, queue.countJobs())
-        self.click_delete()
+        browser.click_on('Delete')
         self.assertEquals(0, queue.countJobs())
 
-    def test_delete_job_create_when_we_have_a_publisher_workflow(self):
+    @browsing
+    def test_delete_job_create_when_we_have_a_publisher_workflow(self, browser):
         queue = IQueue(self.portal)
         folder = create(Builder('folder'))
-        Plone().login().visit(folder, 'delete_confirmation')
+        browser.login().visit(folder, view='delete_confirmation')
         self.assertEquals(0, queue.countJobs())
-        self.click_delete()
+        browser.click_on('Delete')
         self.assertEquals(1, queue.countJobs())
 
         job = queue.getJobs()[0]
         self.assertEquals('delete', job.action)
         self.assertEquals('/plone/folder', job.objectPath)
 
-    def test_delete_job_create_when_parent_has_publisher_workflow(self):
+    @browsing
+    def test_delete_job_create_when_parent_has_publisher_workflow(self, browser):
         queue = IQueue(self.portal)
         folder = create(Builder('folder'))
         page = create(Builder('page').within(folder))
 
-        Plone().login().visit(page, 'delete_confirmation')
+        browser.login().visit(page, view='delete_confirmation')
         self.assertEquals(0, queue.countJobs())
-        self.click_delete()
+        browser.click_on('Delete')
         self.assertEquals(1, queue.countJobs())
 
         job = queue.getJobs()[0]
         self.assertEquals('delete', job.action)
         self.assertEquals('/plone/folder/document', job.objectPath)
-
-    def click_delete(self):
-        # workaround because splinter does not like buttons without a name.
-        browser()._browser.getControl('Delete').click()

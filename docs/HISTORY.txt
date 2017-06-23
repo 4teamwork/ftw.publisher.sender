@@ -5,7 +5,8 @@ Changelog
 2.7.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Rewrite tests using "ftw.testbrowser", drop dependency on
+  "ftw.testing[splinter]". [mbaechtold]
 
 
 2.7.8 (2017-06-12)

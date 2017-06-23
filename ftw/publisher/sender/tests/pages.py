@@ -1,37 +1,39 @@
-from ftw.testing import browser
-from ftw.testing.pages import Plone
+from ftw.testbrowser import browser as default_browser
+from ftw.testbrowser.pages import statusmessages
 
 
-class Workflow(Plone):
+class Workflow(object):
+
+    def __init__(self, browser=default_browser):
+        self.browser = browser
 
     def get_status(self):
-        locals()['__traceback_info__'] = browser().url
-        elm = browser().find_by_xpath(
+        locals()['__traceback_info__'] = self.browser.url
+        elm = self.browser.xpath(
             '//span[starts-with(@class, "state-")]')
         assert elm, 'Could not find element containg current status'
         return elm.first.text
 
     def assert_status(self, status):
-        locals()['__traceback_info__'] = browser().url
+        locals()['__traceback_info__'] = self.browser.url
         current_status = self.get_status()
         assert status == current_status, \
             'Expected workflow state "%s" but it is "%s"' % (
             status, current_status)
 
     def do_transition(self, label, assert_success=True):
-        locals()['__traceback_info__'] = browser().url
-        elements = browser().find_by_xpath(
+        locals()['__traceback_info__'] = self.browser.url
+        elements = self.browser.xpath(
             '//a[starts-with(@id, "workflow-transition-")]')
-
         assert elements, 'No workflow transitions available.'
 
         links = {}
         for node in elements:
-            links[self.normalize_whitespace(node.text)] = node
+            links[node.text] = node
 
         assert label in links, 'Could not find transition "%s", got %s' % (
             label, links.keys())
 
         links[label].click()
         if assert_success:
-            self.assert_portal_message('info', 'Item state changed.')
+            statusmessages.assert_message('Item state changed.')
