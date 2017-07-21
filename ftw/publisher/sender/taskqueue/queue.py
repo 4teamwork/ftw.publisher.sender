@@ -46,7 +46,20 @@ class PublisherExtractObjectWorker(BrowserView):
         obj = api.portal.get().unrestrictedTraverse(path, None)
 
         require_token = self.request.form['token']
-        current_token = IAnnotations(obj).get(TOKEN_ANNOTATION_KEY, None)
+
+        if obj is None:
+            # The object does not yet exist under this path.
+            # The reason is most likely that we are processing a move job
+            # which was created in another process, which has not yet finished
+            # committing.
+            # We want to retry so that we can operate on the transaction where
+            # the object is already moved to the target.
+            # In order to trigger a retry, we set the ``current_token`` to
+            # ``None``.
+            current_token = None
+        else:
+            current_token = IAnnotations(obj).get(TOKEN_ANNOTATION_KEY, None)
+
         if current_token != require_token:
             # The current version of the object is not the version we have
             # planned to extract.
