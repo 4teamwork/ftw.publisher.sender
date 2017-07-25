@@ -5,6 +5,8 @@ Changelog
 2.7.9 (unreleased)
 ------------------
 
+- Fix retrying extraction of move jobs. [mathias.leimgruber]
+
 - Rewrite tests using "ftw.testbrowser", drop dependency on
   "ftw.testing[splinter]". [mbaechtold]
 
