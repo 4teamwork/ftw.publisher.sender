@@ -5,8 +5,8 @@ Changelog
 2.7.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Make the WorkflowConfigTest base class importable again without
+  installing the tests extras. [jone]
 
 2.7.9 (2017-07-25)
 ------------------
