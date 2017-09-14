@@ -136,8 +136,4 @@ def get_site_relative_path(obj):
     obj_path = '/'.join(obj.getPhysicalPath())
     portal_path = '/'.join(portal.getPhysicalPath())
 
-    assert obj_path.startswith(portal_path + '/'), \
-        'Object with path {!r} must be within portal {!r}'.format(
-            obj_path, portal_path)
-
     return obj_path[len(portal_path):]
