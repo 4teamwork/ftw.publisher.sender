@@ -5,6 +5,9 @@ Changelog
 2.7.11 (unreleased)
 -------------------
 
+- Fix changing the ID of an object (bug only occurred in combination
+  with Redis). [mbaechtold]
+
 - Make renaming objects on the Plone Site work again. [mbaechtold]
 
 

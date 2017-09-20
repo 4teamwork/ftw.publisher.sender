@@ -1,4 +1,6 @@
 from collective.taskqueue import taskqueue
+from ftw.publisher.core.utils import decode_for_json
+from ftw.publisher.core.utils import encode_after_json
 from ftw.publisher.sender import getLogger
 from ftw.publisher.sender.extractor import Extractor
 from plone import api
@@ -30,7 +32,7 @@ def enqueue_deferred_extraction(obj, action, filepath, additional_data,
         'path': path,
         'attempt:int': attempt,
         'token': token,
-        'additional_data': json.dumps(dict(additional_data))})
+        'additional_data': json.dumps(decode_for_json(dict(dict(additional_data))))})
 
 
 class PublisherExtractObjectWorker(BrowserView):
@@ -41,7 +43,7 @@ class PublisherExtractObjectWorker(BrowserView):
         action = self.request.form['action']
         filepath = self.request.form['filepath']
         path = self.request.form['path']
-        additional_data = json.loads(self.request.form['additional_data'])
+        additional_data = encode_after_json(json.loads(self.request.form['additional_data']))
 
         obj = api.portal.get().unrestrictedTraverse(path, None)
 
