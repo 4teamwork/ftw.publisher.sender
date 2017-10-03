@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.11 (unreleased)
+2.7.11 (2017-10-03)
 -------------------
 
 - Fix changing the ID of an object (bug only occurred in combination
