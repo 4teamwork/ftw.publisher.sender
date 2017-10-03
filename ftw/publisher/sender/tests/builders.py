@@ -2,7 +2,13 @@ from ftw.builder import builder_registry
 from ftw.builder.archetypes import ArchetypesBuilder
 from ftw.builder.dexterity import DexterityBuilder
 import ftw.simplelayout.tests.builders
-import ftw.contentpage.tests.builders
+
+
+try:
+    import ftw.contentpage.tests.builders
+except ImportError:
+    # Don't bother about ftw.contentpage, since it's a legay package.
+    pass
 
 
 class ExampleDxTypeBuilder(DexterityBuilder):

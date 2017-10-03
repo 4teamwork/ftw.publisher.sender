@@ -5,7 +5,8 @@ Changelog
 2.7.12 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Make ftw.contentpage dependency optional for other packages.
+  [mathias.leimgruber]
 
 
 2.7.11 (2017-10-03)
