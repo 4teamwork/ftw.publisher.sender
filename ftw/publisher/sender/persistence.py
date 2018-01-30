@@ -617,7 +617,7 @@ class Job(Persistent):
             open(file, 'w').close()  # touch
             from ftw.publisher.sender.taskqueue import queue
 
-            if self.action != 'delete':
+            if self.action not in ['delete', 'move']:
                 queue.enqueue_deferred_extraction(object, self.action, file,
                                                   self.additional_data)
             else:
