@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.12 (unreleased)
+2.7.12 (2018-02-06)
 -------------------
 
 - Execute move jobs synchronously, instead of asynchronously. [mbaechtold]
