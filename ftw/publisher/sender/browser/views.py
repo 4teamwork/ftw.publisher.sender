@@ -7,6 +7,7 @@ from ftw.publisher.sender.events import BeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.interfaces import IPreventPublishing
 from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
+from ftw.publisher.sender.utils import ReceiverTimeoutError
 from ftw.publisher.sender.utils import add_transaction_aware_status_message
 from ftw.publisher.sender.utils import get_site_relative_path
 from ftw.publisher.sender.utils import sendJsonToRealm
@@ -337,6 +338,8 @@ class ExecuteQueue(BrowserView):
             except (ConflictError, Retry):
                 raise
             except URLError:
+                raise
+            except ReceiverTimeoutError:
                 raise
             except:
                 # print the exception to the publisher error log

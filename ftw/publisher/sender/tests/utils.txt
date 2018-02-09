@@ -23,7 +23,7 @@ Mock the request:
     ...         user, pwd = base64.b64decode(ac).split(':')
     ...         return user.decode('hex'), pwd.decode('hex')
 
-    >>> def urlopen(request):
+    >>> def urlopen(request, timeout=None):
     ...     return request
     >>> ori_request = urllib2.Request
     >>> ori_urlopen = urllib2.urlopen
