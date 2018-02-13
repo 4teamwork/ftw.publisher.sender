@@ -2,6 +2,7 @@ from Products.CMFCore.utils import getToolByName
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.publisher.sender.testing import PUBLISHER_SENDER_INTEGRATION_TESTING
+from ftw.publisher.sender.utils import IS_PLONE_4
 from ftw.publisher.sender.workflows.contextstate import PublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from plone.app.relationfield.behavior import IRelatedItems
@@ -9,6 +10,7 @@ from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
+from unittest2 import skipUnless
 from unittest2 import TestCase
 from z3c.relationfield.event import _setRelation
 from zope.component import getMultiAdapter
@@ -118,7 +120,8 @@ class TestPublisherContextState(TestCase):
         self.assertFalse(get_state(page).is_parent_published(),
                         'Expected parent folder not to be published')
 
-    def test_is_parent_published__positive__when_parent_has_no_workflow(self):
+    @skipUnless(IS_PLONE_4, 'ftw.contentpage is not available for plone 5')
+    def test_is_parent_published__positive__when_parent_has_no_workflow_plone4(self):
         folder = create(Builder('folder').in_state(EXAMPLE_WF_PUBLISHED))
         page = create(Builder('content page').within(folder))  # no wf
         subpage = create(Builder('content page').within(page))  # no wf
@@ -126,10 +129,27 @@ class TestPublisherContextState(TestCase):
         self.assertTrue(get_state(subpage).is_parent_published(),
                         'Expected parent folder not to be published')
 
-    def test_is_parent_published__negeative__when_parent_has_no_workflow(self):
+    def test_is_parent_published__positive__when_parent_has_no_workflow(self):
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_PUBLISHED))
+        page = create(Builder('sl content page').within(folder))  # no wf
+        subpage = create(Builder('sl content page').within(page))  # no wf
+
+        self.assertTrue(get_state(subpage).is_parent_published(),
+                        'Expected parent folder not to be published')
+
+    @skipUnless(IS_PLONE_4, 'ftw.contentpage is not available for plone 5')
+    def test_is_parent_published__negeative__when_parent_has_no_workflow_plone4(self):
         folder = create(Builder('folder').in_state(EXAMPLE_WF_INTERNAL))
         page = create(Builder('content page').within(folder))  # no wf
         subpage = create(Builder('content page').within(page))  # no wf
+
+        self.assertFalse(get_state(subpage).is_parent_published(),
+                         'Expected parent folder not to be published')
+
+    def test_is_parent_published__negeative__when_parent_has_no_workflow(self):
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_INTERNAL))
+        page = create(Builder('sl content page').within(folder))  # no wf
+        subpage = create(Builder('sl content page').within(page))  # no wf
 
         self.assertFalse(get_state(subpage).is_parent_published(),
                          'Expected parent folder not to be published')

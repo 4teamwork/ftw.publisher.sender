@@ -3,13 +3,16 @@ from ftw.builder import create
 from ftw.publisher.sender.interfaces import IQueue
 from ftw.publisher.sender.tests import FunctionalTestCase
 from ftw.publisher.sender.tests.pages import Workflow
+from ftw.publisher.sender.utils import IS_AT_LEAST_PLONE_5_1
 from ftw.simplelayout.configuration import flattened_block_uids
 from ftw.simplelayout.interfaces import IPageConfiguration
 from ftw.testbrowser import browsing
 from ftw.testing import staticuid
+from unittest2 import skipIf
 from Products.CMFCore.utils import getToolByName
 
 
+@skipIf(IS_AT_LEAST_PLONE_5_1, 'ftw.contentpage is not available for Plone 5')
 class TestPublishingSimplelayoutTypes(FunctionalTestCase):
 
     portal_type = 'ContentPage'
