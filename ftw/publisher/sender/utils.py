@@ -2,6 +2,7 @@ from Acquisition import aq_base
 from Acquisition import aq_chain
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from Products.CMFPlone.utils import getFSVersionTuple
 from ftw.publisher.core import communication
 from ftw.publisher.core.states import ConnectionLost
 from ftw.publisher.sender.persistence import Realm
@@ -16,6 +17,10 @@ import traceback
 import transaction
 import urllib
 import urllib2
+
+
+IS_PLONE_4 = getFSVersionTuple() < (5,)
+IS_AT_LEAST_PLONE_5_1 = getFSVersionTuple() >= (5, 1)
 
 
 class ReceiverTimeoutError(Exception):

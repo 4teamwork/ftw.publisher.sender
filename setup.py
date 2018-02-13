@@ -6,7 +6,8 @@ maintainer = 'Jonas Baumann'
 
 tests_require = [
     'collective.testcaselayer',
-    'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
+    'Products.PloneFormGen',
+    'plone.app.contenttypes',
     'plone.app.referenceablebehavior',
     'plone.app.relationfield',
     'plone.app.testing',
@@ -15,10 +16,14 @@ tests_require = [
     'ftw.testbrowser',
     'ftw.lawgiver',
     'ftw.builder',
-    'ftw.contentpage',
     'ftw.simplelayout [contenttypes]',
     'zc.relation',
     ]
+
+tests_plone4_require = [
+    'ftw.contentpage',
+    'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
+]
 
 
 setup(name='ftw.publisher.sender',
@@ -87,6 +92,7 @@ setup(name='ftw.publisher.sender',
 
       extras_require={
         'tests': tests_require,
+        'tests_plone4': tests_plone4_require,
         'PloneFormGen': ['Products.PloneFormGen'],
         'development': ['ftw.lawgiver'],
         'taskqueue': ['collective.taskqueue'],
