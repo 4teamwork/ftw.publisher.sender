@@ -135,8 +135,8 @@ class TestPublisherContextState(TestCase):
                          'Expected parent folder not to be published')
 
     def test_getting_unpublished_references(self):
-        foo = create(Builder('page').titled('Foo'))
-        bar = create(Builder('page').titled('Bar'))
+        foo = create(Builder('page').titled(u'Foo'))
+        bar = create(Builder('page').titled(u'Bar'))
         bar.setRelatedItems(foo)
 
         self.assertEquals(
@@ -147,9 +147,9 @@ class TestPublisherContextState(TestCase):
             [], list(get_state(bar).get_unpublished_references()))
 
     def test_getting_published_references(self):
-        foo = create(Builder('page').titled('Foo')
+        foo = create(Builder('page').titled(u'Foo')
                      .in_state(EXAMPLE_WF_PUBLISHED))
-        bar = create(Builder('page').titled('Bar'))
+        bar = create(Builder('page').titled(u'Bar'))
         bar.setRelatedItems(foo)
 
         self.assertEquals(
@@ -160,9 +160,9 @@ class TestPublisherContextState(TestCase):
             [], list(get_state(bar).get_published_references()))
 
     def test_do_not_fail_getting_published_references_if_ref_is_none(self):
-        foo = create(Builder('page').titled('Foo')
+        foo = create(Builder('page').titled(u'Foo')
                      .in_state(EXAMPLE_WF_PUBLISHED))
-        bar = create(Builder('page').titled('Bar'))
+        bar = create(Builder('page').titled(u'Bar'))
         bar.setRelatedItems(foo)
         self.portal._delObject(foo.getId(), suppress_events=True)
 
@@ -183,7 +183,7 @@ class TestPublisherContextState(TestCase):
 
     def test_references_at_to_dx(self):
         dx = create(Builder('example dx type').titled(u'DX'))
-        at = create(Builder('page').titled('AT'))
+        at = create(Builder('page').titled(u'AT'))
         at.setRelatedItems(dx)
         self.assertEquals(
             [dx],
@@ -191,7 +191,7 @@ class TestPublisherContextState(TestCase):
         )
 
     def test_references_dx_to_at(self):
-        at = create(Builder('page').titled('AT'))
+        at = create(Builder('page').titled(u'AT'))
         dx = create(Builder('example dx type').titled(u'DX'))
         at_relation = create_relation('/'.join(at.getPhysicalPath()))
         IRelatedItems(dx).relatedItems = [at_relation]

@@ -111,9 +111,9 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_warning_on_publish_when_references_are_not_published(self, browser):
         page = create(Builder('page')
-                      .titled('The Page'))
+                      .titled(u'The Page'))
         other_page = create(Builder('page')
-                            .titled('The Other Page'))
+                            .titled(u'The Other Page'))
         page.setRelatedItems(other_page)
         transaction.commit()
 
@@ -128,9 +128,9 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_do_not_fail_if_reference_is_none(self, browser):
         page = create(Builder('page')
-                      .titled('The Page'))
+                      .titled(u'The Page'))
         other_page = create(Builder('page')
-                            .titled('The Other Page'))
+                            .titled(u'The Other Page'))
         page.setRelatedItems(other_page)
 
         self.portal._delObject(other_page.getId(), suppress_events=True)
@@ -143,7 +143,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_warning_on_publish_when_sl_block_has_unpublished_references(self, browser):
         page=create(Builder('content page'))
-        other_page=create(Builder('content page').titled('Other Page'))
+        other_page=create(Builder('content page').titled(u'Other Page'))
         other_page_uuid=IUUID(other_page)
         create(Builder('text block')
                .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
@@ -160,10 +160,10 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
         page=create(Builder('page')
-                      .titled('The Page')
+                      .titled(u'The Page')
                       .in_state(EXAMPLE_WF_PUBLISHED))
         other_page=create(Builder('page')
-                            .titled('The Other Page')
+                            .titled(u'The Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
         page.setRelatedItems(other_page)
         transaction.commit()
@@ -180,7 +180,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     def test_warning_on_retract_when_sl_block_has_published_references(self, browser):
         page=create(Builder('content page'))
         other_page=create(Builder('content page')
-                            .titled('Other Page')
+                            .titled(u'Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
         other_page_uuid=IUUID(other_page)
         create(Builder('text block')

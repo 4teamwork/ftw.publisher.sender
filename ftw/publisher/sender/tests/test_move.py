@@ -19,7 +19,7 @@ class TestMove(FunctionalTestCase):
         source = create(Builder('folder').titled(u'Source'))
         target = create(Builder('folder').titled(u'Target'))
         with freeze(datetime(2018, 1, 2, 3, 4, 5)):
-            page = create(Builder('page').titled('The Page').within(source))
+            page = create(Builder('page').titled(u'The Page').within(source))
 
         self.assertEquals(0, IQueue(self.portal).countJobs())
         browser.login().open(page).click_on('Cut').open(target).click_on('Paste')
