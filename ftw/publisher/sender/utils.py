@@ -11,10 +11,15 @@ from Products.statusmessages.interfaces import IStatusMessage
 import base64
 import os.path
 import sys
+import socket
 import traceback
 import transaction
 import urllib
 import urllib2
+
+
+class ReceiverTimeoutError(Exception):
+    pass
 
 
 def _get_savepoint_ids():
@@ -99,7 +104,12 @@ def sendRequestToRealm(data, realm, serverAction):
         'Cookie': '__ac=' + credentials,
         }
     request = urllib2.Request(url, urllib.urlencode(data), headers)
-    response = urllib2.urlopen(request)
+
+    try:
+        response = urllib2.urlopen(request, timeout=120)
+    except socket.timeout as error:
+        raise ReceiverTimeoutError(error)
+
     try:
         return response.read()
     finally:
