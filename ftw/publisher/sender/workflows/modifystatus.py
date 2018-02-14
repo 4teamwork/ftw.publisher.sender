@@ -4,6 +4,15 @@ from zope.component import getMultiAdapter
 from zope.component import getUtility
 from zope.interface import implements
 
+try:
+    from plone.protect.utils import addTokenToUrl
+except ImportError:
+    # Plone 4 ships plone.protect 2.x, missing `addTokenToUrl`.
+    HAS_MODERN_PLONE_PROTECT = False
+else:
+    # Plone >= 5 ships plone.protect 3.x featuring `addTokenToUrl`.
+    HAS_MODERN_PLONE_PROTECT = True
+
 
 class ModifyStatusView(BrowserView):
     implements(interfaces.IModifyStatus)
@@ -19,8 +28,12 @@ class ModifyStatusView(BrowserView):
             raise ValueError('No transition passed.')
 
         if self.is_transition_allowed(transition):
-            self.request.RESPONSE.redirect(
-                self.get_transition_action(transition))
+            target_url = self.get_transition_action(transition)
+
+            if HAS_MODERN_PLONE_PROTECT:
+                target_url = addTokenToUrl(target_url)
+
+            self.request.RESPONSE.redirect(target_url)
 
         else:
             self.request.RESPONSE.redirect(
