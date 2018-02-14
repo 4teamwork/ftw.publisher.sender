@@ -15,9 +15,9 @@ import pkg_resources
 try:
     pkg_resources.get_distribution('zc.relation')
 except pkg_resources.DistributionNotFound:
-    HAS_ZC_CATALOG = False
+    HAS_ZC_RELATION = False
 else:
-    HAS_ZC_CATALOG = True
+    HAS_ZC_RELATION = True
     from zope.intid.interfaces import IIntIds
     from zc.relation.interfaces import ICatalog
 
@@ -137,10 +137,9 @@ class PublisherContextState(object):
         else:
             objs = referenceable.getReferences()
 
-        if HAS_ZC_CATALOG:
+        if HAS_ZC_RELATION:
             relation_catalog = getUtility(ICatalog)
             obj_intid = getUtility(IIntIds).getId(context)
-            relation_catalog.findRelations({'from_id': obj_intid})
             relations = tuple(relation_catalog.findRelations({'from_id': obj_intid}))
             objs += map(attrgetter('to_object'), relations)
 
