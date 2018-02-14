@@ -1,5 +1,6 @@
 from ftw.builder import Builder
 from ftw.builder import create
+from ftw.publisher.sender.tests import helpers
 from ftw.publisher.sender.tests import FunctionalTestCase
 from ftw.publisher.sender.tests.pages import Workflow
 from ftw.publisher.sender.utils import IS_PLONE_4
@@ -117,8 +118,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
                       .titled(u'The Page'))
         other_page = create(Builder('page')
                             .titled(u'The Other Page'))
-        page.setRelatedItems(other_page)
-        transaction.commit()
+        helpers.set_related_items(page, other_page)
 
         browser.login().visit(page)
         Workflow().do_transition('publish')
@@ -134,7 +134,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
                       .titled(u'The Page'))
         other_page = create(Builder('page')
                             .titled(u'The Other Page'))
-        page.setRelatedItems(other_page)
+        helpers.set_related_items(page, other_page)
 
         self.portal._delObject(other_page.getId(), suppress_events=True)
         transaction.commit()
@@ -187,8 +187,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         other_page=create(Builder('page')
                             .titled(u'The Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
-        page.setRelatedItems(other_page)
-        transaction.commit()
+        helpers.set_related_items(page, other_page)
 
         browser.login().visit(page)
         Workflow().do_transition('retract')
