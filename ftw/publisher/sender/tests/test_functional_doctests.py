@@ -10,7 +10,6 @@ MODULENAMES = [
 
 TESTFILES = [
     'storage.txt',
-    'utils.txt',
 ]
 
 OPTIONFLAGS = (doctest.NORMALIZE_WHITESPACE|
