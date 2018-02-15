@@ -9,7 +9,6 @@ MODULENAMES = [
 ]
 
 TESTFILES = [
-    'blacklist.txt',
     'storage.txt',
     'utils.txt',
 ]
