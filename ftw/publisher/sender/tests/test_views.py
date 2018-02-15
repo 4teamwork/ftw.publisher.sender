@@ -11,6 +11,7 @@ class TestPublishObjectView(FunctionalTestCase):
 
     @browsing
     def test_publish_folder_enqueues_job(self, browser):
+        self.grant('Manager')
         folder = create(Builder('folder'))
         transaction.commit()
 
@@ -26,6 +27,7 @@ class TestPublishObjectView(FunctionalTestCase):
 
     @browsing
     def test_publish_plonesite_enqueues_job(self, browser):
+        self.grant('Manager')
         self.assertEquals(0, IQueue(self.portal).countJobs())
         browser.login().open(self.portal, view='@@publisher.publish')
         statusmessages.assert_message('This object has been added to the queue.')
@@ -41,6 +43,7 @@ class TestDeleteObjectView(FunctionalTestCase):
 
     @browsing
     def test_delete_folder_enqueues_job(self, browser):
+        self.grant('Manager')
         folder = create(Builder('folder'))
         transaction.commit()
 
@@ -56,6 +59,7 @@ class TestDeleteObjectView(FunctionalTestCase):
 
     @browsing
     def test_delete_plonesite_is_not_allowed(self, browser):
+        self.grant('Manager')
         self.assertEquals(0, IQueue(self.portal).countJobs())
         with browser.expect_http_error(500):
             browser.login().open(self.portal, view='@@publisher.delete')
