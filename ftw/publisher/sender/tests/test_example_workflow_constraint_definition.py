@@ -1,5 +1,6 @@
 from ftw.builder import Builder
 from ftw.builder import create
+from plone.app.textfield.value import RichTextValue
 from ftw.publisher.sender.tests import helpers
 from ftw.publisher.sender.tests import FunctionalTestCase
 from ftw.publisher.sender.tests.pages import Workflow
@@ -8,7 +9,6 @@ from ftw.testbrowser import browsing
 from ftw.testbrowser.pages import statusmessages
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
-from unittest2 import skipIf
 from unittest2 import skipUnless
 import transaction
 
@@ -27,7 +27,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         self.grant('Manager')
 
         wftool = getToolByName(self.portal, 'portal_workflow')
-        wftool.setChainForPortalTypes(['Document', 'Folder', 'ContentPage'],
+        wftool.setChainForPortalTypes(['Document', 'Folder', 'ContentPage', 'ftw.simplelayout.ContentPage'],
                                       EXAMPLE_WF_ID)
 
         transaction.commit()
@@ -162,13 +162,12 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         )
 
     @browsing
-    @skipIf(IS_PLONE_4, 'This needs to be fixed for Plone 5')
-    def test_warning_on_publish_when_sl_block_has_unpublished_references_plone5(self, browser):
-        page=create(Builder('sl content page'))
-        other_page=create(Builder('sl content page').titled(u'Other Page'))
-        other_page_uuid=IUUID(other_page)
+    def test_warning_on_publish_when_ftw_simplelayout_block_has_unpublished_references(self, browser):
+        page = create(Builder('sl content page'))
+        other_page = create(Builder('sl content page').titled(u'Other Page'))
+        other_page_uuid = IUUID(other_page)
         create(Builder('sl textblock')
-               .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
                .within(page))
 
         browser.login().visit(page)
@@ -220,15 +219,14 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         )
 
     @browsing
-    @skipIf(IS_PLONE_4, 'This needs to be fixed for Plone 5')
-    def test_warning_on_retract_when_sl_block_has_published_references(self, browser):
+    def test_warning_on_retract_when_ftw_simplelayout_block_has_published_references(self, browser):
         page = create(Builder('sl content page'))
         other_page = create(Builder('sl content page')
                             .titled(u'Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
         other_page_uuid = IUUID(other_page)
         create(Builder('sl textblock')
-               .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
                .within(page))
 
         browser.login().visit(page)

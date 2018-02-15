@@ -16,6 +16,10 @@
         <adapter factory=".sl.SimplelayoutContainerContextState" />
     </configure>
 
+    <configure zcml:condition="installed ftw.simplelayout">
+        <adapter factory=".ftw_simplelayout.FtwSimplelayoutContainerContextState" />
+    </configure>
+
     <browser:page
         name="publisher-modify-status"
         for="*"
