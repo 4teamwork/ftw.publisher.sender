@@ -37,12 +37,10 @@ General:
     A webmaster can always manage content settings.
 
     A system administrator can always perform the same actions as a webmaster.
-    A system administrator can always manage.
 
 
 Status Internal:
     A creator can view this content.
-    A creator can view inactive objects.
     A creator can edit this content.
     A creator can delete this content.
     A creator can submit.
@@ -52,8 +50,6 @@ Status Internal:
 
 Status Pending:
     A creator can view this content.
-    A creator can view inactive objects.
-    A publisher can view inactive objects.
     A publisher can view this content.
     A publisher can edit this content.
     A publisher can delete this content.
@@ -63,18 +59,14 @@ Status Pending:
 
 Status Published:
     A visitor can view this content.
-    An editor can view inactive objects.
     An editor can revise.
-    A publisher can view inactive objects.
     A publisher can revise.
 
 
 Status Revision:
     A visitor can view this content.
-    An editor can view inactive objects.
     An editor can edit this content.
     An editor can publish.
-    A publisher can view inactive objects.
     A publisher can edit this content.
     A publisher can delete this content.
     A publisher can publish.
