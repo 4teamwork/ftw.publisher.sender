@@ -1,5 +1,6 @@
 from ftw.builder import Builder
 from ftw.builder import create
+from plone import api
 from plone.app.textfield.value import RichTextValue
 from ftw.publisher.sender.tests import helpers
 from ftw.publisher.sender.tests import FunctionalTestCase
@@ -181,12 +182,14 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
         page=create(Builder('page')
-                      .titled(u'The Page')
-                      .in_state(EXAMPLE_WF_PUBLISHED))
+                      .titled(u'The Page'))
         other_page=create(Builder('page')
-                            .titled(u'The Other Page')
-                            .in_state(EXAMPLE_WF_PUBLISHED))
+                            .titled(u'The Other Page'))
         helpers.set_related_items(page, other_page)
+
+        api.content.transition(obj=page,to_state=EXAMPLE_WF_PUBLISHED)
+        api.content.transition(obj=other_page,to_state=EXAMPLE_WF_PUBLISHED)
+        transaction.commit()
 
         browser.login().visit(page)
         Workflow().do_transition('retract')
