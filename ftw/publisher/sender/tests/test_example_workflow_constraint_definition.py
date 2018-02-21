@@ -11,6 +11,8 @@ from ftw.testbrowser.pages import statusmessages
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
 from unittest2 import skipUnless
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
 import transaction
 
 
@@ -167,9 +169,12 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         page = create(Builder('sl content page'))
         other_page = create(Builder('sl content page').titled(u'Other Page'))
         other_page_uuid = IUUID(other_page)
-        create(Builder('sl textblock')
-               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
-               .within(page))
+        textblock = create(Builder('sl textblock')
+                           .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
+                           .within(page))
+
+        notify(ObjectModifiedEvent(textblock))
+        transaction.commit()
 
         browser.login().visit(page)
         Workflow().do_transition('publish')
@@ -228,9 +233,12 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
                             .titled(u'Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
         other_page_uuid = IUUID(other_page)
-        create(Builder('sl textblock')
-               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
-               .within(page))
+        textblock = create(Builder('sl textblock')
+                           .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
+                           .within(page))
+
+        notify(ObjectModifiedEvent(textblock))
+        transaction.commit()
 
         browser.login().visit(page)
         # cannot add text block when published
