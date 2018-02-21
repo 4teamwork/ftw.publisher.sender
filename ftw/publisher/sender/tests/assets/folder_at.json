@@ -1,0 +1,103 @@
+{
+    "unicode:backreferences_adapter": {},
+    "unicode:field_data_adapter": {
+        "utf8:allowDiscussion": false,
+        "utf8:constrainTypesMode": -1,
+        "utf8:contributors": [
+            "utf8:tuple",
+            []
+        ],
+        "utf8:creation_date": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:creators": [
+            "utf8:tuple",
+            [
+                "utf8:test_user_1_"
+            ]
+        ],
+        "utf8:description": "utf8:Description of the folder",
+        "utf8:effectiveDate": null,
+        "utf8:excludeFromNav": false,
+        "utf8:expirationDate": null,
+        "utf8:id": "utf8:a-folder",
+        "utf8:immediatelyAddableTypes": [
+            "utf8:tuple",
+            [
+                "utf8:Document",
+                "utf8:Event",
+                "utf8:File",
+                "utf8:Folder",
+                "utf8:Image",
+                "utf8:Link",
+                "utf8:News Item",
+                "utf8:Collection",
+                "utf8:ContentPage",
+                "utf8:News",
+                "utf8:NewsFolder",
+                "utf8:EventFolder",
+                "utf8:ftw.simplelayout.ContentPage",
+                "utf8:ExampleDxType",
+                "utf8:FormFolder"
+            ]
+        ],
+        "utf8:language": "utf8:en",
+        "utf8:locallyAllowedTypes": [
+            "utf8:tuple",
+            [
+                "utf8:Document",
+                "utf8:Event",
+                "utf8:File",
+                "utf8:Folder",
+                "utf8:Image",
+                "utf8:Link",
+                "utf8:News Item",
+                "utf8:Collection",
+                "utf8:ContentPage",
+                "utf8:News",
+                "utf8:NewsFolder",
+                "utf8:EventFolder",
+                "utf8:ftw.simplelayout.ContentPage",
+                "utf8:ExampleDxType",
+                "utf8:FormFolder"
+            ]
+        ],
+        "utf8:location": "utf8:",
+        "utf8:modification_date": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:nextPreviousEnabled": false,
+        "utf8:relatedItems": [],
+        "utf8:rights": "utf8:",
+        "utf8:subject": [
+            "utf8:tuple",
+            []
+        ],
+        "utf8:title": "utf8:A folder"
+    },
+    "unicode:geo_data_adapter": [
+        "utf8:tuple",
+        [
+            null,
+            null
+        ]
+    ],
+    "unicode:interface_data_adapter": [],
+    "unicode:portlet_data_adapter": {},
+    "unicode:properties_data_adapter": [
+        {
+            "utf8:id": "utf8:title",
+            "utf8:mode": "utf8:wd",
+            "utf8:type": "utf8:string",
+            "utf8:value": "unicode:A folder"
+        }
+    ],
+    "utf8:metadata": {
+        "utf8:UID": "utf8:testarchetypesfolderextrac000002",
+        "utf8:action": "utf8:push",
+        "utf8:id": "utf8:a-folder",
+        "utf8:modified": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:physicalPath": "utf8:/foo/a-folder",
+        "utf8:portal_type": "utf8:Folder",
+        "utf8:review_state": "utf8:",
+        "utf8:sibling_positions": {
+            "utf8:a-folder": 0
+        }
+    }
+}

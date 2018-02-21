@@ -1,0 +1,74 @@
+{
+    "unicode:backreferences_adapter": {},
+    "unicode:dx_field_data_adapter": {
+        "utf8:IAllowDiscussion": {
+            "utf8:allow_discussion": null
+        },
+        "utf8:ICategorization": {
+            "utf8:language": "utf8:en",
+            "utf8:subjects": [
+                "utf8:tuple",
+                []
+            ]
+        },
+        "utf8:IExcludeFromNavigation": {
+            "utf8:exclude_from_nav": null
+        },
+        "utf8:IOwnership": {
+            "utf8:contributors": [
+                "utf8:tuple",
+                []
+            ],
+            "utf8:creators": [
+                "utf8:tuple",
+                [
+                    "unicode:test_user_1_"
+                ]
+            ],
+            "utf8:rights": null
+        },
+        "utf8:IPublication": {
+            "utf8:effective": null,
+            "utf8:expires": null
+        },
+        "utf8:IRelatedItems": {
+            "utf8:relatedItems": [
+                "utf8:raw",
+                null
+            ]
+        },
+        "utf8:IShortName": {
+            "utf8:id": "utf8:image.gif"
+        },
+        "utf8:plone_0_Image": {
+            "utf8:description": "unicode:Description of the image",
+            "utf8:image": {
+                "utf8:data": "utf8:R0lGODlhAQABAIAAAAAAAAAAACH5BAQAAAAALAAAAAABAAEAAAICRAEAOw==\n",
+                "utf8:filename": "unicode:image.gif"
+            },
+            "utf8:title": "unicode:An image"
+        }
+    },
+    "unicode:interface_data_adapter": [],
+    "unicode:portlet_data_adapter": {},
+    "unicode:properties_data_adapter": [
+        {
+            "utf8:id": "utf8:title",
+            "utf8:mode": "utf8:wd",
+            "utf8:type": "utf8:string",
+            "utf8:value": "unicode:An image"
+        }
+    ],
+    "utf8:metadata": {
+        "utf8:UID": "utf8:testdexterityimageextracto000002",
+        "utf8:action": "utf8:push",
+        "utf8:id": "utf8:image.gif",
+        "utf8:modified": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:physicalPath": "utf8:/foo/image.gif",
+        "utf8:portal_type": "utf8:Image",
+        "utf8:review_state": "utf8:",
+        "utf8:sibling_positions": {
+            "utf8:image.gif": 0
+        }
+    }
+}

@@ -90,3 +90,73 @@ class TestExtractor(FunctionalTestCase):
         IConfig(self.portal).set_ignored_fields({'Folder': ['description']})
         data = encode_after_json(json.loads(Extractor()(folder, 'push', {})))
         self.assertNotIn('description', data['dx_field_data_adapter']['IDublinCore'])
+
+    @skipUnless(IS_PLONE_4, 'Plone 4 version')
+    @staticuid()
+    def test_archetypes_folder_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            folder = create(Builder('folder')
+                            .titled(u'A folder')
+                            .having(description=u'Description of the folder')
+                            .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('folder_at.json').text())),
+            encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        )
+
+    @skipUnless(IS_AT_LEAST_PLONE_5_1, 'Plone 5 version')
+    @staticuid()
+    def test_dexterity_folder_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            folder = create(Builder('folder')
+                            .titled(u'A folder')
+                            .having(description=u'Description of the folder')
+                            .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('folder_dx.json').text())),
+            encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        )
+
+    @skipUnless(IS_PLONE_4, 'Plone 4 version')
+    @staticuid()
+    def test_archetypes_image_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            image = create(Builder('image')
+                           .titled(u'An image')
+                           .with_dummy_content()
+                           .having(description=u'Description of the image')
+                           .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('image_at.json').text())),
+            encode_after_json(json.loads(Extractor()(image, 'push', {})))
+        )
+
+    @skipUnless(IS_AT_LEAST_PLONE_5_1, 'Plone 5 version')
+    @staticuid()
+    def test_dexterity_image_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            image = create(Builder('image')
+                           .titled(u'An image')
+                           .with_dummy_content()
+                           .having(description=u'Description of the image')
+                           .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('image_dx.json').text())),
+            encode_after_json(json.loads(Extractor()(image, 'push', {})))
+        )

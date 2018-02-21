@@ -6,6 +6,7 @@ maintainer = 'Jonas Baumann'
 
 tests_require = [
     'collective.testcaselayer',
+    'path.py',
     'Products.PloneFormGen',
     'plone.app.contenttypes',
     'plone.app.referenceablebehavior',
