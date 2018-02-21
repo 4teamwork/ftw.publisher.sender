@@ -47,12 +47,12 @@ class Extractor(object):
         portal = self.object.portal_url.getPortalObject()
         config = IConfig(portal)
         ignore = config.get_ignored_fields()
-        for ptype, fields in ignore.items():
-            if data['metadata']['portal_type'] == ptype:
-                for field in fields:
-                    if 'field_data_adapter' in data and \
-                       field in data['field_data_adapter']:
-                        del data['field_data_adapter'][field]
+        for field_to_ignore in ignore.get(data['metadata']['portal_type'], ()):
+            # AT:
+            data.get('field_data_adapter', {}).pop(field_to_ignore, None)
+            # DX:
+            for schemata in data.get('dx_field_data_adapter', {}).values():
+                schemata.pop(field_to_ignore, None)
 
         if action == 'move':
             data['move'] = additional_data['move_data']
