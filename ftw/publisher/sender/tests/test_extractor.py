@@ -41,7 +41,6 @@ class TestExtractor(FunctionalTestCase):
                           'physicalPath': '/foo/the-folder',
                           'portal_type': 'Folder',
                           'review_state': '',
-                          'schema_path': 'Products.ATContentTypes.content.folder.ATFolder.schema',
                           'sibling_positions': {'the-folder': 0}}},
             data)
 
@@ -64,7 +63,6 @@ class TestExtractor(FunctionalTestCase):
                           'physicalPath': '/foo/the-folder',
                           'portal_type': 'Folder',
                           'review_state': '',
-                          'schema_path': 'plone.app.contenttypes.content.Folder.schema',
                           'sibling_positions': {'the-folder': 0}}},
             data)
 

@@ -44,7 +44,6 @@ class TestMove(FunctionalTestCase):
             u'utf8:physicalPath': u'utf8:/target/the-page',
             u'utf8:portal_type': u'utf8:Document',
             u'utf8:review_state': u'utf8:',
-            u'utf8:schema_path': u'utf8:Products.ATContentTypes.content.document.ATDocument.schema',
             u'utf8:sibling_positions': {u'utf8:the-page': 0}},
          u'utf8:move': {
              u'utf8:newName': u'utf8:the-page',
@@ -52,9 +51,6 @@ class TestMove(FunctionalTestCase):
              u'utf8:newTitle': u'unicode:The Page',
              u'utf8:oldName': u'utf8:the-page',
              u'utf8:oldParent': u'utf8:/source'}}
-
-        if IS_AT_LEAST_PLONE_5_1:
-            expected[u'utf8:metadata'][u'utf8:schema_path'] = u'utf8:plone.app.contenttypes.content.Document.schema'
 
         self.assertEquals(
             expected,

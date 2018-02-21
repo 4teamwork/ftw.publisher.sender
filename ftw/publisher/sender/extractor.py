@@ -93,13 +93,6 @@ class Extractor(object):
             raise
         except Exception:
             wf_info = ''
-        # get schema path
-        if self.is_root:
-            schema_path = None
-        else:
-            schema_path = '.'.join((self.object.__module__,
-                                    self.object.__class__.__name__,
-                                    'schema'))
         try:
             modifiedDate = str(self.object.modified())
         except AttributeError:
@@ -112,7 +105,6 @@ class Extractor(object):
             'physicalPath': self.getRelativePath(),
             'sibling_positions': positions,
             'review_state': wf_info,
-            'schema_path': schema_path,
             'modified': modifiedDate,
             }
         return data
