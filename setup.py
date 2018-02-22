@@ -5,14 +5,12 @@ version = '2.7.14.dev0'
 maintainer = 'Jonas Baumann'
 
 tests_require = [
-    'collective.testcaselayer',
     'path.py',
     'Products.PloneFormGen',
     'plone.app.contenttypes',
     'plone.app.referenceablebehavior',
     'plone.app.relationfield',
     'plone.app.testing',
-    'Products.PloneTestCase',
     'ftw.testing',
     'ftw.testbrowser',
     'ftw.lawgiver',
