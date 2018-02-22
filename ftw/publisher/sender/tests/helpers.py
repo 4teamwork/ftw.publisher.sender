@@ -2,7 +2,9 @@ from Acquisition import aq_base
 from ftw.publisher.sender.utils import IS_AT_LEAST_PLONE_5_1
 from plone import api
 from zope.component import getUtility
+from zope.event import notify
 from zope.intid import IIntIds
+from zope.lifecycleevent import ObjectModifiedEvent
 import transaction
 
 
@@ -20,8 +22,6 @@ def set_related_items(obj, *args, **kwargs):
 
         obj.relatedItems = relations
 
-        from zope.event import notify
-        from zope.lifecycleevent import ObjectModifiedEvent
         notify(ObjectModifiedEvent(obj))
     else:
         obj.setRelatedItems(related_items)
