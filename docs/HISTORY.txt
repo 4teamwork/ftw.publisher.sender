@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.7.13 (unreleased)
+2.7.13 (2018-02-23)
 -------------------
 
 - Define a two minute timeout when sending the data to the receiver. [mbaechtold]
