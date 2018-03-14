@@ -12,6 +12,7 @@ from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
 from persistent import Persistent
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
+from plone.app.uuid.utils import uuidToObject
 from plone.memoize import instance
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
@@ -688,9 +689,8 @@ class Job(Persistent):
         @return:            Context object of this Job
         @rtype:             Plone object
         """
-        reference_tool = getToolByName(context, 'reference_catalog')
         return self.is_root and context.portal_url.getPortalObject() or \
-            reference_tool.lookupObject(self.objectUID)
+            uuidToObject(self.objectUID)
 
     security.declarePrivate('executed_with_states')
     def executed_with_states(self, entries):

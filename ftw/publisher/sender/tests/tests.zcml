@@ -5,6 +5,7 @@
     <include package="Products.Five" file="meta.zcml" />
     <include package="Products.Five.viewlet" file="meta.zcml" />
     <include package="Products.GenericSetup" file="meta.zcml" />
+    <include package="plone.resource" file="meta.zcml" />
 
     <include package="AccessControl" file="permissions.zcml" />
 

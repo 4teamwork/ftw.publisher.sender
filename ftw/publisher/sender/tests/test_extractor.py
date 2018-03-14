@@ -1,100 +1,162 @@
-from Products.PloneTestCase.ptc import PloneTestCase
+from datetime import datetime
+from ftw.builder import Builder
+from ftw.builder import create
 from ftw.publisher.core.interfaces import IDataCollector
 from ftw.publisher.core.utils import encode_after_json
 from ftw.publisher.sender.extractor import Extractor
-from ftw.publisher.sender.tests.layer import Layer
+from ftw.publisher.sender.interfaces import IConfig
+from ftw.publisher.sender.tests import FunctionalTestCase
+from ftw.publisher.sender.utils import IS_AT_LEAST_PLONE_5_1
+from ftw.publisher.sender.utils import IS_PLONE_4
+from ftw.testing import freeze
+from ftw.testing import staticuid
+from unittest2 import skipUnless
 from zope.component import getAdapters
-import unittest
 import json
 
 
-class TestExtractor(PloneTestCase):
-    layer = Layer
+class TestExtractor(FunctionalTestCase):
 
-    def afterSetUp(self):
-        # add some default plone types
-        testdoc1id = self.folder.invokeFactory('Document', 'test-doc-1')
-        self.testdoc1 = getattr(self.folder, testdoc1id, None)
-        topicid = self.folder.manage_addProduct['ATContentTypes'].addATTopic(
-            id='topic1', title='topic 1')
-        self.topic1 = getattr(self.folder, topicid, None)
-        self.extractor = Extractor()
-        self.extractor(self.testdoc1, 'delete', {})
+    def test_extractors_are_registered(self):
+        self.grant('Manager')
+        adapters = getAdapters((create(Builder('folder')),), IDataCollector)
+        self.assertIn(u'properties_data_adapter', dict(adapters))
 
-    def test_extractor_object(self):
-        adapters = getAdapters((self.testdoc1, ), IDataCollector)
-        expected_adapters = [u'field_data_adapter',
-                             u'properties_data_adapter',
-                             u'backreferences_adapter',
-                             u'interface_data_adapter',
-                             u'portlet_data_adapter',
-                             u'geo_data_adapter']
-        list_adapters = []
-        for name, adapter in adapters:
-            list_adapters.append(name)
-        self.assertEquals(set(expected_adapters), set(list_adapters))
+    @skipUnless(IS_PLONE_4, 'Plone 4 version')
+    @staticuid()
+    def test_delete_job_get_metadata_plone_4(self):
+        self.grant('Manager')
+        with freeze(datetime(2030, 1, 2, 4, 5)) as clock:
+            folder = create(Builder('folder').titled(u'The Folder')
+                            .within(create(Builder('folder').titled(u'Foo'))))
+            clock.forward(hours=1)
+            data = encode_after_json(json.loads(Extractor()(folder, 'delete', {})))
 
-    def test_extractor_topic(self):
-        adapters = getAdapters((self.topic1, ), IDataCollector)
-        expected_adapters = [u'field_data_adapter',
-                             u'properties_data_adapter',
-                             u'backreferences_adapter',
-                             u'topic_critera_adapter',
-                             u'interface_data_adapter',
-                             u'portlet_data_adapter',
-                             u'geo_data_adapter']
-        list_adapters = []
-        for name, adapter in adapters:
-            list_adapters.append(name)
-        self.assertEquals(set(expected_adapters), set(list_adapters))
+        self.maxDiff = None
+        self.assertEquals(
+            {'metadata': {'UID': 'testdeletejobgetmetadatapl000002',
+                          'action': 'delete',
+                          'id': 'the-folder',
+                          'modified': '2030/01/02 04:05:00 GMT+1',
+                          'physicalPath': '/foo/the-folder',
+                          'portal_type': 'Folder',
+                          'review_state': '',
+                          'sibling_positions': {'the-folder': 0}}},
+            data)
 
-    def test_getMetadata(self):
-        metadata = self.extractor.getMetadata('delete')
+    @skipUnless(IS_AT_LEAST_PLONE_5_1, 'Plone 5 version')
+    @staticuid()
+    def test_delete_job_get_metadata_plone_5(self):
+        self.grant('Manager')
+        with freeze(datetime(2030, 1, 2, 4, 5)) as clock:
+            folder = create(Builder('folder').titled(u'The Folder')
+                            .within(create(Builder('folder').titled(u'Foo'))))
+            clock.forward(hours=1)
+            data = encode_after_json(json.loads(Extractor()(folder, 'delete', {})))
 
-        expected_metadata = {
-            'UID': metadata['UID'],
-            'portal_type': 'Document',
-            'modified': 'MODIFIED',
-            'physicalPath': '/Members/test_user_1_/test-doc-1',
-            'schema_path':
-                'Products.ATContentTypes.content.document.ATDocument.schema',
-            'sibling_positions': {'topic1': 1,
-                                  'test-doc-1': 0},
-            'action': 'delete',
-            'review_state': 'private',
-            'id': 'test-doc-1'}
+        self.maxDiff = None
+        self.assertEquals(
+            {'metadata': {'UID': 'testdeletejobgetmetadatapl000002',
+                          'action': 'delete',
+                          'id': 'the-folder',
+                          'modified': '2030/01/02 04:05:00 GMT+1',
+                          'physicalPath': '/foo/the-folder',
+                          'portal_type': 'Folder',
+                          'review_state': '',
+                          'sibling_positions': {'the-folder': 0}}},
+            data)
 
-        self.assertTrue('modified' in metadata)
-        metadata['modified'] = 'MODIFIED'
+    @skipUnless(IS_PLONE_4, 'Plone 4 version')
+    def test_ignoring_fields_of_field_data_adapter_plone_4(self):
+        self.grant('Manager')
+        folder = create(Builder('folder').titled(u'Foo'))
+        data = encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        self.assertIn('field_data_adapter', data)
+        self.assertIn('description', data['field_data_adapter'])
 
-        self.assertEquals(expected_metadata, metadata)
+        IConfig(self.portal).set_ignored_fields({'Folder': ['description']})
+        data = encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        self.assertNotIn('description', data['field_data_adapter'])
 
-    def test_ignoreFields(self):
-        # first all fields are in data
-        jsondata = self.extractor(self.testdoc1, 'push', {})
-        # decode from json
-        data = json.loads(jsondata)
-        data = encode_after_json(data)
-        self.assertTrue('description' in data['field_data_adapter'])
-        self.assertTrue('excludeFromNav' in data['field_data_adapter'])
+    @skipUnless(IS_AT_LEAST_PLONE_5_1, 'Plone 5 version')
+    def test_ignoring_fields_of_field_data_adapter_plone_5(self):
+        self.grant('Manager')
+        folder = create(Builder('folder').titled(u'Foo'))
+        data = encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        self.assertIn('dx_field_data_adapter', data)
+        self.assertIn('IDublinCore', data['dx_field_data_adapter'])
+        self.assertIn('description', data['dx_field_data_adapter']['IDublinCore'])
 
-        # now ignore some fields
-        from ftw.publisher.sender.interfaces import IConfig
-        config = IConfig(self.portal)
-        config.set_ignored_fields({'Document': ['description',
-                                                'excludeFromNav']})
+        IConfig(self.portal).set_ignored_fields({'Folder': ['description']})
+        data = encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        self.assertNotIn('description', data['dx_field_data_adapter']['IDublinCore'])
 
-        jsondata = self.extractor(self.testdoc1, 'push', {})
-        # decode from json
-        data = json.loads(jsondata)
-        data = encode_after_json(data)
-        self.assertTrue('description' not in data['field_data_adapter'])
-        self.assertTrue('excludeFromNav' not in data['field_data_adapter'])
+    @skipUnless(IS_PLONE_4, 'Plone 4 version')
+    @staticuid()
+    def test_archetypes_folder_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
 
-    def test_getRelativePath(self):
-        path = self.extractor.getRelativePath()
-        self.assertEquals(path, '/Members/test_user_1_/test-doc-1')
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            folder = create(Builder('folder')
+                            .titled(u'A folder')
+                            .having(description=u'Description of the folder')
+                            .within(create(Builder('folder').titled(u'Foo'))))
 
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('folder_at.json').text())),
+            encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        )
 
-def test_suite():
-    return unittest.defaultTestLoader.loadTestsFromName(__name__)
+    @skipUnless(IS_AT_LEAST_PLONE_5_1, 'Plone 5 version')
+    @staticuid()
+    def test_dexterity_folder_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            folder = create(Builder('folder')
+                            .titled(u'A folder')
+                            .having(description=u'Description of the folder')
+                            .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('folder_dx.json').text())),
+            encode_after_json(json.loads(Extractor()(folder, 'push', {})))
+        )
+
+    @skipUnless(IS_PLONE_4, 'Plone 4 version')
+    @staticuid()
+    def test_archetypes_image_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            image = create(Builder('image')
+                           .titled(u'An image')
+                           .with_dummy_content()
+                           .having(description=u'Description of the image')
+                           .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('image_at.json').text())),
+            encode_after_json(json.loads(Extractor()(image, 'push', {})))
+        )
+
+    @skipUnless(IS_AT_LEAST_PLONE_5_1, 'Plone 5 version')
+    @staticuid()
+    def test_dexterity_image_extractor(self):
+        self.grant('Manager')
+        self.maxDiff = None
+
+        with freeze(datetime(2030, 1, 2, 4, 5)):
+            image = create(Builder('image')
+                           .titled(u'An image')
+                           .with_dummy_content()
+                           .having(description=u'Description of the image')
+                           .within(create(Builder('folder').titled(u'Foo'))))
+
+        self.assertDictEqual(
+            encode_after_json(json.loads(self.asset('image_dx.json').text())),
+            encode_after_json(json.loads(Extractor()(image, 'push', {})))
+        )

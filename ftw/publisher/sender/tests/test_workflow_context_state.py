@@ -2,19 +2,19 @@ from Products.CMFCore.utils import getToolByName
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.publisher.sender.testing import PUBLISHER_SENDER_INTEGRATION_TESTING
+from ftw.publisher.sender.tests import helpers
+from ftw.publisher.sender.utils import IS_PLONE_4
 from ftw.publisher.sender.workflows.contextstate import PublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
-from plone.app.relationfield.behavior import IRelatedItems
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import TEST_USER_NAME
 from plone.app.testing import login
 from plone.app.testing import setRoles
+from unittest2 import skipUnless
 from unittest2 import TestCase
-from z3c.relationfield.event import _setRelation
 from zope.component import getMultiAdapter
 from zope.component import queryMultiAdapter
 from zope.interface.verify import verifyClass
-from z3c.relationfield.relation import create_relation
 
 
 def get_state(context):
@@ -118,7 +118,8 @@ class TestPublisherContextState(TestCase):
         self.assertFalse(get_state(page).is_parent_published(),
                         'Expected parent folder not to be published')
 
-    def test_is_parent_published__positive__when_parent_has_no_workflow(self):
+    @skipUnless(IS_PLONE_4, 'ftw.contentpage is not available for plone 5')
+    def test_is_parent_published__positive__when_parent_has_no_workflow_plone4(self):
         folder = create(Builder('folder').in_state(EXAMPLE_WF_PUBLISHED))
         page = create(Builder('content page').within(folder))  # no wf
         subpage = create(Builder('content page').within(page))  # no wf
@@ -126,7 +127,16 @@ class TestPublisherContextState(TestCase):
         self.assertTrue(get_state(subpage).is_parent_published(),
                         'Expected parent folder not to be published')
 
-    def test_is_parent_published__negeative__when_parent_has_no_workflow(self):
+    def test_is_parent_published__positive__when_parent_has_no_workflow(self):
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_PUBLISHED))
+        page = create(Builder('sl content page').within(folder))  # no wf
+        subpage = create(Builder('sl content page').within(page))  # no wf
+
+        self.assertTrue(get_state(subpage).is_parent_published(),
+                        'Expected parent folder not to be published')
+
+    @skipUnless(IS_PLONE_4, 'ftw.contentpage is not available for plone 5')
+    def test_is_parent_published__negeative__when_parent_has_no_workflow_plone4(self):
         folder = create(Builder('folder').in_state(EXAMPLE_WF_INTERNAL))
         page = create(Builder('content page').within(folder))  # no wf
         subpage = create(Builder('content page').within(page))  # no wf
@@ -134,10 +144,18 @@ class TestPublisherContextState(TestCase):
         self.assertFalse(get_state(subpage).is_parent_published(),
                          'Expected parent folder not to be published')
 
+    def test_is_parent_published__negeative__when_parent_has_no_workflow(self):
+        folder = create(Builder('folder').in_state(EXAMPLE_WF_INTERNAL))
+        page = create(Builder('sl content page').within(folder))  # no wf
+        subpage = create(Builder('sl content page').within(page))  # no wf
+
+        self.assertFalse(get_state(subpage).is_parent_published(),
+                         'Expected parent folder not to be published')
+
     def test_getting_unpublished_references(self):
-        foo = create(Builder('page').titled('Foo'))
-        bar = create(Builder('page').titled('Bar'))
-        bar.setRelatedItems(foo)
+        foo = create(Builder('page').titled(u'Foo'))
+        bar = create(Builder('page').titled(u'Bar'))
+        helpers.set_related_items(bar, foo)
 
         self.assertEquals(
             [foo], list(get_state(bar).get_unpublished_references()))
@@ -147,10 +165,10 @@ class TestPublisherContextState(TestCase):
             [], list(get_state(bar).get_unpublished_references()))
 
     def test_getting_published_references(self):
-        foo = create(Builder('page').titled('Foo')
+        foo = create(Builder('page').titled(u'Foo')
                      .in_state(EXAMPLE_WF_PUBLISHED))
-        bar = create(Builder('page').titled('Bar'))
-        bar.setRelatedItems(foo)
+        bar = create(Builder('page').titled(u'Bar'))
+        helpers.set_related_items(bar, foo)
 
         self.assertEquals(
             [foo], list(get_state(bar).get_published_references()))
@@ -160,10 +178,10 @@ class TestPublisherContextState(TestCase):
             [], list(get_state(bar).get_published_references()))
 
     def test_do_not_fail_getting_published_references_if_ref_is_none(self):
-        foo = create(Builder('page').titled('Foo')
+        foo = create(Builder('page').titled(u'Foo')
                      .in_state(EXAMPLE_WF_PUBLISHED))
-        bar = create(Builder('page').titled('Bar'))
-        bar.setRelatedItems(foo)
+        bar = create(Builder('page').titled(u'Bar'))
+        helpers.set_related_items(bar, foo)
         self.portal._delObject(foo.getId(), suppress_events=True)
 
         self.assertEquals(
@@ -172,10 +190,7 @@ class TestPublisherContextState(TestCase):
     def test_references_dx_to_dx(self):
         foo = create(Builder('example dx type').titled(u'Foo'))
         bar = create(Builder('example dx type').titled(u'Bar'))
-
-        foo_relation = create_relation('/'.join(foo.getPhysicalPath()))
-        IRelatedItems(bar).relatedItems = [foo_relation]
-        _setRelation(bar, 'relatedItems', foo_relation)
+        helpers.set_related_items(bar, foo, force_relation_values=True)
         self.assertEquals(
             [foo],
             list(get_state(bar).get_references())
@@ -183,19 +198,17 @@ class TestPublisherContextState(TestCase):
 
     def test_references_at_to_dx(self):
         dx = create(Builder('example dx type').titled(u'DX'))
-        at = create(Builder('page').titled('AT'))
-        at.setRelatedItems(dx)
+        at = create(Builder('page').titled(u'AT'))
+        helpers.set_related_items(at, dx)
         self.assertEquals(
             [dx],
             list(get_state(at).get_references())
         )
 
     def test_references_dx_to_at(self):
-        at = create(Builder('page').titled('AT'))
+        at = create(Builder('page').titled(u'AT'))
         dx = create(Builder('example dx type').titled(u'DX'))
-        at_relation = create_relation('/'.join(at.getPhysicalPath()))
-        IRelatedItems(dx).relatedItems = [at_relation]
-        _setRelation(dx, 'relatedItems', at_relation)
+        helpers.set_related_items(dx, at, force_relation_values=True)
         self.assertEquals(
             [at],
             list(get_state(dx).get_references())

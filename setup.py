@@ -5,20 +5,24 @@ version = '2.7.14.dev0'
 maintainer = 'Jonas Baumann'
 
 tests_require = [
-    'collective.testcaselayer',
-    'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
+    'path.py',
+    'Products.PloneFormGen',
+    'plone.app.contenttypes',
     'plone.app.referenceablebehavior',
     'plone.app.relationfield',
     'plone.app.testing',
-    'Products.PloneTestCase',
     'ftw.testing',
     'ftw.testbrowser',
     'ftw.lawgiver',
     'ftw.builder',
-    'ftw.contentpage',
     'ftw.simplelayout [contenttypes]',
     'zc.relation',
     ]
+
+tests_plone4_require = [
+    'ftw.contentpage',
+    'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
+]
 
 
 setup(name='ftw.publisher.sender',
@@ -32,8 +36,8 @@ setup(name='ftw.publisher.sender',
 
       classifiers=[
         'Framework :: Plone',
-        'Framework :: Plone :: 4.2',
         'Framework :: Plone :: 4.3',
+        'Framework :: Plone :: 5.1',
         'Programming Language :: Python',
         'Topic :: Software Development :: Libraries :: Python Modules',
         ],
@@ -87,6 +91,7 @@ setup(name='ftw.publisher.sender',
 
       extras_require={
         'tests': tests_require,
+        'tests_plone4': tests_plone4_require,
         'PloneFormGen': ['Products.PloneFormGen'],
         'development': ['ftw.lawgiver'],
         'taskqueue': ['collective.taskqueue'],

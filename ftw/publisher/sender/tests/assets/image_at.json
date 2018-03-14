@@ -1,0 +1,70 @@
+{
+    "unicode:backreferences_adapter": {},
+    "unicode:field_data_adapter": {
+        "utf8:allowDiscussion": false,
+        "utf8:contributors": [
+            "utf8:tuple",
+            []
+        ],
+        "utf8:creation_date": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:creators": [
+            "utf8:tuple",
+            [
+                "utf8:test_user_1_"
+            ]
+        ],
+        "utf8:description": "utf8:Description of the image",
+        "utf8:effectiveDate": null,
+        "utf8:excludeFromNav": false,
+        "utf8:expirationDate": null,
+        "utf8:id": "utf8:an-image",
+        "utf8:image": {
+            "utf8:data": "utf8:R0lGODlhAQABAIAAAAAAAAAAACH5BAQAAAAALAAAAAABAAEAAAICRAEAOw==\n",
+            "utf8:filename": "utf8:image.gif",
+            "utf8:type": "utf8:blob"
+        },
+        "utf8:language": "utf8:en",
+        "utf8:location": "utf8:",
+        "utf8:modification_date": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:relatedItems": [],
+        "utf8:rights": "utf8:",
+        "utf8:subject": [
+            "utf8:tuple",
+            []
+        ],
+        "utf8:title": "utf8:An image"
+    },
+    "unicode:geo_data_adapter": [
+        "utf8:tuple",
+        [
+            null,
+            null
+        ]
+    ],
+    "unicode:interface_data_adapter": [
+        "utf8:plone.app.blob.interfaces.IATBlobImage",
+        "utf8:Products.ATContentTypes.interfaces.image.IATImage",
+        "utf8:Products.ATContentTypes.interfaces.image.IImageContent"
+    ],
+    "unicode:portlet_data_adapter": {},
+    "unicode:properties_data_adapter": [
+        {
+            "utf8:id": "utf8:title",
+            "utf8:mode": "utf8:wd",
+            "utf8:type": "utf8:string",
+            "utf8:value": "utf8:An image"
+        }
+    ],
+    "utf8:metadata": {
+        "utf8:UID": "utf8:testarchetypesimageextract000002",
+        "utf8:action": "utf8:push",
+        "utf8:id": "utf8:an-image",
+        "utf8:modified": "utf8:2030/01/02 04:05:00 GMT+1",
+        "utf8:physicalPath": "utf8:/foo/an-image",
+        "utf8:portal_type": "utf8:Image",
+        "utf8:review_state": "utf8:",
+        "utf8:sibling_positions": {
+            "utf8:an-image": 0
+        }
+    }
+}

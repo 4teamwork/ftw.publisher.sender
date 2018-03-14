@@ -1,11 +1,18 @@
 from ftw.builder import Builder
 from ftw.builder import create
+from plone import api
+from plone.app.textfield.value import RichTextValue
+from ftw.publisher.sender.tests import helpers
 from ftw.publisher.sender.tests import FunctionalTestCase
 from ftw.publisher.sender.tests.pages import Workflow
+from ftw.publisher.sender.utils import IS_PLONE_4
 from ftw.testbrowser import browsing
 from ftw.testbrowser.pages import statusmessages
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
+from unittest2 import skipUnless
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent
 import transaction
 
 
@@ -23,7 +30,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         self.grant('Manager')
 
         wftool = getToolByName(self.portal, 'portal_workflow')
-        wftool.setChainForPortalTypes(['Document', 'Folder', 'ContentPage'],
+        wftool.setChainForPortalTypes(['Document', 'Folder', 'ContentPage', 'ftw.simplelayout.ContentPage'],
                                       EXAMPLE_WF_ID)
 
         transaction.commit()
@@ -111,11 +118,10 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_warning_on_publish_when_references_are_not_published(self, browser):
         page = create(Builder('page')
-                      .titled('The Page'))
+                      .titled(u'The Page'))
         other_page = create(Builder('page')
-                            .titled('The Other Page'))
-        page.setRelatedItems(other_page)
-        transaction.commit()
+                            .titled(u'The Other Page'))
+        helpers.set_related_items(page, other_page)
 
         browser.login().visit(page)
         Workflow().do_transition('publish')
@@ -128,10 +134,10 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
     @browsing
     def test_do_not_fail_if_reference_is_none(self, browser):
         page = create(Builder('page')
-                      .titled('The Page'))
+                      .titled(u'The Page'))
         other_page = create(Builder('page')
-                            .titled('The Other Page'))
-        page.setRelatedItems(other_page)
+                            .titled(u'The Other Page'))
+        helpers.set_related_items(page, other_page)
 
         self.portal._delObject(other_page.getId(), suppress_events=True)
         transaction.commit()
@@ -141,9 +147,10 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         statusmessages.assert_no_error_messages()
 
     @browsing
-    def test_warning_on_publish_when_sl_block_has_unpublished_references(self, browser):
+    @skipUnless(IS_PLONE_4, 'ftw.contentpage is not available for plone 5')
+    def test_warning_on_publish_when_sl_block_has_unpublished_references_plone4(self, browser):
         page=create(Builder('content page'))
-        other_page=create(Builder('content page').titled('Other Page'))
+        other_page=create(Builder('content page').titled(u'Other Page'))
         other_page_uuid=IUUID(other_page)
         create(Builder('text block')
                .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
@@ -158,14 +165,35 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         )
 
     @browsing
+    def test_warning_on_publish_when_ftw_simplelayout_block_has_unpublished_references(self, browser):
+        page = create(Builder('sl content page'))
+        other_page = create(Builder('sl content page').titled(u'Other Page'))
+        other_page_uuid = IUUID(other_page)
+        textblock = create(Builder('sl textblock')
+                           .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
+                           .within(page))
+
+        notify(ObjectModifiedEvent(textblock))
+        transaction.commit()
+
+        browser.login().visit(page)
+        Workflow().do_transition('publish')
+
+        statusmessages.assert_message(
+            'The referenced object <a href="http://nohost/plone'
+            '/other-page">Other Page</a> is not yet published.'
+        )
+
+    @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
         page=create(Builder('page')
-                      .titled('The Page')
-                      .in_state(EXAMPLE_WF_PUBLISHED))
+                      .titled(u'The Page'))
         other_page=create(Builder('page')
-                            .titled('The Other Page')
-                            .in_state(EXAMPLE_WF_PUBLISHED))
-        page.setRelatedItems(other_page)
+                            .titled(u'The Other Page'))
+        helpers.set_related_items(page, other_page)
+
+        api.content.transition(obj=page,to_state=EXAMPLE_WF_PUBLISHED)
+        api.content.transition(obj=other_page,to_state=EXAMPLE_WF_PUBLISHED)
         transaction.commit()
 
         browser.login().visit(page)
@@ -177,15 +205,40 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         )
 
     @browsing
-    def test_warning_on_retract_when_sl_block_has_published_references(self, browser):
+    @skipUnless(IS_PLONE_4, 'ftw.contentpage is not available for plone 5')
+    def test_warning_on_retract_when_sl_block_has_published_references_plone4(self, browser):
         page=create(Builder('content page'))
         other_page=create(Builder('content page')
-                            .titled('Other Page')
+                            .titled(u'Other Page')
                             .in_state(EXAMPLE_WF_PUBLISHED))
         other_page_uuid=IUUID(other_page)
         create(Builder('text block')
                .having(text='<a href="resolveuid/%s">link</a>' % other_page_uuid)
                .within(page))
+
+        browser.login().visit(page)
+        # cannot add text block when published
+        Workflow().do_transition('publish')
+        Workflow().do_transition('retract')
+
+        statusmessages.assert_message(
+            'The referenced object <a href="http://nohost/plone'
+            '/other-page">Other Page</a> is still published.'
+        )
+
+    @browsing
+    def test_warning_on_retract_when_ftw_simplelayout_block_has_published_references(self, browser):
+        page = create(Builder('sl content page'))
+        other_page = create(Builder('sl content page')
+                            .titled(u'Other Page')
+                            .in_state(EXAMPLE_WF_PUBLISHED))
+        other_page_uuid = IUUID(other_page)
+        textblock = create(Builder('sl textblock')
+                           .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % other_page_uuid))
+                           .within(page))
+
+        notify(ObjectModifiedEvent(textblock))
+        transaction.commit()
 
         browser.login().visit(page)
         # cannot add text block when published

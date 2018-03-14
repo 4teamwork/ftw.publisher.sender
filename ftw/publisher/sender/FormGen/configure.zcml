@@ -1,7 +1,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:monkey="http://namespaces.plone.org/monkey"
-    i18n_domain="ftw.file">
+    i18n_domain="ftw.publisher.sender">
 
     <include package="collective.monkeypatcher" />
 

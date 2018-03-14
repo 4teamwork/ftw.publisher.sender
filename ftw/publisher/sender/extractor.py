@@ -47,12 +47,12 @@ class Extractor(object):
         portal = self.object.portal_url.getPortalObject()
         config = IConfig(portal)
         ignore = config.get_ignored_fields()
-        for ptype, fields in ignore.items():
-            if data['metadata']['portal_type'] == ptype:
-                for field in fields:
-                    if 'field_data_adapter' in data and \
-                       field in data['field_data_adapter']:
-                        del data['field_data_adapter'][field]
+        for field_to_ignore in ignore.get(data['metadata']['portal_type'], ()):
+            # AT:
+            data.get('field_data_adapter', {}).pop(field_to_ignore, None)
+            # DX:
+            for schemata in data.get('dx_field_data_adapter', {}).values():
+                schemata.pop(field_to_ignore, None)
 
         if action == 'move':
             data['move'] = additional_data['move_data']
@@ -93,13 +93,6 @@ class Extractor(object):
             raise
         except Exception:
             wf_info = ''
-        # get schema path
-        if self.is_root:
-            schema_path = None
-        else:
-            schema_path = '.'.join((self.object.__module__,
-                                    self.object.__class__.__name__,
-                                    'schema'))
         try:
             modifiedDate = str(self.object.modified())
         except AttributeError:
@@ -112,7 +105,6 @@ class Extractor(object):
             'physicalPath': self.getRelativePath(),
             'sibling_positions': positions,
             'review_state': wf_info,
-            'schema_path': schema_path,
             'modified': modifiedDate,
             }
         return data
