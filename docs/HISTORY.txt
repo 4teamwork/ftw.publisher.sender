@@ -5,13 +5,11 @@ Changelog
 2.7.14 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add support for Plone 5.1. [mbaechtold]
 
 
 2.7.13 (2018-02-23)
 -------------------
-
-- Add support for Plone 5.1. [mbaechtold]
 
 - Define a two minute timeout when sending the data to the receiver. [mbaechtold]
 
