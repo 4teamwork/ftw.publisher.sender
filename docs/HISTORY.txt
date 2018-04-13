@@ -5,6 +5,8 @@ Changelog
 2.7.14 (unreleased)
 -------------------
 
+- Improve extraction worker. [mbaechtold]
+
 - Add support for Plone 5.1. [mbaechtold]
 
 
