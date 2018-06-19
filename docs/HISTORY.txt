@@ -5,8 +5,7 @@ Changelog
 2.8.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Extraction: increase attempts to 10 and pause 0.5s in between. [jone]
 
 2.8.0 (2018-04-25)
 ------------------
