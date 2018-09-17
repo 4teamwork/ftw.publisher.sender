@@ -5,6 +5,7 @@ from ftw.publisher.sender import getLogger
 from ftw.publisher.sender.extractor import Extractor
 from plone import api
 from Products.Five.browser import BrowserView
+from time import sleep
 from zope.annotation import IAnnotations
 import json
 import os
@@ -12,6 +13,8 @@ import uuid
 
 
 TOKEN_ANNOTATION_KEY = 'ftw.publisher.sender:deferred-extraction-token'
+MAX_ATTEMPTS = 10
+TIMEOUT_BETWEEN_ATTEMPTS = 0.5
 
 
 def enqueue_deferred_extraction(obj, action, filepath, additional_data,
@@ -53,7 +56,8 @@ class PublisherExtractObjectWorker(BrowserView):
         attempt = self.request.form['attempt']
 
         if obj is None:
-            if attempt == 1:
+            if attempt < MAX_ATTEMPTS:
+                sleep(TIMEOUT_BETWEEN_ATTEMPTS)
                 return enqueue_deferred_extraction(
                     None, action, filepath, additional_data,
                     attempt=attempt + 1,
@@ -71,10 +75,11 @@ class PublisherExtractObjectWorker(BrowserView):
         if current_token != require_token:
             # The current version of the object is not the version we have
             # planned to extract.
-            if attempt == 1:
+            if attempt < MAX_ATTEMPTS:
                 # Lets retry for solving the problem that the worker is too
                 # early and the transaction which triggered the action was not
                 # yet commited to the database.
+                sleep(TIMEOUT_BETWEEN_ATTEMPTS)
                 return enqueue_deferred_extraction(
                     obj, action, filepath, additional_data,
                     attempt=attempt + 1,
