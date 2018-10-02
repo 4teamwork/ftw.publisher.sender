@@ -34,7 +34,7 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
                                       EXAMPLE_WF_ID)
 
         transaction.commit()
-        
+
     @browsing
     def test_warning_on_submit_when_parent_is_not_published(self, browser):
         folder = create(Builder('folder')
@@ -130,6 +130,32 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
             '/the-other-page">The Other Page</a> is not yet published.'
         )
 
+    @browsing
+    def test_warning_shown_when_referencing_children_with_separate_workflow(self, browser):
+        parent = create(Builder('folder').titled(u'Parent'))
+        child = create(Builder('folder').titled(u'Child').within(parent))
+        helpers.set_related_items(parent, child)
+
+        browser.login().visit(parent)
+        Workflow().do_transition('publish')
+        self.assertItemsEqual(
+            ['The referenced object <a href="http://nohost/plone'
+             '/parent/child">Child</a> is not yet published.'],
+            statusmessages.warning_messages(),
+        )
+
+    @browsing
+    def test_warning_not_shown_when_referencing_children_without_workflow(self, browser):
+        parent = create(Builder('folder').titled(u'Parent'))
+        child = create(Builder('file').titled(u'Child').within(parent))
+        helpers.set_related_items(parent, child)
+
+        browser.login().visit(parent)
+        Workflow().do_transition('publish')
+        self.assertItemsEqual(
+            [],
+            statusmessages.warning_messages(),
+        )
 
     @browsing
     def test_do_not_fail_if_reference_is_none(self, browser):

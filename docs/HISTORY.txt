@@ -5,8 +5,7 @@ Changelog
 2.8.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Do not warn unpublished references which will now be published. [jone]
 
 2.8.1 (2018-09-17)
 ------------------
