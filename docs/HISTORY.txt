@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.8.2 (unreleased)
+2.8.2 (2018-10-02)
 ------------------
 
 - Do not warn unpublished references which will now be published. [jone]
