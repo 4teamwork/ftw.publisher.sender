@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.8.3 (unreleased)
+2.9.0 (2019-08-29)
 ------------------
 
 - Concatenate csv entries from self and realm in monkeypatched
