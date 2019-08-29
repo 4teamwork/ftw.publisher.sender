@@ -1,12 +1,10 @@
-from ftw.publisher.sender import _
-from ftw.publisher.sender.utils import sendRequestToRealm
-from ftw.publisher.sender.interfaces import IConfig
-from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
-from Products.statusmessages.interfaces import IStatusMessage
-from Products.CMFCore.utils import getToolByName
-from zope.component import getUtility
-from Acquisition import aq_parent
 from Products.Archetypes.utils import contentDispositionHeader
+from Products.CMFCore.utils import getToolByName
+from Products.statusmessages.interfaces import IStatusMessage
+from ftw.publisher.sender import _
+from ftw.publisher.sender.interfaces import IConfig
+from ftw.publisher.sender.utils import sendRequestToRealm
+from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from zope.component import getMultiAdapter
 
 
@@ -28,9 +26,12 @@ def download(self, REQUEST=None, RESPONSE=None):
 
     elif len(realms) == 1:
         data = {'uid': self.UID(), 'download_format': download_format}
-        return_data = sendRequestToRealm(data,
-                                         realms[0],
-                                         'formgen_get_saved_data')
+        return_data_realm = sendRequestToRealm(data,
+                                               realms[0],
+                                               'formgen_get_saved_data')
+        return_data_this = self.getSavedFormInputForEdit()
+        return_data = '{}{}'.format(return_data_realm, return_data_this)
+
         filename = self.id
         if filename.find('.') < 0:
             filename = '%s.%s' % (filename, download_format)
@@ -42,6 +43,7 @@ def download(self, REQUEST=None, RESPONSE=None):
         RESPONSE.setHeader("Content-Type",
                            'text/%s-separated-values;'
                            'charset=%s' % (sep_type, self.getCharset()))
+
         return return_data
 
     else:
@@ -49,4 +51,3 @@ def download(self, REQUEST=None, RESPONSE=None):
         messages.add(_(u"couldn't determine correct realm to fetch from."),
                      type=u"error")
         return RESPONSE.redirect(self.context.absolute_url())
-

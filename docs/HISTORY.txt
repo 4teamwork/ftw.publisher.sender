@@ -5,7 +5,8 @@ Changelog
 2.8.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Concatenate csv entries from self and realm in monkeypatched
+  Products.PloneFormGen download method. [busykoala]
 
 
 2.8.2 (2018-10-02)
