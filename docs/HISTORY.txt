@@ -5,6 +5,8 @@ Changelog
 2.9.1 (unreleased)
 ------------------
 
+- Improve ``ftw.trash`` compatibility by using ``contentValues`` instead of ``objectValues``. [jone]
+
 - Refactor synchronizing simplelayout state so that it works for non-content-pages. [jone]
 
 - Introduce new "BeforePublishEvent". [jone]
