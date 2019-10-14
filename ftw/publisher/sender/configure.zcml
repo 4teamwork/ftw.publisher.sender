@@ -84,6 +84,13 @@
         handler=".eventhandlers.add_move_job"
         />
 
+    <subscriber
+        zcml:condition="installed ftw.simplelayout"
+        for="ftw.simplelayout.interfaces.ISimplelayout
+             ftw.publisher.sender.interfaces.IBeforePublishEvent"
+        handler=".simplelayout.synchronize_sl_page"
+        />
+
   <include package="ftw.profilehook" />
 
   <profilehook:hook

@@ -17,15 +17,6 @@
       permission="zope2.View"
       />
 
-  <configure zcml:condition="installed ftw.simplelayout">
-      <browser:page
-          name="publisher.publish"
-          for="ftw.simplelayout.interfaces.ISimplelayout"
-          class=".ftw_simplelayout.PublishSLContainer"
-          permission="zope2.View"
-          />
-  </configure>
-
   <browser:page
       name="publisher.move"
       for="*"
