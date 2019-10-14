@@ -1,4 +1,5 @@
 from datetime import datetime
+from ftw.publisher.core import belongs_to_parent
 from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
@@ -7,12 +8,13 @@ from ftw.publisher.sender.events import BeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.interfaces import IPreventPublishing
 from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
-from ftw.publisher.sender.utils import ReceiverTimeoutError
 from ftw.publisher.sender.utils import add_transaction_aware_status_message
 from ftw.publisher.sender.utils import get_site_relative_path
+from ftw.publisher.sender.utils import ReceiverTimeoutError
 from ftw.publisher.sender.utils import sendJsonToRealm
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces import IPloneSiteRoot
+from Products.CMFPlone.utils import base_hasattr
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from StringIO import StringIO
@@ -32,7 +34,7 @@ class PublishObject(BrowserView):
     publishing queue.
     """
 
-    def __call__(self, no_response=False, msg=None):
+    def __call__(self, no_response=False, msg=None, recursive=True):
         if IPreventPublishing.providedBy(self.context):
             return 'prevented'
 
@@ -67,6 +69,11 @@ class PublishObject(BrowserView):
                 self.context.Title(),
                 '/'.join(self.context.getPhysicalPath()),
                 ))
+
+        if recursive and base_hasattr(self.context, 'contentValues'):
+            # Use contentValues for implicit ftw.trash compatibility.
+            for obj in filter(belongs_to_parent, self.context.contentValues()):
+                obj.restrictedTraverse('@@publisher.publish')(no_response=True, msg=msg)
 
         # status message
         if msg is None:

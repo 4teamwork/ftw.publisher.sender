@@ -1,3 +1,4 @@
+from ftw.publisher.sender.interfaces import IQueue
 from path import Path
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
@@ -34,3 +35,13 @@ class FunctionalTestCase(TestCase):
         filepath = Path(__file__).parent.joinpath('assets', filename)
         assert filepath.isfile(), 'Missing asset "{0}" at {1}'.format(filepath, filepath)
         return filepath
+
+    def assert_jobs(self, *expected):
+        """Example:
+        self.assert_jobs(('push', 'page'), ('push', 'textblock'))
+        """
+        got = []
+        for job in IQueue(self.portal).getJobs():
+            got.append((job.action, job.getObject(self.portal).getId()))
+
+        self.assertEqual(list(expected), list(got))

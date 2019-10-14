@@ -2,17 +2,15 @@ from ftw.builder import Builder
 from ftw.builder import create
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.persistence import Realm
-from ftw.publisher.sender.testing import PUBLISHER_SENDER_FUNCTIONAL_TESTING
+from ftw.publisher.sender.tests import FunctionalTestCase
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from Products.CMFCore.utils import getToolByName
-from unittest2 import TestCase
 from urllib2 import URLError
 import transaction
 
 
-class TestFormGenIntegration(TestCase):
-    layer = PUBLISHER_SENDER_FUNCTIONAL_TESTING
+class TestFormGenIntegration(FunctionalTestCase):
 
     def setUp(self):
         super(TestFormGenIntegration, self).setUp()
@@ -50,3 +48,15 @@ class TestFormGenIntegration(TestCase):
         with self.assertRaises(URLError):
             self.save_data_adapter.download(self.portal.REQUEST,
                                             self.portal.REQUEST.RESPONSE)
+
+    def test_form_elements_are_published_along_with_form(self):
+        self.assertEqual(['mailer', 'replyto', 'topic', 'comments', 'thank-you', 'formsavedataadapter'],
+                         self.formfolder.contentIds())
+        self.formfolder.restrictedTraverse('@@publisher.publish')()
+        self.assert_jobs(('push', 'formfolder'),
+                         ('push', 'mailer'),
+                         ('push', 'replyto'),
+                         ('push', 'topic'),
+                         ('push', 'comments'),
+                         ('push', 'thank-you'),
+                         ('push', 'formsavedataadapter'))
