@@ -1,4 +1,4 @@
-from ftw.publisher.core.adapters.simplelayout_utils import is_sl_contentish
+from ftw.publisher.core import belongs_to_parent
 from zope.component import queryMultiAdapter
 import os
 
@@ -11,14 +11,10 @@ def add_move_job(obj, event):
     if os.environ.get('disable-publisher-for-testing', None):
         return
 
-    if is_sl_contentish(obj):
-        # We are moving a simplelayout block, which is considered part
-        # of the content.
-        # A move of content should not be published instantly, but when
-        # the page is published.
-        # Since the simplelayout publisher adapter makes sure that blocks
-        # are removed when the content no longer exists on the backend,
-        # we can savely skip publishing block movements instantly.
+    if belongs_to_parent(obj):
+        # We are moving a content which is considered part of the parent.
+        # A move of this content should not be published instantly, but when
+        # the parent is published.
         return
 
     if obj == event.object:
@@ -33,7 +29,7 @@ def add_move_job(obj, event):
                                 'manage_pasteObjects',
                                 'object_paste']:
             return
-        #set event info on
+        # set event info on
         move_view = queryMultiAdapter(
             (obj, obj.REQUEST),
             name="publisher.move")
