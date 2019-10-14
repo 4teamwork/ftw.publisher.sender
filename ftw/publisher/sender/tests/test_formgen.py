@@ -1,13 +1,11 @@
-from Products.CMFCore.utils import getToolByName
 from ftw.builder import Builder
 from ftw.builder import create
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.persistence import Realm
 from ftw.publisher.sender.testing import PUBLISHER_SENDER_FUNCTIONAL_TESTING
-from plone.app.testing import TEST_USER_ID
-from plone.app.testing import TEST_USER_NAME
-from plone.app.testing import login
 from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+from Products.CMFCore.utils import getToolByName
 from unittest2 import TestCase
 from urllib2 import URLError
 import transaction
@@ -50,5 +48,5 @@ class TestFormGenIntegration(TestCase):
                                 '-TRANSITION--publish--internal_published')
         transaction.commit()
         with self.assertRaises(URLError):
-            csv = self.save_data_adapter.download(self.portal.REQUEST,
-                                                  self.portal.REQUEST.RESPONSE)
+            self.save_data_adapter.download(self.portal.REQUEST,
+                                            self.portal.REQUEST.RESPONSE)
