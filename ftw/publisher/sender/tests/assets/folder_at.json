@@ -99,5 +99,6 @@
         "utf8:sibling_positions": {
             "utf8:a-folder": 0
         }
-    }
+    },
+    "unicode:remove_children": []
 }
