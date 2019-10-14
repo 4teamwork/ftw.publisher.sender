@@ -28,6 +28,12 @@ class IQueue(interface.Interface):
     """
 
 
+class IBeforePublishEvent(IObjectEvent):
+    """
+    Event getting fired right before a publishing job is created for an object.
+    """
+
+
 class IAfterPushEvent(IObjectEvent):
     """
     Event gets fired, after object is pushed to the realm

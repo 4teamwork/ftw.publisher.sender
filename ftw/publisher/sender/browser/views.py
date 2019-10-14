@@ -3,8 +3,10 @@ from ftw.publisher.core import belongs_to_parent
 from ftw.publisher.core import states
 from ftw.publisher.sender import getLogger, getErrorLogger
 from ftw.publisher.sender import message_factory as _
-from ftw.publisher.sender.events import AfterPushEvent, QueueExecutedEvent
+from ftw.publisher.sender.events import AfterPushEvent
+from ftw.publisher.sender.events import BeforePublishEvent
 from ftw.publisher.sender.events import BeforeQueueExecutionEvent
+from ftw.publisher.sender.events import QueueExecutedEvent
 from ftw.publisher.sender.interfaces import IPathBlacklist, IConfig, IQueue
 from ftw.publisher.sender.interfaces import IPreventPublishing
 from ftw.publisher.sender.nojobs import publisher_jobs_are_disabled
@@ -51,6 +53,8 @@ class PublishObject(BrowserView):
             if not no_response:
                 return self.request.RESPONSE.redirect('./view')
             return False
+
+        event.notify(BeforePublishEvent(self.context))
 
         # mle: now its possible to execite this view on plonesiteroot
         # This View should not be executed at the PloneSiteRoot

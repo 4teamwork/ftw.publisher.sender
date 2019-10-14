@@ -5,6 +5,8 @@ Changelog
 2.9.1 (unreleased)
 ------------------
 
+- Introduce new "BeforePublishEvent". [jone]
+
 - Replace simplelayout publishing recursion with a generic mechanism
   in order to support PloneFormGen. [jone]
 
