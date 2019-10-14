@@ -30,19 +30,9 @@ import transaction
 class PublishObject(BrowserView):
     """This BrowserView adds the current object (self.context) to the
     publishing queue.
-
     """
-    def __call__(self, no_response=False, msg=None, *args, **kwargs):
-        """
-        The __call__ method is used to execute the BrowserView. It creates and
-        adds a "PUSH"-Job on the current context to the queue.
-        @param args:    list of unnamed arguments
-        @type args:     list
-        @param kwargs:  dict of named keyword-arguments
-        @type kwargs:   dict
-        @return:        Redirect to object`s default view
-        """
 
+    def __call__(self, no_response=False, msg=None):
         if IPreventPublishing.providedBy(self.context):
             return 'prevented'
 
@@ -52,8 +42,8 @@ class PublishObject(BrowserView):
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
-            self.logger.warning('Could not create push job for blacklisted '+\
-                                    'object (%s at %s)' % (
+            self.logger.warning(
+                'Could not create push job for blacklisted object (%s at %s)' % (
                     self.context.Title(),
                     '/'.join(self.context.getPhysicalPath())))
             if not no_response:
@@ -62,11 +52,12 @@ class PublishObject(BrowserView):
 
         # mle: now its possible to execite this view on plonesiteroot
         # This View should not be executed at the PloneSiteRoot
-        #if IPloneSiteRoot.providedBy(self.context):
+        # if IPloneSiteRoot.providedBy(self.context):
         #    raise Exception('Not allowed on PloneSiteRoot')
         # get username
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
+
         # create Job
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
@@ -93,16 +84,7 @@ class MoveObject(BrowserView):
     publishing queue for renaming.
 
     """
-    def __call__(self, event, no_response=False, msg=None, *args, **kwargs):
-        """
-        Creates a "rename" job for the current item(s)
-        @param args:    list of unnamed arguments
-        @type args:     list
-        @param kwargs:  dict of named keyword-arguments
-        @type kwargs:   dict
-        @return:        Redirect to object`s default view
-        """
-
+    def __call__(self, event, no_response=False, msg=None):
         if IPreventPublishing.providedBy(self.context):
             return 'prevented'
 
@@ -112,8 +94,8 @@ class MoveObject(BrowserView):
         self.logger = getLogger()
         # is the object blacklisted?
         if IPathBlacklist(self.context).is_blacklisted():
-            self.logger.warning('Could not create move job for blacklisted '+\
-                                    'object (%s at %s)' % (
+            self.logger.warning(
+                'Could not create move job for blacklisted object (%s at %s)' % (
                     self.context.Title(),
                     '/'.join(self.context.getPhysicalPath())))
             if not no_response:
@@ -123,9 +105,11 @@ class MoveObject(BrowserView):
         # This View should not be executed at the PloneSiteRoot
         if IPloneSiteRoot.providedBy(self.context):
             raise Exception('Not allowed on PloneSiteRoot')
+
         # get username
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
+
         # create Job
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
@@ -145,6 +129,7 @@ class MoveObject(BrowserView):
             self.context.Title(),
             '/'.join(self.context.getPhysicalPath()),
         ))
+
         # status message
         if msg is None:
             msg = _(u'Object move/rename action has been added to the queue.')
@@ -157,23 +142,12 @@ class MoveObject(BrowserView):
             return self.request.RESPONSE.redirect('./view')
 
 
-
 class DeleteObject(BrowserView):
     """
     Add a object to the queue with the action "delete".
     """
 
-    def __call__(self, no_response=False, msg=None, *args, **kwargs):
-        """
-        Add the current context as delete-job to the queue, creates a status
-        message to inform the user and returns to the default view.
-        @param args:    list of unnamed arguments
-        @type args:     list
-        @param kwargs:  dict of named keyword-arguments
-        @type kwargs:   dict
-        @return:        Redirect to object`s default view
-        """
-
+    def __call__(self, no_response=False, msg=None):
         if IPreventPublishing.providedBy(self.context):
             return 'prevented'
 
@@ -194,9 +168,11 @@ class DeleteObject(BrowserView):
         # This view should not be executed at the PloneSiteRoot
         if IPloneSiteRoot.providedBy(self.context):
             raise Exception('Not allowed on PloneSiteRoot')
+
         # get username
         user = self.context.portal_membership.getAuthenticatedMember()
         username = user.getUserName()
+
         # create Job
         portal = self.context.portal_url.getPortalObject()
         queue = IQueue(portal)
@@ -278,9 +254,10 @@ class ExecuteQueue(BrowserView):
         try:
             # execute queue
             self.execute()
-        except:
+        except Exception:
             self.logger.removeHandler(logHandler)
-            if self.config.locking_enabled(): self.get_lock_object().release()
+            if self.config.locking_enabled():
+                self.get_lock_object().release()
             # re-raise exception
             raise
         # get logs
@@ -291,13 +268,14 @@ class ExecuteQueue(BrowserView):
         del logHandler
 
         # unlock
-        if self.config.locking_enabled(): self.get_lock_object().release()
+        if self.config.locking_enabled():
+            self.get_lock_object().release()
 
         event.notify(QueueExecutedEvent(portal, log))
         return log
 
     def get_lock_object(self):
-        if getattr(self.__class__, '_lock', None) == None:
+        if getattr(self.__class__, '_lock', None) is None:
             self.__class__._lock = RLock()
         return self.__class__._lock
 
@@ -341,7 +319,7 @@ class ExecuteQueue(BrowserView):
                 raise
             except ReceiverTimeoutError:
                 raise
-            except:
+            except Exception:
                 # print the exception to the publisher error log
                 exc = ''.join(traceback.format_exception(*sys.exc_info()))
                 self.error_logger.error(exc)
