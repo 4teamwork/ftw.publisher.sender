@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-2.9.1 (unreleased)
-------------------
+2.10.0 (2019-10-18)
+-------------------
 
 - Improve ``ftw.trash`` compatibility by using ``contentValues`` instead of ``objectValues``. [jone]
 
