@@ -5,7 +5,17 @@ Changelog
 2.9.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Improve ``ftw.trash`` compatibility by using ``contentValues`` instead of ``objectValues``. [jone]
+
+- Refactor synchronizing simplelayout state so that it works for non-content-pages. [jone]
+
+- Introduce new "BeforePublishEvent". [jone]
+
+- Replace simplelayout publishing recursion with a generic mechanism
+  in order to support PloneFormGen. [jone]
+
+- Replace use of "is_sl_contentish" function with "belongs_to_parent".
+  This requires an update of `ftw.publisher.core` to the compatible version. [jone]
 
 
 2.9.0 (2019-08-29)

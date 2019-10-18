@@ -17,46 +17,6 @@
       permission="zope2.View"
       />
 
-  <configure zcml:condition="installed simplelayout.base">
-      <browser:page
-          name="publisher.publish"
-          for="simplelayout.base.interfaces.ISimpleLayoutCapable"
-          class=".simplelayout_utils.PublishSLObject"
-          permission="zope2.View"
-          />
-
-      <browser:page
-          zcml:condition="installed ftw.subsite"
-          name="publisher.publish"
-          for="ftw.subsite.interfaces.ISubsite"
-          class=".simplelayout_utils.PublishSLObject"
-          permission="zope2.View"
-          />
-
-      <browser:page
-          name="publisher.publish"
-          for="simplelayout.base.interfaces.ISimpleLayoutBlock"
-          class=".simplelayout_utils.PublishSLObject"
-          permission="zope2.View"
-          />
-  </configure>
-
-  <configure zcml:condition="installed ftw.simplelayout">
-      <browser:page
-          name="publisher.publish"
-          for="ftw.simplelayout.interfaces.ISimplelayout"
-          class=".ftw_simplelayout.PublishSLContainer"
-          permission="zope2.View"
-          />
-
-      <browser:page
-          name="publisher.publish"
-          for="ftw.simplelayout.interfaces.ISimplelayoutBlock"
-          class=".simplelayout_utils.PublishSLObject"
-          permission="zope2.View"
-          />
-  </configure>
-
   <browser:page
       name="publisher.move"
       for="*"
@@ -167,15 +127,6 @@
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".configlet.TestRealm"
       permission="ftw.publisher.sender.ChangePublisherConfiguration"
-      />
-
-  <!-- special publisher view for PloneFormGen -->
-  <browser:page
-      zcml:condition="installed Products.PloneFormGen"
-      name="publisher.publish"
-      for="Products.PloneFormGen.interfaces.IPloneFormGenForm"
-      class=".publishformgen.PublishObject"
-      permission="cmf.ReviewPortalContent"
       />
 
   <!-- path blacklist -->

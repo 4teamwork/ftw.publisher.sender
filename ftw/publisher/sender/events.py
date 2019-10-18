@@ -1,4 +1,5 @@
 from ftw.publisher.sender.interfaces import IAfterPushEvent
+from ftw.publisher.sender.interfaces import IBeforePublishEvent
 from ftw.publisher.sender.interfaces import IBeforeQueueExecutionEvent
 from ftw.publisher.sender.interfaces import IQueueExecutedEvent
 from zope import interface
@@ -16,6 +17,10 @@ class AfterPushEvent(ObjectEvent):
         self.uid = job.objectUID
 
         self.state = state
+
+
+class BeforePublishEvent(ObjectEvent):
+    interface.implements(IBeforePublishEvent)
 
 
 class BeforeQueueExecutionEvent(ObjectEvent):

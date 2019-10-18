@@ -1,6 +1,6 @@
 from Acquisition import aq_inner
 from Acquisition import aq_parent
-from ftw.publisher.core.adapters.simplelayout_utils import is_sl_contentish
+from ftw.publisher.core import belongs_to_parent
 from ftw.publisher.sender.utils import is_temporary
 from ftw.publisher.sender.workflows.interfaces import DELETE_ACTIONS
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
@@ -63,9 +63,9 @@ def handle_remove_event(context, event):
     if context is not event.object:
         return
 
-    if is_sl_contentish(context):
-        # Do not delete sl contentish objects, they are deleted when the
-        # associated sl container is published.
+    if belongs_to_parent(context):
+        # Do not delete objects belonging to the parent,
+        # they are deleted when the parent is published.
         return
 
     # Find the workflow object by walking up. We may be deleting a file

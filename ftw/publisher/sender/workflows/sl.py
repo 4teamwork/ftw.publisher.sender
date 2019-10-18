@@ -21,7 +21,8 @@ class SimplelayoutContainerContextState(PublisherContextState):
         return references
 
     def get_blocks_without_worfklows(self):
-        for obj in self.context.objectValues():
+        # Use contentValues for implicit ftw.trash compatibility.
+        for obj in self.context.contentValues():
             if not ISimpleLayoutBlock.providedBy(obj):
                 continue
 
