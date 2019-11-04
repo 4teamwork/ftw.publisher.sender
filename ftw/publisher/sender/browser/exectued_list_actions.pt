@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="ftw.publisher.sender">
+
+  <body>
+    <form tal:attributes="action string:@@publisher-config-listExecutedJobs" method="POST" tal:define="key options/key">
+      <a class="standalone"
+         tal:attributes="href string:@@publisher-config-executed-job-details?job=${key}"
+         i18n:translate="link_job_details">
+        Details
+      </a>
+      |
+      <input type="hidden" name="requeue.job" tal:attributes="value key" />
+      <button type="submit" i18n:translate="link_requeue_job">
+        Requeue
+      </button>
+      <span tal:replace="structure context/@@authenticator/authenticator"/>
+    </form>
+  </body>
+</html>

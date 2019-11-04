@@ -1,6 +1,7 @@
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.PloneBatch import Batch
 from Products.Five import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from ZODB.POSException import ConflictError
 from ftw.publisher.core import states
@@ -14,6 +15,9 @@ from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.table.interfaces import ITableGenerator
 from persistent.dict import PersistentDict
 from persistent.list import PersistentList
+from plone.protect import CheckAuthenticator
+from plone.protect import PostOnly
+from plone.protect import protect
 from plone.z3cform import z2
 from plone.z3cform.interfaces import IWrappedForm
 from z3c.form import button
@@ -25,7 +29,6 @@ from zope.interface import implements
 from zope.publisher.interfaces import Retry
 import datetime
 import md5
-
 
 EXECUTED_JOBS_BATCH_SIZE = 100
 
@@ -305,32 +308,15 @@ class ListExecutedJobs(PublisherConfigletView):
                ('username', _(u'th_username', default=u'Username')),
                ('', ''))
 
-    def __call__(self, *args, **kwargs):
+    actions_template = ViewPageTemplateFile('exectued_list_actions.pt')
 
+    def __call__(self, *args,  **kwargs):
         redirect = False
-        if self.request.get('button.cleanup'):
-            self.queue.clear_executed_jobs()
-            redirect = True
 
-        if self.request.get('button.delete.olderthan'):
-            days = int(self.request.get('days'))
-            date = datetime.datetime.now() - datetime.timedelta(days)
-            self.queue.remove_executed_jobs_older_than(date)
-            redirect = True
-
-        requeueJob = self.request.get('requeue.job')
-        if requeueJob:
-            key = int(requeueJob)
-            try:
-                job = self.queue.get_executed_job_by_key(key)
-            except KeyError:
-                # could not find job
-                pass
-            else:
-                self.queue.remove_executed_job(key)
-                job.move_jsonfile_to(self.config.getDataFolder())
-                self.queue.appendJob(job)
-                redirect = True
+        if ('button.cleanup' in self.request
+            or 'button.delete.olderthan' in self.request
+            or 'requeue.job' in self.request):
+            redirect = self.button_action()
 
         if redirect:
             url = './@@publisher-config-listExecutedJobs'
@@ -345,6 +331,33 @@ class ListExecutedJobs(PublisherConfigletView):
 
         return super(ListExecutedJobs, self).__call__(*args, **kwargs)
 
+    @protect(PostOnly)
+    @protect(CheckAuthenticator)
+    def button_action(self, REQUEST=None):
+        if self.request.get('button.cleanup'):
+            self.queue.clear_executed_jobs()
+            return True
+
+        if self.request.get('button.delete.olderthan'):
+            days = int(self.request.get('days'))
+            date = datetime.datetime.now() - datetime.timedelta(days)
+            self.queue.remove_executed_jobs_older_than(date)
+            return True
+
+        requeueJob = self.request.get('requeue.job')
+        if requeueJob:
+            key = int(requeueJob)
+            try:
+                job = self.queue.get_executed_job_by_key(key)
+            except KeyError:
+                # could not find job
+                pass
+            else:
+                self.queue.remove_executed_job(key)
+                job.move_jsonfile_to(self.config.getDataFolder())
+                self.queue.appendJob(job)
+                return True
+
     def render_table(self):
         generator = getUtility(ITableGenerator, 'ftw.tablegenerator')
         columns = [c[1] for c in ListExecutedJobs.COLUMNS]
@@ -352,12 +365,6 @@ class ListExecutedJobs(PublisherConfigletView):
 
     def _get_data(self):
         columns = dict(ListExecutedJobs.COLUMNS)
-        i18n_details = self.context.translate(_(
-                u'link_job_details',
-                default=u'Details'))
-        i18n_requeu = self.context.translate(_(
-                u'link_requeue_job',
-                default='Requeue'))
         # get a batched part of the executed jobs. But we need to start
         # batching at the end, get the batch forward and then reverse,
         # because we want the newest job at the top.
@@ -391,13 +398,9 @@ class ListExecutedJobs(PublisherConfigletView):
                 raise
             except:
                 pass
-            ctrl = ' '.join((
-                    '<a href="./@@publisher-config-executed-job-details' +\
-                        '?job=%s">%s</a>' % (key, i18n_details),
-                    '|',
-                    '<a href="./@@publisher-config-listExecutedJobs' +\
-                        '?requeue.job=%s">%s</a>' % (key, i18n_requeu),
-                    ))
+
+            ctrl = self.actions_template(key=key)
+
             shortened_title = job.objectTitle
             maximum_length = 35
 
@@ -436,12 +439,21 @@ class ListExecutedJobs(PublisherConfigletView):
 
 class ExecutedJobDetails(PublisherConfigletView):
 
-    def __call__(self, *args, **kwargs):
-        redirect_to = None
-
+    def __call__(self, REQUEST=None, *args, **kwargs):
         self.key = int(self.request.get('job'))
         self.job = self.queue.get_executed_job_by_key(self.key)
 
+        if ('button.requeue' in self.request
+            or 'button.delete' in self.request
+            or 'button.execute' in self.request):
+            redirect = self.action()
+            if redirect:
+                return self.request.RESPONSE.redirect(redirect)
+        return super(ExecutedJobDetails, self).__call__(*args, **kwargs)
+
+    @protect(PostOnly)
+    @protect(CheckAuthenticator)
+    def action(self, REQUEST=None):
         if self.request.get('button.requeue'):
             if self.job.json_file_exists():
                 self.queue.remove_executed_job(self.key)
@@ -451,7 +463,7 @@ class ExecutedJobDetails(PublisherConfigletView):
                         default=u'The job has been moved to the queue.')
                 IStatusMessage(self.request).addStatusMessage(msg,
                                                               type='info')
-                redirect_to = './@@publisher-config'
+                return './@@publisher-config'
             else:
                 msg = _(u'error_job_data_file_missing',
                         default=u'The data file of the job is missing.')
@@ -466,7 +478,7 @@ class ExecutedJobDetails(PublisherConfigletView):
                     default=u'The job has been deleted.')
             IStatusMessage(self.request).addStatusMessage(msg,
                                                           type='info')
-            redirect_to = './@@publisher-config-listExecutedJobs'
+            return './@@publisher-config-listExecutedJobs'
 
         if self.request.get('button.execute'):
             if self.job.json_file_exists():
@@ -483,13 +495,8 @@ class ExecutedJobDetails(PublisherConfigletView):
                         default=u'The data file of the job is missing.')
                 IStatusMessage(self.request).addStatusMessage(msg,
                                                               type='error')
-            redirect_to = './@@publisher-config-executed-job-details?job=' + \
+            return './@@publisher-config-executed-job-details?job=' + \
                 str(self.key)
-
-        if redirect_to:
-            return self.request.RESPONSE.redirect(redirect_to)
-
-        return super(ExecutedJobDetails, self).__call__(*args, **kwargs)
 
     def get_translated_state_name(self, state):
         name = getattr(state, 'localized_name', None)
@@ -504,7 +511,9 @@ class ExecutedJobDetails(PublisherConfigletView):
 
 class CleanJobs(PublisherConfigletView):
 
-    def __call__(self, *args, **kwargs):
+    @protect(PostOnly)
+    @protect(CheckAuthenticator)
+    def __call__(self, REQUEST=None, *args, **kwargs):
         self.queue.clearJobs()
         self.statusMessage('Removed all jobs from queue')
         return self.request.RESPONSE.redirect('./@@publisher-config')
@@ -512,7 +521,9 @@ class CleanJobs(PublisherConfigletView):
 
 class ExecuteJobs(PublisherConfigletView):
 
-    def __call__(self, *args, **kwargs):
+    @protect(PostOnly)
+    @protect(CheckAuthenticator)
+    def __call__(self, REQUEST=None, *args, **kwargs):
         self.output = self.context.restrictedTraverse(
             'publisher.executeQueue')()
         self.output = self.output.replace('\n', '<br/>')
@@ -521,7 +532,9 @@ class ExecuteJobs(PublisherConfigletView):
 
 class ExecuteJob(PublisherConfigletView):
 
-    def __call__(self, *args, **kwargs):
+    @protect(PostOnly)
+    @protect(CheckAuthenticator)
+    def __call__(self, REQUEST=None, *args, **kwargs):
         job = self.get_job()
         if not job:
             raise Exception('No job found')
@@ -541,7 +554,9 @@ class ExecuteJob(PublisherConfigletView):
 
 class RemoveJob(PublisherConfigletView):
 
-    def __call__(self, *args, **kwargs):
+    @protect(PostOnly)
+    @protect(CheckAuthenticator)
+    def __call__(self, REQUEST=None, *args, **kwargs):
         job = self.get_job()
         if not job:
             raise Exception('No job found')
