@@ -14,7 +14,7 @@ from ftw.publisher.sender.utils import add_transaction_aware_status_message
 from ftw.publisher.sender.utils import get_site_relative_path
 from ftw.publisher.sender.utils import ReceiverTimeoutError
 from ftw.publisher.sender.utils import sendJsonToRealm
-from Products.CMFCore.utils import getToolByName
+from plone.app.uuid.utils import uuidToObject
 from Products.CMFPlone.interfaces import IPloneSiteRoot
 from Products.CMFPlone.utils import base_hasattr
 from Products.Five import BrowserView
@@ -400,7 +400,6 @@ class ExecuteQueue(BrowserView):
         job.executed_with_states(state_entries)
 
         # fire AfterPushEvent
-        reference_catalog = getToolByName(self.context, 'reference_catalog')
-        obj = reference_catalog.lookupObject(job.objectUID)
+        obj = uuidToObject(job.objectUID)
         if state is not None:
             event.notify(AfterPushEvent(obj, state, job))
