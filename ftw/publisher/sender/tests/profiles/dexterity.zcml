@@ -13,4 +13,12 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <genericsetup:registerProfile
+        name="dexterity-plone4"
+        title="ftw.publisher.sender.tests:dexterity-plone4"
+        directory="dexterity-plone4"
+        description=""
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+        />
+
 </configure>
