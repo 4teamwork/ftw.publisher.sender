@@ -6,6 +6,7 @@ Changelog
 -------------------
 
 - Support CSRF protection and fix publishing on plone 5 with it [Nachtalb]
+- Fix realm editing form [Nachtalb]
 
 
 2.10.0 (2019-10-18)
