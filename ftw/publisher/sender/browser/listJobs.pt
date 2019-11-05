@@ -50,12 +50,20 @@
                 <td tal:define="length job/getSize"
                     tal:content="string:${length} Bytes"/>
                 <td>
-                  <a tal:attributes="href string:./@@publisher.execute.job?job=${job/get_filename}"
-                     i18n:translate="execute_job"
-                     >Execute</a>
-                  |
-                  <a tal:attributes="href string:./@@publisher.remove.job?job=${job/get_filename}"
-                     i18n:translate="delete_job">Delete</a>
+                  <form action="@@publisher.execute.job" method="POST">
+                    <input type="hidden" name="job" tal:attributes="value job/get_filename" />
+                    <button type="submit" i18n:translate="execute_job">
+                      Execute
+                    </button>
+                    <span tal:replace="structure context/@@authenticator/authenticator"/>
+                  </form>
+                  <form action="@@publisher.remove.job" method="POST">
+                    <input type="hidden" name="job" tal:attributes="value job/get_filename" />
+                    <button type="submit" i18n:translate="delete_job">
+                      Delete
+                    </button>
+                    <span tal:replace="structure context/@@authenticator/authenticator"/>
+                  </form>
                 </td>
               </tr>
             </tal:repeat>

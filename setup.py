@@ -8,7 +8,6 @@ tests_require = [
     'path.py',
     'Products.PloneFormGen',
     'plone.app.contenttypes',
-    'plone.app.referenceablebehavior',
     'plone.app.relationfield',
     'plone.app.testing',
     'ftw.testing',
@@ -21,9 +20,9 @@ tests_require = [
 
 tests_plone4_require = [
     'ftw.contentpage',
+    'plone.app.referenceablebehavior',
     'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
 ]
-
 
 setup(name='ftw.publisher.sender',
       version=version,

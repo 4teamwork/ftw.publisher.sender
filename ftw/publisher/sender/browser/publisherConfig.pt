@@ -35,7 +35,6 @@
             <b tal:content="view/getQueueSize" i18n:name="amount">666666</b>
             jobs in the queue.
           </p>
-
           <ul>
             <li>
               <a href="@@publisher-config-listJobs" class="standalone"
@@ -48,17 +47,22 @@
                 List executed jobs
               </a>
             </li><li>
-              <a href="@@publisher-config-cleanJobs" class="standalone"
-                 tal:define="msg view/get_clear_confirm_message"
-                 tal:attributes="onclick string:return confirm('$msg')"
-                 i18n:translate="link_clear_queue">
-                Clear queue
-              </a>
+              <form action="@@publisher-config-cleanJobs" method="POST">
+                <button class="standalone"
+                        tal:define="msg view/get_clear_confirm_message"
+                        tal:attributes="onclick string:return confirm('$msg')"
+                        i18n:translate="link_clear_queue">
+                  Clear queue
+                </button>
+                <span tal:replace="structure context/@@authenticator/authenticator"/>
+              </form>
             </li><li>
-              <a href="@@publisher-config-executeJobs" class="standalone"
-                 i18n:translate="link_execute_queue">
-                Execute queue
-              </a>
+              <form action="@@publisher-config-executeJobs" method="POST">
+                <button i18n:translate="link_execute_queue">
+                  Execute queue
+                </button>
+                <span tal:replace="structure context/@@authenticator/authenticator"/>
+              </form>
             </li><li>
               <a href="@@publisher-config-blacklist" class="standalone"
                  i18n:translate="link_path_blacklist">
@@ -93,12 +97,17 @@
                   <td tal:content="realm/url" />
                   <td tal:content="realm/username" />
                   <td>
-                    <a href="@@publisher-config-editRealm?id=X"
-                       tal:attributes="href string:@@publisher-config-editRealm?form.widgets.id=${realm/id}"
-                       class="context"
-                       i18n:translate="link_edit_realm"
-                       tal:condition="view/config/is_update_realms_possible"
-                       >Edit</a>
+                    <form method="POST" tal:attributes="action string:@@publisher-config-editRealm">
+                      <input type="hidden" name="form.widgets.id" tal:attributes="value realm/id"/>
+                      <button type="submit"
+                              class="context"
+                              i18n:translate="link_edit_realm"
+                              tal:condition="view/config/is_update_realms_possible" >
+                        Edit
+                      </button>
+                      <span tal:replace="structure context/@@authenticator/authenticator"/>
+                    </form>
+
                     <a href="@@publisher-config-deleteRealm?id=X"
                        tal:attributes="href string:@@publisher-config-deleteRealm?id=${realm/id}"
                        onclick="return confirm('Are you sure to delete this realm?')"

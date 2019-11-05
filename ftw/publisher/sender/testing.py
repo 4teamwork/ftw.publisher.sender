@@ -58,13 +58,18 @@ class PublisherSenderLayer(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         if IS_PLONE_4:
             applyProfile(portal, 'ftw.contentpage:default')
+            applyProfile(portal, 'plone.app.referenceablebehavior:default')
+
         applyProfile(portal, 'ftw.simplelayout.contenttypes:default')
         applyProfile(portal, 'ftw.publisher.sender:default')
         applyProfile(portal, 'ftw.publisher.sender:example-workflow')
         applyProfile(portal, 'plone.app.relationfield:default')
-        applyProfile(portal, 'plone.app.referenceablebehavior:default')
         applyProfile(portal, 'ftw.publisher.sender.tests:dexterity')
         applyProfile(portal, 'Products.PloneFormGen:default')
+
+        if IS_PLONE_4:
+            applyProfile(portal, 'ftw.publisher.sender.tests:dexterity-plone4')
+
         if IS_AT_LEAST_PLONE_5_1:
             applyProfile(portal, 'plone.app.contenttypes:default')
 
