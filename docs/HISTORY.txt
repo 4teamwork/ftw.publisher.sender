@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.10.1 (unreleased)
+2.10.1 (2019-11-11)
 -------------------
 
 - Support CSRF protection and fix publishing on plone 5 with it [Nachtalb]
