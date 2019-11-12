@@ -10,7 +10,7 @@ from ftw.publisher.sender.utils import IS_AT_LEAST_PLONE_5_1
 from ftw.publisher.sender.utils import IS_PLONE_4
 from ftw.testing import freeze
 from ftw.testing import staticuid
-from unittest2 import skipUnless
+from unittest import skipUnless
 from zope.component import getAdapters
 import json
 

@@ -4,7 +4,7 @@ from ftw.publisher.sender.workflows import constraints
 from ftw.publisher.sender.workflows import interfaces
 from ftw.testing import MockTestCase
 from plone.mocktestcase.dummy import Dummy
-from unittest2 import TestCase
+from unittest import TestCase
 from zope.interface import Interface
 from zope.interface.verify import verifyClass
 

@@ -8,7 +8,7 @@ from ftw.simplelayout.configuration import flattened_block_uids
 from ftw.simplelayout.interfaces import IPageConfiguration
 from ftw.testbrowser import browsing
 from ftw.testing import staticuid
-from unittest2 import skipIf
+from unittest import skipIf
 from Products.CMFCore.utils import getToolByName
 
 

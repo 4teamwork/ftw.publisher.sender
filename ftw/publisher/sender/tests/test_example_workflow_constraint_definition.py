@@ -10,7 +10,7 @@ from ftw.testbrowser import browsing
 from ftw.testbrowser.pages import statusmessages
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.utils import getToolByName
-from unittest2 import skipUnless
+from unittest import skipUnless
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
 import transaction
