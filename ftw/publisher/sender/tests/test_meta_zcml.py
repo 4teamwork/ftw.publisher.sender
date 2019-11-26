@@ -101,9 +101,7 @@ class TestOverriddenRealmZCML(MockTestCase):
 
     def test_default_realms_config(self):
         portal = self.providing_stub([IPloneSiteRoot, IAttributeAnnotatable])
-        self.expect(portal.portal_url.getPortalObject()).result(portal)
-        self.replay()
-
+        portal.portal_url.getPortalObject.return_value = portal
         config = IConfig(portal)
         self.assertTrue(config)
         self.assertTrue(config.is_update_realms_possible())
@@ -127,8 +125,7 @@ class TestOverriddenRealmZCML(MockTestCase):
                     )))
 
         portal = self.providing_stub([IPloneSiteRoot, IAttributeAnnotatable])
-        self.expect(portal.portal_url.getPortalObject()).result(portal)
-        self.replay()
+        portal.portal_url.getPortalObject.return_value = portal
 
         config = IConfig(portal)
         self.assertTrue(config)
