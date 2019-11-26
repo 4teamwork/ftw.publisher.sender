@@ -19,7 +19,6 @@ tests_require = [
     ]
 
 tests_plone4_require = [
-    'ftw.contentpage',
     'plone.app.referenceablebehavior',
     'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
 ]

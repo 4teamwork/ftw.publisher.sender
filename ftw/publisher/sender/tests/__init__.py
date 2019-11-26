@@ -18,8 +18,7 @@ class FunctionalTestCase(TestCase):
         ftw.publisher.sender's tests-extras.
 
         If the layer import would be on module level, we would load the testing.py,
-        which would import from ftw.contentpage builders and other dependencies
-        which may not be installed.
+        which would import from dependencies which may not be installed.
         """
         from ftw.publisher.sender import testing
         return testing.PUBLISHER_SENDER_FUNCTIONAL_TESTING

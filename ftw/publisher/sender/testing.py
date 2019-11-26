@@ -39,11 +39,6 @@ class PublisherSenderLayer(PloneSandboxLayer):
             '</configure>',
             context=configurationContext)
 
-        if IS_PLONE_4:
-            z2.installProduct(app, 'ftw.contentpage')
-            z2.installProduct(app, 'simplelayout.base')
-            z2.installProduct(app, 'simplelayout.ui.base')
-            z2.installProduct(app, 'simplelayout.ui.dragndrop')
         z2.installProduct(app, 'ftw.simplelayout')
         z2.installProduct(app, 'Products.PloneFormGen')
         import plone.app.dexterity
@@ -56,7 +51,6 @@ class PublisherSenderLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         if IS_PLONE_4:
-            applyProfile(portal, 'ftw.contentpage:default')
             applyProfile(portal, 'plone.app.referenceablebehavior:default')
 
         applyProfile(portal, 'ftw.simplelayout.contenttypes:default')
