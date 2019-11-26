@@ -5,7 +5,7 @@ Changelog
 2.10.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Compatibility with ``ftw.publisher.core = 2.13.0``. [jone]
 
 
 2.10.1 (2019-11-11)

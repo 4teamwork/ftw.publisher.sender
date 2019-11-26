@@ -79,7 +79,7 @@ setup(name='ftw.publisher.sender',
         'Products.CMFPlone',
 
         'ftw.autofeature',
-        'ftw.publisher.core >= 2.6.0',
+        'ftw.publisher.core >= 2.13.0',
         'ftw.profilehook',
         'ftw.table',
         'ftw.upgrade',
