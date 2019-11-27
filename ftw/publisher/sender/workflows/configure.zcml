@@ -12,10 +12,6 @@
     <utility factory=".config.PublisherConfigs" />
     <adapter factory=".contextstate.PublisherContextState" />
 
-    <configure zcml:condition="installed simplelayout.base">
-        <adapter factory=".sl.SimplelayoutContainerContextState" />
-    </configure>
-
     <configure zcml:condition="installed ftw.simplelayout">
         <adapter factory=".ftw_simplelayout.FtwSimplelayoutContainerContextState" />
     </configure>

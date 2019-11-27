@@ -8,53 +8,8 @@ from ftw.simplelayout.configuration import flattened_block_uids
 from ftw.simplelayout.interfaces import IPageConfiguration
 from ftw.testbrowser import browsing
 from ftw.testing import staticuid
-from unittest2 import skipIf
+from unittest import skipIf
 from Products.CMFCore.utils import getToolByName
-
-
-@skipIf(IS_AT_LEAST_PLONE_5_1, 'ftw.contentpage is not available for Plone 5')
-class TestPublishingFtwContentpageTypes(FunctionalTestCase):
-
-    portal_type = 'ContentPage'
-    page_builder = 'content page'
-    textblock_builder = 'text block'
-    listingblock_builder = 'listing block'
-
-    def setUp(self):
-        super(TestPublishingFtwContentpageTypes, self).setUp()
-        self.grant('Manager')
-
-        wftool = getToolByName(self.portal, 'portal_workflow')
-        wftool.setChainForPortalTypes([self.portal_type],
-                                      'publisher-example-workflow')
-
-    @browsing
-    def test_blocks_are_published_with_contentpage(self, browser):
-        page = create(Builder(self.page_builder))
-        create(Builder(self.textblock_builder).within(page))
-
-        browser.login().visit(page)
-        Workflow().do_transition('publish')
-
-        queue = IQueue(self.portal)
-        self.assertEquals(
-            2, queue.countJobs(),
-            'Expected the page and the text block to be in the queue.')
-
-    @browsing
-    def test_sl_listing_block_publishes_its_children(self, browser):
-        page = create(Builder(self.page_builder))
-        listing_block = create(Builder(self.listingblock_builder).within(page))
-        create(Builder('file').within(listing_block))
-
-        browser.login().visit(page)
-        Workflow().do_transition('publish')
-
-        queue = IQueue(self.portal)
-        self.assertEquals(
-            3, queue.countJobs(),
-            'Expected the page, the listing block and the file to be'
-            ' in the queue.')
 
 
 class TestPublishingFtwSimplelayoutTypes(FunctionalTestCase):

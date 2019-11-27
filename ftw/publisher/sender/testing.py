@@ -4,14 +4,14 @@ from ftw.builder.testing import set_builder_session_factory
 from ftw.publisher.sender.utils import IS_AT_LEAST_PLONE_5_1
 from ftw.publisher.sender.utils import IS_PLONE_4
 from ftw.testing import ComponentRegistryLayer
+from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
-from plone.app.testing import applyProfile
 from plone.testing import z2
 from zope.configuration import xmlconfig
-import ftw.publisher.sender.tests.builders
+import ftw.publisher.sender.tests.builders  # noqa
 
 
 class ZCMLLayer(ComponentRegistryLayer):
@@ -24,7 +24,6 @@ class ZCMLLayer(ComponentRegistryLayer):
 
 
 ZCML_LAYER = ZCMLLayer()
-
 
 
 class PublisherSenderLayer(PloneSandboxLayer):
@@ -40,11 +39,6 @@ class PublisherSenderLayer(PloneSandboxLayer):
             '</configure>',
             context=configurationContext)
 
-        if IS_PLONE_4:
-            z2.installProduct(app, 'ftw.contentpage')
-            z2.installProduct(app, 'simplelayout.base')
-            z2.installProduct(app, 'simplelayout.ui.base')
-            z2.installProduct(app, 'simplelayout.ui.dragndrop')
         z2.installProduct(app, 'ftw.simplelayout')
         z2.installProduct(app, 'Products.PloneFormGen')
         import plone.app.dexterity
@@ -57,7 +51,6 @@ class PublisherSenderLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         if IS_PLONE_4:
-            applyProfile(portal, 'ftw.contentpage:default')
             applyProfile(portal, 'plone.app.referenceablebehavior:default')
 
         applyProfile(portal, 'ftw.simplelayout.contenttypes:default')

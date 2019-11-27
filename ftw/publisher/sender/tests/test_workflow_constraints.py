@@ -1,10 +1,10 @@
-from Products.statusmessages.interfaces import IStatusMessage
 from ftw.publisher.sender import _
 from ftw.publisher.sender.workflows import constraints
 from ftw.publisher.sender.workflows import interfaces
 from ftw.testing import MockTestCase
-from plone.mocktestcase.dummy import Dummy
-from unittest2 import TestCase
+from ftw.testing.testcase import Dummy
+from Products.statusmessages.interfaces import IStatusMessage
+from unittest import TestCase
 from zope.interface import Interface
 from zope.interface.verify import verifyClass
 
@@ -100,49 +100,35 @@ class TestConstraintStatusMessages(MockTestCase):
 
     def setUp(self):
         super(TestConstraintStatusMessages, self).setUp()
-
         self.context = self.create_dummy()
         self.request = self.create_dummy()
-
-        status_message = self.stub()
-        self.mock_adapter(status_message, IStatusMessage, [Interface])
-        self.msg = self.mocker.mock()
-        self.expect(status_message(self.request)).result(self.msg)
+        self.mock_adapter(self.mock(), IStatusMessage, [Interface])
 
     def test_definition1_submit(self):
-        self.expect(self.msg.addStatusMessage('Bahar', type='error'))
-        self.expect(self.msg.addStatusMessage('Fohoo', type='warning'))
-
-        self.replay()
         constriants = ConstraintDefinition1(self.context, self.request)
         self.assertFalse(constriants.is_action_allowed(interfaces.SUBMIT))
+        IStatusMessage(self.request).addStatusMessage.assert_any_call('Bahar', type='error')
+        IStatusMessage(self.request).addStatusMessage.assert_any_call('Fohoo', type='warning')
 
     def test_definition1_publish(self):
-        self.expect(self.msg.addStatusMessage('Bahar', type='error'))
-        self.expect(self.msg.addStatusMessage('Fohoo', type='error'))
-
-        self.replay()
         constriants = ConstraintDefinition1(self.context, self.request)
         self.assertFalse(constriants.is_action_allowed(interfaces.PUBLISH))
+        IStatusMessage(self.request).addStatusMessage.assert_any_call('Bahar', type='error')
+        IStatusMessage(self.request).addStatusMessage.assert_any_call('Fohoo', type='error')
 
     def test_definition2_success(self):
-
-        self.replay()
         constriants = ConstraintDefinition2(self.context, self.request)
         self.assertTrue(constriants.is_action_allowed(interfaces.SUBMIT))
 
     def test_definition2_multi_objects(self):
-        self.expect(self.msg.addStatusMessage(
-                'X <a href="http://host/foo">Foo</a> Y', type='error'))
-        self.expect(self.msg.addStatusMessage(
-                'X <a href="http://host/bar">Bar</a> Y', type='error'))
-
-        self.replay()
         constriants = ConstraintDefinition2(self.context, self.request)
         self.assertFalse(constriants.is_action_allowed(interfaces.PUBLISH))
+        IStatusMessage(self.request).addStatusMessage.assert_any_call(
+            'X <a href="http://host/foo">Foo</a> Y', type='error')
+        IStatusMessage(self.request).addStatusMessage.assert_any_call(
+            'X <a href="http://host/bar">Bar</a> Y', type='error')
 
     def test_no_messages_when_silent(self):
-        self.replay()
         constriants = ConstraintDefinition2(self.context, self.request)
         self.assertFalse(constriants.is_action_allowed(interfaces.PUBLISH,
                                                        silent=True))

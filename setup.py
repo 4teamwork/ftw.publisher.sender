@@ -19,7 +19,6 @@ tests_require = [
     ]
 
 tests_plone4_require = [
-    'ftw.contentpage',
     'plone.app.referenceablebehavior',
     'Products.PloneFormGen < 1.8.0a',  # Plone 4 Version
 ]
@@ -79,7 +78,7 @@ setup(name='ftw.publisher.sender',
         'Products.CMFPlone',
 
         'ftw.autofeature',
-        'ftw.publisher.core >= 2.6.0',
+        'ftw.publisher.core >= 2.13.0',
         'ftw.profilehook',
         'ftw.table',
         'ftw.upgrade',

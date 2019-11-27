@@ -37,9 +37,6 @@
                 null
             ]
         },
-        "utf8:IShortName": {
-            "utf8:id": "utf8:image.gif"
-        },
         "utf8:plone_0_Image": {
             "utf8:description": "unicode:Description of the image",
             "utf8:image": {
