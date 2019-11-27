@@ -38,9 +38,6 @@
                 null
             ]
         },
-        "utf8:IShortName": {
-            "utf8:id": "utf8:a-folder"
-        },
         "utf8:plone_0_Folder": {}
     },
     "unicode:interface_data_adapter": [],
