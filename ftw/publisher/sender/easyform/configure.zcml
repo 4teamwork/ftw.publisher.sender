@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
+    i18n_domain="ftw.publisher.sender">
+
+    <include package="collective.monkeypatcher" />
+
+    <monkey:patch
+        description="This is a fix to get the data from a public site when on the editorial site."
+        class="collective.easyform.actions.SaveData"
+        original="download"
+        replacement=".actions.download"
+        preserveOriginal="True"
+        />
+
+</configure>

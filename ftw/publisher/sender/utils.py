@@ -83,7 +83,7 @@ def sendJsonToRealm(json, realm, serverAction):
     return communication.parseResponse(html)
 
 
-def sendRequestToRealm(data, realm, serverAction):
+def sendRequestToRealm(data, realm, serverAction, return_response=False):
     """
     Makes a HTTP-Request to a realm and sends the given data on
     the provided serverAction
@@ -94,6 +94,9 @@ def sendRequestToRealm(data, realm, serverAction):
     @type realm:            Realm
     @param serverAction:    Name of the BrowserView on the target instance
     @type serverAction:     string
+    @param return_response: When True, returns the response object instead of
+                            the body.
+    @type return_response:  bool
     @return:                Response Text
     @rtype:                 string
     """
@@ -114,6 +117,9 @@ def sendRequestToRealm(data, realm, serverAction):
         response = urllib2.urlopen(request, timeout=120)
     except socket.timeout as error:
         raise ReceiverTimeoutError(error)
+
+    if return_response:
+        return response
 
     try:
         return response.read()

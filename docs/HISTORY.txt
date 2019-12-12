@@ -5,7 +5,7 @@ Changelog
 2.13.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add collective.easyform support: download remote data of safe data adapter. [jone]
 
 
 2.13.0 (2019-11-27)
