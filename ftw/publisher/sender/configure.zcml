@@ -25,6 +25,7 @@
     <include file="profiles.zcml" />
     <include package=".upgrades" />
     <include package=".FormGen" zcml:condition="installed Products.PloneFormGen" />
+    <include package=".easyform" zcml:condition="installed collective.easyform" />
 
     <include zcml:condition="installed ftw.lawgiver" file="lawgiver.zcml" />
     <include zcml:condition="have ftw.publisher.sender:taskqueue" package=".taskqueue" />
