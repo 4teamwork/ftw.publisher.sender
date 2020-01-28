@@ -6,6 +6,7 @@ Changelog
 -------------------
 
 - Add collective.easyform support: download remote data of safe data adapter. [jone]
+- Fix references on new page onto itself are matched as unpublished [Nachtalb]
 
 
 2.13.0 (2019-11-27)

@@ -2,6 +2,7 @@ from Acquisition import aq_parent, aq_inner
 from Products.Archetypes.interfaces.referenceable import IReferenceable
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+from ftw.publisher.core.belongs_to_parent import get_main_obj_belonging_to
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from ftw.publisher.sender.workflows.interfaces import IWorkflowConfigs
 from operator import attrgetter
@@ -55,12 +56,14 @@ class PublisherContextState(object):
         if IPloneSiteRoot.providedBy(self.context):
             return True
 
+        main_obj = get_main_obj_belonging_to(self.context)
         configs = getUtility(IWorkflowConfigs)
-        return configs.is_published(self.context) or self.is_in_revision()
+        return configs.is_published(main_obj) or self.is_in_revision()
 
     def is_in_revision(self):
+        main_obj = get_main_obj_belonging_to(self.context)
         configs = getUtility(IWorkflowConfigs)
-        return configs.is_in_revision(self.context)
+        return configs.is_in_revision(main_obj)
 
     def get_closest_parent_having_workflow(self):
         """Visits the parents of an object by walking up. If the parent

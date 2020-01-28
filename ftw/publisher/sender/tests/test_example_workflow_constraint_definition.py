@@ -191,6 +191,57 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         )
 
     @browsing
+    def test_no_warning_on_publish_when_page_content_has_reference_to_itself(self, browser):
+        page = create(Builder('sl content page'))
+        create(Builder('sl textblock')
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(page)))
+               .within(page))
+
+        browser.login().visit(page)
+        Workflow().do_transition('publish')
+
+        self.assertFalse(
+            statusmessages.warning_messages(),
+            'A reference in the page to itself should not return an error on '
+            'publication.')
+
+    @browsing
+    def test_no_warning_on_publish_when_page_content_has_reference_to_content_without_workflow_on_page(self, browser):
+        page = create(Builder('sl content page'))
+        textblock = create(Builder('sl textblock')
+                          .within(page))
+        create(Builder('sl textblock')
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(textblock)))
+               .within(page))
+
+        browser.login().visit(page)
+        Workflow().do_transition('publish')
+
+        self.assertFalse(
+            statusmessages.warning_messages(),
+            'A reference in the page to another object in itself should not '
+            'return an error on publication.')
+
+    @browsing
+    def test_warning_on_publish_when_page_content_has_reference_to_content_on_other_page(self, browser):
+        page = create(Builder('sl content page'))
+        other_page = create(Builder('sl content page').titled(u'Other page'))
+        other_textblock = create(Builder('sl textblock')
+                                 .titled(u'Other Textblock')
+                                 .within(other_page))
+        create(Builder('sl textblock')
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(other_textblock)))
+               .within(page))
+
+        browser.login().visit(page)
+        Workflow().do_transition('publish')
+
+        statusmessages.assert_message(
+            'The referenced object <a href="http://nohost/plone'
+            '/other-page/other-textblock">Other Textblock</a> is not yet published.'
+        )
+
+    @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
         page=create(Builder('page')
                       .titled(u'The Page'))
