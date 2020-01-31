@@ -7,6 +7,7 @@ from ftw.publisher.sender.workflows.constraints import message
 from ftw.publisher.sender.workflows.constraints import warning_on
 from ftw.publisher.core.belongs_to_parent import get_main_obj_belonging_to
 
+
 class ExampleWorkflowConfiguration(config.LawgiverWorkflowConfiguration):
     workflow_id = 'publisher-example-workflow'
 
@@ -47,13 +48,14 @@ class ExampleWorkflowConstraintDefinition(constraints.ConstraintDefinition):
     def references_should_be_published(self):
         main_obj = get_main_obj_belonging_to(self.context)
 
-        def reference_is_not_reference_to_self(target):
-            return get_main_obj_belonging_to(target) != main_obj
+        def reference_is_not_reference_to_self(target_main_obj):
+            return target_main_obj != main_obj
 
         return list(filter(reference_is_not_reference_to_self,
-                           self.state().get_unpublished_references()))
+                           map(get_main_obj_belonging_to,
+                               self.state().get_unpublished_references())))
 
     @message(_('The referenced object ${item} is still published.'))
     @warning_on(interfaces.DELETE, interfaces.RETRACT)
     def references_may_be_retracted_too(self):
-        return list(self.state().get_published_references())
+        return list(map(get_main_obj_belonging_to, self.state().get_published_references()))
