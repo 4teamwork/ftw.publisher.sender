@@ -223,22 +223,24 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
 
     @browsing
     def test_warning_on_publish_when_page_content_has_reference_to_content_on_other_page(self, browser):
-        page = create(Builder('sl content page'))
-        other_page = create(Builder('sl content page').titled(u'Other page'))
-        other_textblock = create(Builder('sl textblock')
-                                 .titled(u'Other Textblock')
-                                 .within(other_page))
-        create(Builder('sl textblock')
-               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(other_textblock)))
-               .within(page))
+        target_page = create(Builder('sl content page').titled(u'Target'))
+        target_textblock = create(Builder('sl textblock').within(target_page)
+                                  .titled(u'Target Block'))
 
-        browser.login().visit(page)
+        source_page = create(Builder('sl content page').titled(u'Source'))
+        source_textblock = create(Builder('sl textblock')
+                                  .titled(u'Source Block')
+                                  .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(target_textblock)))
+                                  .within(source_page))
+
+        notify(ObjectModifiedEvent(source_textblock))
+        transaction.commit()
+
+        browser.login().visit(source_page)
         Workflow().do_transition('publish')
 
-        statusmessages.assert_message(
-            'The referenced object <a href="http://nohost/plone'
-            '/other-page/other-textblock">Other Textblock</a> is not yet published.'
-        )
+        statusmessages.assert_message('The referenced object <a href="{}">Target Block</a> is not yet published.'.format(
+            target_textblock.absolute_url()))
 
     @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
