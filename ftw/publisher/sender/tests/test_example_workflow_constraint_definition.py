@@ -239,8 +239,8 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         browser.login().visit(source_page)
         Workflow().do_transition('publish')
 
-        statusmessages.assert_message('The referenced object <a href="{}">Target Block</a> is not yet published.'.format(
-            target_textblock.absolute_url()))
+        statusmessages.assert_message('The referenced object <a href="{}">Target</a> is not yet published.'.format(
+            target_page.absolute_url()))
 
     @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
