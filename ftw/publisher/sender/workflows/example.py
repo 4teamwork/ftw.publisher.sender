@@ -5,8 +5,7 @@ from ftw.publisher.sender.workflows import interfaces
 from ftw.publisher.sender.workflows.constraints import error_on
 from ftw.publisher.sender.workflows.constraints import message
 from ftw.publisher.sender.workflows.constraints import warning_on
-from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
-from zope.component import getMultiAdapter
+from ftw.publisher.core.belongs_to_parent import get_main_obj_belonging_to
 
 
 class ExampleWorkflowConfiguration(config.LawgiverWorkflowConfiguration):
@@ -47,21 +46,16 @@ class ExampleWorkflowConstraintDefinition(constraints.ConstraintDefinition):
     @message(_('The referenced object ${item} is not yet published.'))
     @warning_on(interfaces.PUBLISH, interfaces.SUBMIT)
     def references_should_be_published(self):
-        def does_not_share_workflow_with_current_context(target):
-            target_state = getMultiAdapter((target, self.request), IPublisherContextState)
-            if not target_state.has_workflow() and \
-               target_state.get_closest_parent_having_workflow() == self.context:
-                # The reference target is an object within the current object (self.context)
-                # and the target is a direct or indirect child of the current object without
-                # an own workflow.
-                # This means that the reference will most likely be published along with the
-                # current object. In this situation we do not want to warn.
-                return False
-            return True
-        return list(filter(does_not_share_workflow_with_current_context,
-                           self.state().get_unpublished_references()))
+        main_obj = get_main_obj_belonging_to(self.context)
+
+        def reference_is_not_reference_to_self(target_main_obj):
+            return target_main_obj != main_obj
+
+        return list(filter(reference_is_not_reference_to_self,
+                           map(get_main_obj_belonging_to,
+                               self.state().get_unpublished_references())))
 
     @message(_('The referenced object ${item} is still published.'))
     @warning_on(interfaces.DELETE, interfaces.RETRACT)
     def references_may_be_retracted_too(self):
-        return list(self.state().get_published_references())
+        return list(map(get_main_obj_belonging_to, self.state().get_published_references()))

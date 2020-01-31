@@ -22,7 +22,6 @@ EXAMPLE_WF_REVISION = 'publisher-example-workflow--STATUS--revision'
 
 class TestExampleWFConstraintDefinition(FunctionalTestCase):
 
-
     def setUp(self):
         super(TestExampleWFConstraintDefinition, self).setUp()
         self.grant('Manager')
@@ -191,15 +190,68 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
         )
 
     @browsing
+    def test_no_warning_on_publish_when_page_content_has_reference_to_itself(self, browser):
+        page = create(Builder('sl content page'))
+        create(Builder('sl textblock')
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(page)))
+               .within(page))
+
+        browser.login().visit(page)
+        Workflow().do_transition('publish')
+
+        self.assertFalse(
+            statusmessages.warning_messages(),
+            'A reference in the page to itself should not return an error on '
+            'publication.')
+
+    @browsing
+    def test_no_warning_on_publish_when_page_content_has_reference_to_content_without_workflow_on_page(self, browser):
+        page = create(Builder('sl content page'))
+        textblock = create(Builder('sl textblock')
+                          .within(page))
+        create(Builder('sl textblock')
+               .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(textblock)))
+               .within(page))
+
+        browser.login().visit(page)
+        Workflow().do_transition('publish')
+
+        self.assertFalse(
+            statusmessages.warning_messages(),
+            'A reference in the page to another object in itself should not '
+            'return an error on publication.')
+
+    @browsing
+    def test_warning_on_publish_when_page_content_has_reference_to_content_on_other_page(self, browser):
+        target_page = create(Builder('sl content page').titled(u'Target'))
+        target_textblock = create(Builder('sl textblock').within(target_page)
+                                  .titled(u'Target Block'))
+
+        source_page = create(Builder('sl content page').titled(u'Source'))
+        source_textblock = create(Builder('sl textblock')
+                                  .titled(u'Source Block')
+                                  .having(text=RichTextValue('<a href="resolveuid/%s">link</a>' % IUUID(target_textblock)))
+                                  .within(source_page))
+
+        notify(ObjectModifiedEvent(source_textblock))
+        transaction.commit()
+
+        browser.login().visit(source_page)
+        Workflow().do_transition('publish')
+
+        statusmessages.assert_message('The referenced object <a href="{}">Target</a> is not yet published.'.format(
+            target_page.absolute_url()))
+
+    @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
-        page=create(Builder('page')
+        page = create(Builder('page')
                       .titled(u'The Page'))
-        other_page=create(Builder('page')
+        other_page = create(Builder('page')
                             .titled(u'The Other Page'))
         helpers.set_related_items(page, other_page)
 
-        api.content.transition(obj=page,to_state=EXAMPLE_WF_PUBLISHED)
-        api.content.transition(obj=other_page,to_state=EXAMPLE_WF_PUBLISHED)
+        api.content.transition(obj=page, to_state=EXAMPLE_WF_PUBLISHED)
+        api.content.transition(obj=other_page, to_state=EXAMPLE_WF_PUBLISHED)
         transaction.commit()
 
         browser.login().visit(page)
