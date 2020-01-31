@@ -22,7 +22,6 @@ EXAMPLE_WF_REVISION = 'publisher-example-workflow--STATUS--revision'
 
 class TestExampleWFConstraintDefinition(FunctionalTestCase):
 
-
     def setUp(self):
         super(TestExampleWFConstraintDefinition, self).setUp()
         self.grant('Manager')
@@ -243,14 +242,14 @@ class TestExampleWFConstraintDefinition(FunctionalTestCase):
 
     @browsing
     def test_warning_on_retract_when_references_are_still_published(self, browser):
-        page=create(Builder('page')
+        page = create(Builder('page')
                       .titled(u'The Page'))
-        other_page=create(Builder('page')
+        other_page = create(Builder('page')
                             .titled(u'The Other Page'))
         helpers.set_related_items(page, other_page)
 
-        api.content.transition(obj=page,to_state=EXAMPLE_WF_PUBLISHED)
-        api.content.transition(obj=other_page,to_state=EXAMPLE_WF_PUBLISHED)
+        api.content.transition(obj=page, to_state=EXAMPLE_WF_PUBLISHED)
+        api.content.transition(obj=other_page, to_state=EXAMPLE_WF_PUBLISHED)
         transaction.commit()
 
         browser.login().visit(page)

@@ -7,6 +7,7 @@ from ftw.publisher.sender.workflows.constraints import message
 from ftw.publisher.sender.workflows.constraints import warning_on
 from ftw.publisher.core.belongs_to_parent import get_main_obj_belonging_to
 
+
 class ExampleWorkflowConfiguration(config.LawgiverWorkflowConfiguration):
     workflow_id = 'publisher-example-workflow'
 
