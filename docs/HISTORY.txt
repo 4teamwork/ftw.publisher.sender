@@ -5,7 +5,7 @@ Changelog
 2.14.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Remove source checkout of ftw.publisher.core [Nachtalb]
 
 
 2.14.0 (2020-01-31)
