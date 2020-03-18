@@ -5,7 +5,7 @@ Changelog
 2.14.1 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix tests after constrained types adapter added to core. [djowett-ftw]
 
 
 2.14.0 (2020-01-31)

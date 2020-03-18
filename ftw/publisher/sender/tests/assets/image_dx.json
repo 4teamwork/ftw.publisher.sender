@@ -1,5 +1,6 @@
 {
     "unicode:backreferences_adapter": {},
+    "unicode:constrain_types_adapter": {},
     "unicode:dx_field_data_adapter": {
         "utf8:IAllowDiscussion": {
             "utf8:allow_discussion": null
