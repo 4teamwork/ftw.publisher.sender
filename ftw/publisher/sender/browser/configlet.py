@@ -18,7 +18,6 @@ from persistent.list import PersistentList
 from plone.protect import CheckAuthenticator
 from plone.protect import PostOnly
 from plone.protect import protect
-from plone.protect.interfaces import IDisableCSRFProtection
 from plone.z3cform import z2
 from plone.z3cform.interfaces import IWrappedForm
 from z3c.form import button
@@ -31,6 +30,11 @@ from zope.interface import implements
 from zope.publisher.interfaces import Retry
 import datetime
 import md5
+
+try:
+    from plone.protect.interfaces import IDisableCSRFProtection
+except ImportError:
+    IDisableCSRFProtection = None
 
 EXECUTED_JOBS_BATCH_SIZE = 100
 
@@ -527,7 +531,7 @@ class ExecuteJobs(PublisherConfigletView):
         if REQUEST['SERVER_NAME'] != 'Zope Clock Server':
             PostOnly(REQUEST)
             CheckAuthenticator(REQUEST)
-        else:
+        elif IDisableCSRFProtection:
             alsoProvides(REQUEST, IDisableCSRFProtection)
 
         self.output = self.context.restrictedTraverse(
