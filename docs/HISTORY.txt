@@ -6,6 +6,7 @@ Changelog
 -------------------
 
 - Fix tests after constrained types adapter added to core. [djowett-ftw]
+- Fix IDisableCSRFProtection import error for older versions of plone.protect. [busykoala]
 
 
 2.14.0 (2020-01-31)
