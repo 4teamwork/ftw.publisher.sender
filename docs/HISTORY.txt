@@ -5,7 +5,7 @@ Changelog
 2.14.2 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Support save data adapter which returns excel format. [mathias.leimgruber]
 
 
 2.14.1 (2020-07-30)
