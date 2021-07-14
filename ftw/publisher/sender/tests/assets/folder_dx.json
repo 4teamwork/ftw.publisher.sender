@@ -31,7 +31,7 @@
             "utf8:exclude_from_nav": null
         },
         "utf8:INextPreviousToggle": {
-            "utf8:nextPreviousEnabled": false
+            "utf8:nextPreviousEnabled": null
         },
         "utf8:IRelatedItems": {
             "utf8:relatedItems": [
