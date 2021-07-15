@@ -1,3 +1,4 @@
+from StringIO import StringIO
 from collective.easyform.api import get_context
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.utils import sendRequestToRealm
@@ -5,6 +6,33 @@ from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 import os
+
+
+def combine_excel(response, local_excel, remote_excel, has_title_row=False):
+    from openpyxl import load_workbook
+
+    local_tmp_file = StringIO(local_excel)
+    remote_tmp_file = StringIO(remote_excel)
+    local_wb = load_workbook(local_tmp_file)
+    remote_wb = load_workbook(remote_tmp_file)
+
+    local_ws = local_wb.active
+    remote_ws = remote_wb.active
+
+    for index, row in enumerate(remote_ws.rows):
+        if has_title_row and index == 0:
+            # Do not add a second title row
+            continue
+        local_ws.append(map(lambda cell: cell.value, row))
+
+    output = StringIO()
+    local_wb.save(output)
+    result = output.getvalue()
+    output.close()
+
+    response.setHeader("Content-Disposition", 'attachment; filename="data.xlsx"')
+    response.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response.write(result)
 
 
 def download(self, response):
@@ -24,11 +52,14 @@ def download(self, response):
     assuming that the receiver side does not have any realms configured.
     """
 
-    self._old_download(response)
-
     site = getSite()
     realms = IConfig(site).getRealms()
     if not realms:
+        return
+
+    if site.REQUEST.get('is_publisher', None):
+        # Prevent endless loop if sender and receiver are running on the same machine
+        self._old_download(response)
         return
 
     pub_state = getMultiAdapter((get_context(self), response), IPublisherContextState)
@@ -40,10 +71,15 @@ def download(self, response):
     relative_path = os.path.relpath(context_path, site_path)
     view_path = '/'.join((relative_path, '@@actions', self.__name__, '@@data'))
 
+    is_xlsx = getattr(self, 'DownloadFormat', 'tsv') == 'xlsx'
+
+    if not is_xlsx:
+        self._old_download(response)
+
     for realm in realms:
         remote_response = sendRequestToRealm(getSite().REQUEST.form.copy(),
                                              realm,
-                                             view_path.lstrip('/'),
+                                             view_path.lstrip('/') + '?is_publisher=1',
                                              return_response=True)
 
         if remote_response.code != 200:
@@ -54,6 +90,13 @@ def download(self, response):
             ))
 
         try:
-            response.write(remote_response.read())
+            if is_xlsx:
+                use_title_row = getattr(self, "UseColumnNames", False)
+                local_excel = self.get_saved_form_input_as_xlsx(use_title_row)
+                combine_excel(response, local_excel, remote_response.read(), use_title_row)
+            else:
+                response.write(remote_response.read())
+        except ImportError:
+            raise Exception('Was not able to combine excel, since openpyxl is missing')
         finally:
             remote_response.close()
