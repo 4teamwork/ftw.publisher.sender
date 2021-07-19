@@ -28,6 +28,7 @@ def add_move_job(obj, event):
                                 'folder_paste',
                                 'manage_pasteObjects',
                                 'object_rename',
+                                '@@fc-rename',
                                 'object_paste']:
             return
         # set event info on
