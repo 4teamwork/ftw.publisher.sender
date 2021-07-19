@@ -27,6 +27,7 @@ def add_move_job(obj, event):
         if url_endswith not in ['folder_rename_form',
                                 'folder_paste',
                                 'manage_pasteObjects',
+                                'object_rename',
                                 'object_paste']:
             return
         # set event info on
