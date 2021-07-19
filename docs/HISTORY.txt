@@ -5,7 +5,7 @@ Changelog
 2.14.4 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Create a move job upon folder_contents rename view (Plone 5 only). [mathias.leimgruber]
 
 
 2.14.3 (2021-07-19)
