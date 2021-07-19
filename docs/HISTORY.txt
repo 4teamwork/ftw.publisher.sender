@@ -5,7 +5,7 @@ Changelog
 2.14.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Create a move job upon object_rename view (Plone 5 only). [mathias.leimgruber]
 
 
 2.14.2 (2021-07-16)
