@@ -35,7 +35,7 @@ def combine_excel(response, local_excel, remote_excel, has_title_row=False):
     response.write(result)
 
 
-def download(self, response):
+def download(self, response, delimiter=""):
     """This patch combines the data from the sender installation and the receiver
     installation to one csv / tsv.
     We assume that the form config is the same on both sides.
@@ -59,7 +59,7 @@ def download(self, response):
 
     if site.REQUEST.get('is_publisher', None):
         # Prevent endless loop if sender and receiver are running on the same machine
-        self._old_download(response)
+        self._old_download(response, delimiter)
         return
 
     pub_state = getMultiAdapter((get_context(self), response), IPublisherContextState)
@@ -72,9 +72,13 @@ def download(self, response):
     view_path = '/'.join((relative_path, '@@actions', self.__name__, '@@data'))
 
     is_xlsx = getattr(self, 'DownloadFormat', 'tsv') == 'xlsx'
+    is_csv = getattr(self, 'DownloadFormat', 'tsv') == 'csv'
+
+    if is_csv and len(delimiter) == 0:
+        delimiter = ','
 
     if not is_xlsx:
-        self._old_download(response)
+        self._old_download(response, delimiter)
 
     for realm in realms:
         remote_response = sendRequestToRealm(getSite().REQUEST.form.copy(),
