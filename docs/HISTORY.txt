@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-2.14.5 (unreleased)
+2.14.5 (2021-09-30)
 -------------------
 
 - Fix easyform download integration. Since v3 delimiter is part of the download method signature. [mathias.leimgruber]
