@@ -1,8 +1,9 @@
-from StringIO import StringIO
 from collective.easyform.api import get_context
 from ftw.publisher.sender.interfaces import IConfig
 from ftw.publisher.sender.utils import sendRequestToRealm
 from ftw.publisher.sender.workflows.interfaces import IPublisherContextState
+from StringIO import StringIO
+from urllib2 import HTTPError
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 import os
@@ -12,18 +13,18 @@ def combine_excel(response, local_excel, remote_excel, has_title_row=False):
     from openpyxl import load_workbook
 
     local_tmp_file = StringIO(local_excel)
-    remote_tmp_file = StringIO(remote_excel)
     local_wb = load_workbook(local_tmp_file)
-    remote_wb = load_workbook(remote_tmp_file)
-
     local_ws = local_wb.active
-    remote_ws = remote_wb.active
 
-    for index, row in enumerate(remote_ws.rows):
-        if has_title_row and index == 0:
-            # Do not add a second title row
-            continue
-        local_ws.append(map(lambda cell: cell.value, row))
+    if remote_excel:
+        remote_tmp_file = StringIO(remote_excel.read())
+        remote_wb = load_workbook(remote_tmp_file)
+        remote_ws = remote_wb.active
+        for index, row in enumerate(remote_ws.rows):
+            if has_title_row and index == 0:
+                # Do not add a second title row
+                continue
+            local_ws.append(map(lambda cell: cell.value, row))
 
     output = StringIO()
     local_wb.save(output)
@@ -81,12 +82,16 @@ def download(self, response, delimiter=""):
         self._old_download(response, delimiter)
 
     for realm in realms:
-        remote_response = sendRequestToRealm(getSite().REQUEST.form.copy(),
-                                             realm,
-                                             view_path.lstrip('/') + '?is_publisher=1',
-                                             return_response=True)
+        try:
+            remote_response = sendRequestToRealm(getSite().REQUEST.form.copy(),
+                                                 realm,
+                                                 view_path.lstrip('/') + '?is_publisher=1',
+                                                 return_response=True)
 
-        if remote_response.code != 200:
+        except HTTPError:
+            remote_response = False  # Nothing to combine
+
+        if remote_response and remote_response.code != 200:
             raise ValueError('Bad response from remote realm ({} {}): {!r}..'.format(
                 remote_response.code,
                 remote_response.msg,
@@ -97,10 +102,11 @@ def download(self, response, delimiter=""):
             if is_xlsx:
                 use_title_row = getattr(self, "UseColumnNames", False)
                 local_excel = self.get_saved_form_input_as_xlsx(use_title_row)
-                combine_excel(response, local_excel, remote_response.read(), use_title_row)
+                combine_excel(response, local_excel, remote_response, use_title_row)
             else:
                 response.write(remote_response.read())
         except ImportError:
             raise Exception('Was not able to combine excel, since openpyxl is missing')
         finally:
-            remote_response.close()
+            if remote_response:
+                remote_response.close()
